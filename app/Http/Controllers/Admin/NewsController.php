@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use Illuminate\Http\Request;
-use App\Models\{Pages};
+use App\Models\{News};
 use Illuminate\Support\Facades\Validator;
 use URL;
 
-class PagesController extends Controller
+class NewsController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        return view('cp.pages.index')->with('title', 'Страницы и разделы');
+        return view('cp.news.index')->with('title', 'Новости');
     }
 
     /**
@@ -22,13 +23,7 @@ class PagesController extends Controller
      */
     public function create()
     {
-        $options = [];
-
-        foreach (Pages::orderBy('id')->published()->where('page_path', 'false')->get() as $row) {
-            $options[$row->id] = $row->title;
-        }
-
-        return view('cp.pages.create_edit', compact('options'))->with('title', 'Добавление раздела');
+        return view('cp.news.create_edit')->with('title', 'Добавление новости');
     }
 
     /**
@@ -38,10 +33,10 @@ class PagesController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title' => 'required',
+            'title' => 'required|min:6|max:200',
             'text' => 'required',
+            'preview' => 'required|min:6|max:255',
             'slug' => 'required|unique:pages',
-            'parent_id' => 'integer|nullable'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -50,9 +45,9 @@ class PagesController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        Pages::create($request->all());
+        News::create($request->all());
 
-        return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно добавлены');
+        return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно добавлены');
 
     }
 
@@ -62,17 +57,11 @@ class PagesController extends Controller
      */
     public function edit($id)
     {
-        $row = Pages::find($id);
+        $row = News::find($id);
 
         if (!$row) abort(404);
 
-        $options = [];
-
-        foreach (Pages::orderBy('id')->published()->where('page_path', 'false')->get() as $row) {
-            $options[$row->id] = $row->title;
-        }
-
-        return view('cp.pages.create_edit', compact('row', 'options'))->with('title', 'Редактирование раздела');
+        return view('cp.pages.create_edit', compact('row'))->with('title', 'Редактирование новости');
 
     }
 
@@ -83,10 +72,10 @@ class PagesController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'title' => 'required',
+            'title' => 'required|min:6|max:200',
             'text' => 'required',
+            'preview' => 'required|min:6|max:255',
             'slug' => 'required|unique:pages,slug,' . $request->id,
-            'parent_id' => 'integer|nullable'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -95,33 +84,17 @@ class PagesController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $row = Pages::find($request->id);
+        $row = News::find($request->id);
 
         if (!$row) abort(404);
 
         $row->title = $request->input('title');
         $row->text = $request->input('text');
+        $row->preview = $request->input('preview');
         $row->meta_title = $request->input('meta_title');
         $row->meta_description = $request->input('meta_description');
         $row->meta_keywords = $request->input('meta_keywords');
-        $row->parent_id = $request->input('parent_id');
         $row->slug = $request->input('slug');
-
-        $published = 'false';
-
-        if ($request->input('published')) {
-            $published = 'true';
-        }
-
-        $row->published = $published;
-
-        $page_path = 'false';
-
-        if ($request->input('page_path')) {
-            $page_path = 'true';
-        }
-
-        $row->page_path = $page_path;
         $row->save();
 
         return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно обновлены');
@@ -133,6 +106,6 @@ class PagesController extends Controller
      */
     public function destroy(Request $request)
     {
-        Pages::where('id', $request->id)->delete();
+        News::where('id', $request->id)->delete();
     }
 }

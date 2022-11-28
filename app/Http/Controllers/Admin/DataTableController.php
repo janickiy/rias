@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\{User,Settings, Pages};
+use App\Models\{User,Settings,Pages,News};
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use URL;
@@ -51,6 +51,24 @@ class DataTableController extends Controller
 
             ->editColumn('page_path', function ($row) {
                 return $row->PagePathType ?? '';
+            })
+
+            ->rawColumns(['actions'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNews()
+    {
+        $row = News::query();
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.news.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
 
             ->rawColumns(['actions'])->make(true);

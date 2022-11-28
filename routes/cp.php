@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\{
@@ -11,9 +10,9 @@ use App\Http\Controllers\Admin\{
     DataTableController,
     PagesController,
     MenuController,
+    NewsController,
     AjaxController,
 };
-
 
 
 /*
@@ -58,6 +57,15 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('destroy', [UsersController::class, 'destroy'])->name('cp.users.destroy');
     });
 
+    Route::group(['prefix' => 'news'], function () {
+        Route::get('', [NewsController::class, 'index'])->name('cp.news.index');
+        Route::get('create', [NewsController::class, 'create'])->name('cp.news.create');
+        Route::post('create', [NewsController::class, 'store'])->name('cp.news.store');
+        Route::get('edit/{id}', [NewsController::class, 'edit'])->name('cp.news.edit')->where('id', '[0-9]+');
+        Route::put('update', [NewsController::class, 'update'])->name('cp.news.update');
+        Route::post('destroy', [NewsController::class, 'destroy'])->name('cp.news.destroy');
+    });
+
     Route::group(['prefix' => 'settings'], function () {
         Route::get('', [SettingsController::class, 'index'])->name('cp.settings.index');
         Route::get('create', [SettingsController::class, 'create'])->name('cp.settings.create');
@@ -73,6 +81,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('users', [DataTableController::class, 'getUsers'])->name('cp.datatable.users');
         Route::any('pages', [DataTableController::class, 'getPages'])->name('cp.datatable.pages');
         Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings');
+        Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
     });
 
 });

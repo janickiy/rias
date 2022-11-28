@@ -115,7 +115,6 @@ Use search to find needed section.
         </div>
         <!-- end fullscreen button -->
 
-
         <!-- collapse menu button -->
         <div id="hide-menu" class="btn-header pull-right">
             <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Свернуть меню"><i
@@ -130,8 +129,6 @@ Use search to find needed section.
             </span>
         </div>
         <!-- end fullscreen button -->
-
-
 
     </div>
     <!-- end pulled right: nav area -->
@@ -192,6 +189,9 @@ Use search to find needed section.
                             разделы</a>
                     </li>
 
+                    <li {!! Request::is('cp/news') ? ' class="active"' : '' !!}><a
+                            href="{{ URL::route('cp.news.index') }}"><i class="fa fa-list"></i> Новости</a>
+                    </li>
 
                 </ul>
             </li>

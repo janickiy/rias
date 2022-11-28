@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.pages.update') : URL::route('cp.pages.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'tmplForm']) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.news.update') : URL::route('cp.news.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'tmplForm']) !!}
 
                         <div class="smart-form">
 
@@ -67,6 +67,22 @@
 
                                     @if ($errors->has('title'))
                                         <p class="text-danger">{{ $errors->first('title') }}</p>
+                                    @endif
+
+                                </section>
+
+                                <section>
+
+                                    {!! Form::label('preview', 'Краткое описание*', ['class' => 'label']) !!}
+
+                                    <label class="textarea textarea-resizable">
+
+                                        {!! Form::textarea('preview', old('preview', isset($row) ? $row->preview : null), ['rows' => "3", 'class' => 'custom-scroll']) !!}
+
+                                    </label>
+
+                                    @if ($errors->has('preview'))
+                                        <p class="text-danger">{{ $errors->first('preview') }}</p>
                                     @endif
 
                                 </section>
@@ -151,49 +167,13 @@
 
                                 </section>
 
-                                <section>
-
-                                    {!! Form::label('page_path', 'Тип контента', ['class' => 'label']) !!}
-
-                                    <div class="inline-group">
-                                        <label class="radio">
-
-                                            {!! Form::radio('page_path',1, (isset($row) && $row->contentType == 1) or !isset($row) ? true : false) !!}
-
-                                            <i></i>Страница
-                                        </label>
-                                        <label class="radio">
-
-                                            {!! Form::radio('page_path',0, isset($row->contentType) && $row->contentType == 0 ? true : false) !!}
-
-                                            <i></i>Раздел
-                                        </label>
-
-                                    </div>
-
-                                </section>
-
-                                <section>
-
-                                    <label class="checkbox">
-
-                                        {!! Form::checkbox('published', 1, isset($row) ? ($row->published == 1 ? 1 : 0): 1) !!}
-
-                                        <i></i>Публиковать</label>
-
-                                    @if ($errors->has('published'))
-                                        <span class="text-danger">{{ $errors->first('published') }}</span>
-                                    @endif
-
-                                </section>
-
                             </fieldset>
 
                             <footer>
                                 <button type="submit" class="btn btn-primary button-apply">
                                     {{ isset($row) ? 'Изменить' : 'Добавить' }}
                                 </button>
-                                <a class="btn btn-default" href="{{ URL::route('cp.pages.index') }}">
+                                <a class="btn btn-default" href="{{ URL::route('cp.news.index') }}">
                                     Назад
                                 </a>
                             </footer>
@@ -237,7 +217,7 @@
                         url: '{!! URL::route('cp.ajax.action') !!}',
                         method: "POST",
                         data: {
-                            action: "get_content_slug",
+                            action: "get_news_slug",
                             title: title
                         },
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
