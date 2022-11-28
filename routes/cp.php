@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\{
     PagesController,
     MenuController,
     NewsController,
+    RobotsController,
     AjaxController,
 };
 
@@ -73,6 +74,11 @@ Route::group(['prefix' => 'cp'], function () {
         Route::get('edit/{id}', [SettingsController::class, 'edit'])->name('cp.settings.edit')->where('id', '[0-9]+');
         Route::put('update', [SettingsController::class, 'update'])->name('cp.settings.update');
         Route::post('destroy', [SettingsController::class, 'destroy'])->name('cp.settings.destroy');
+    });
+
+    Route::group(['prefix' => 'robots'], function () {
+        Route::get('edit', [RobotsController::class, 'edit'])->name('cp.robots.edit');
+        Route::put('update', [RobotsController::class, 'update'])->name('cp.robots.update');
     });
 
     Route::any('ajax', AjaxController::class)->name('cp.ajax.action');

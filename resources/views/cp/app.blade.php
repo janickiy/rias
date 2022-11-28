@@ -196,6 +196,22 @@ Use search to find needed section.
                 </ul>
             </li>
 
+            <li class="">
+                <a href="#">
+                    <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">SEO</span>
+                </a>
+
+                <ul class="treeview-menu">
+
+                    <li {!! Request::is('cp/robots/edit*') ? ' class="active"' : '' !!}>
+                        <a href="{{ URL::route('cp.robots.edit') }}">
+                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Robots.txt</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
             <li {!! Request::is('users*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
             </li>
