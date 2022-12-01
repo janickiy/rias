@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\{User,Settings,Pages,News};
+use App\Models\{
+    User,
+    Settings,
+    Pages,
+    News,
+    Feedback
+};
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use URL;
@@ -72,6 +78,18 @@ class DataTableController extends Controller
             })
 
             ->rawColumns(['actions'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeedback()
+    {
+        $row  = Feedback::query();
+
+        return Datatables::of($row)
+
+            ->make(true);
     }
 
     /**

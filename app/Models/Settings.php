@@ -21,7 +21,7 @@ class Settings extends Model
      * @param $value
      */
     public function setNameAttribute($value) {
-        $this->attributes['name'] = str_replace(' ', '_', $value);
+        $this->attributes['name'] = strtoupper(str_replace(' ', '_', $value));
     }
 
 }
