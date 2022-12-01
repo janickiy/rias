@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\{
     NewsController,
     RobotsController,
     SitemapController,
+    FeedbackController,
     AjaxController,
 };
 
@@ -47,6 +48,8 @@ Route::group(['prefix' => 'cp'], function () {
         Route::delete('destroy', [PagesController::class, 'destroy'])->name('cp.pages.destroy');
 
     });
+
+    Route::get('feedback',FeedbackController::class)->name('cp.feedback.index');
 
     // меню
     Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index');
@@ -97,6 +100,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('pages', [DataTableController::class, 'getPages'])->name('cp.datatable.pages');
         Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings');
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
+        Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');
     });
 
 });

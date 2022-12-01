@@ -222,6 +222,10 @@ Use search to find needed section.
                 <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
             </li>
 
+            <li {!! Request::is('cp/feedback*') ? ' class="active"' : '' !!}>
+                <a href="{{URL::route('cp.feedback.index')}}"><i class="fa fa-fw fa-envelope"></i> <span class="menu-item-parent"> Сообщения с сайта</span></a>
+            </li>
+
             <li {!! Request::is('cp/settings*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.settings.index')}}"><i class="fa fa-fw fa-cog txt-color-blue"></i> <span class="menu-item-parent"> Настройки</span></a>
             </li>

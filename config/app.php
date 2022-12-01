@@ -201,6 +201,7 @@ return [
         Yajra\DataTables\HtmlServiceProvider::class,
 
         Harimayco\Menu\MenuServiceProvider::class,
+        Igoshev\Captcha\Providers\CaptchaServiceProvider::class,
     ],
 
     /*
