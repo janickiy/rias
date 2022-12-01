@@ -167,7 +167,7 @@ Use search to find needed section.
         -->
 
         <ul>
-            <li {!! Request::is('/') ? ' class="active"' : '' !!}>
+            <li {!! Request::is('cp*') ? ' class="active"' : '' !!}>
                 <a href="{{ URL::route('cp.dashbaord.index') }}"><i class="fa fa-fw fa-home"></i> <span class="menu-item-parent"> Главная</span></a>
             </li>
 
@@ -178,18 +178,18 @@ Use search to find needed section.
 
                 <ul class="treeview-menu">
 
-                    <li {!! Request::is('cp/pages/manage-menus*') ? ' class="active"' : '' !!}>
+                    <li {!! Request::is('cp/manage-menus*') ? ' class="active"' : '' !!}>
                         <a href="{{ URL::route('cp.menu.index') }}">
                             <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Меню</span>
                         </a>
                     </li>
 
-                    <li {!! Request::is('cp/pages') ? ' class="active"' : '' !!}><a
+                    <li {!! Request::is('cp/pages*') ? ' class="active"' : '' !!}><a
                             href="{{ URL::route('cp.pages.index') }}"><i class="fa fa-list"></i> Страницы и
                             разделы</a>
                     </li>
 
-                    <li {!! Request::is('cp/news') ? ' class="active"' : '' !!}><a
+                    <li {!! Request::is('cp/news*') ? ' class="active"' : '' !!}><a
                             href="{{ URL::route('cp.news.index') }}"><i class="fa fa-list"></i> Новости</a>
                     </li>
 
@@ -209,14 +209,20 @@ Use search to find needed section.
                         </a>
                     </li>
 
+                    <li {!! Request::is('cp/sitemap*') ? ' class="active"' : '' !!}>
+                        <a href="{{ URL::route('cp.sitemap.index') }}">
+                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Sitemap.xml</span>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
 
-            <li {!! Request::is('users*') ? ' class="active"' : '' !!}>
+            <li {!! Request::is('cp/users*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
             </li>
 
-            <li {!! Request::is('settings*') ? ' class="active"' : '' !!}>
+            <li {!! Request::is('cp/settings*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.settings.index')}}"><i class="fa fa-fw fa-cog txt-color-blue"></i> <span class="menu-item-parent"> Настройки</span></a>
             </li>
 

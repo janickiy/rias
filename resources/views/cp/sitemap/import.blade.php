@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => URL::route('cp.robots.update'), 'method' => 'put', 'id' => 'tmplForm']) !!}
+                        {!! Form::open(['url' => URL::route('cp.sitemap.import'), 'files' => true, 'method' => 'post', 'id' => 'tmplForm']) !!}
 
                         <div class="smart-form">
 
@@ -54,27 +54,26 @@
                             <fieldset>
 
                                 <section>
+                                    <label class="label">Файл sitemap.xml*</label>
+                                    <div class="input input-file">
+                                        <span class="button"><input type="file" id="file" name="file" onchange="this.parentNode.nextSibling.value = this.value">Выбрать</span>
+                                        <input type="text" placeholder="Include some files" readonly="">
+                                    </div>
 
-                                    {!! Form::label('content', 'Содержимое Robots.txt*', ['class' => 'label']) !!}
-
-                                    <label class="textarea textarea-resizable">
-
-                                        {!! Form::textarea('content', old('content', isset($file) ? $file : null), ['rows' => "6", 'class' => 'custom-scroll']) !!}
-
-                                    </label>
-
-                                    @if ($errors->has('content'))
-                                        <p class="text-danger">{{ $errors->first('content') }}</p>
+                                    @if ($errors->has('file'))
+                                        <p class="text-danger">{{ $errors->first('file') }}</p>
                                     @endif
-
                                 </section>
 
                             </fieldset>
 
                             <footer>
                                 <button type="submit" class="btn btn-primary button-apply">
-                                    Изменить
+                                    Загрузить
                                 </button>
+                                <a class="btn btn-default" href="{{ URL::route('cp.sitemap.index') }}">
+                                    Назад
+                                </a>
                             </footer>
 
                         </div>

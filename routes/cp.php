@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\{
     MenuController,
     NewsController,
     RobotsController,
+    SitemapController,
     AjaxController,
 };
 
@@ -45,9 +46,10 @@ Route::group(['prefix' => 'cp'], function () {
         Route::put('update', [PagesController::class, 'update'])->name('cp.pages.update');
         Route::delete('destroy', [PagesController::class, 'destroy'])->name('cp.pages.destroy');
 
-        // меню
-        Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index');
     });
+
+    // меню
+    Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index');
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('', [UsersController::class, 'index'])->name('cp.users.index');
@@ -79,6 +81,13 @@ Route::group(['prefix' => 'cp'], function () {
     Route::group(['prefix' => 'robots'], function () {
         Route::get('edit', [RobotsController::class, 'edit'])->name('cp.robots.edit');
         Route::put('update', [RobotsController::class, 'update'])->name('cp.robots.update');
+    });
+
+    Route::group(['prefix' => 'sitemap'], function () {
+        Route::get('', [SitemapController::class, 'index'])->name('cp.sitemap.index');
+        Route::get('export', [SitemapController::class, 'export'])->name('cp.sitemap.export');
+        Route::get('import', [SitemapController::class, 'importForm'])->name('cp.sitemap.import_form');
+        Route::post('import', [SitemapController::class, 'import'])->name('cp.sitemap.import');
     });
 
     Route::any('ajax', AjaxController::class)->name('cp.ajax.action');
