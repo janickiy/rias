@@ -11,7 +11,7 @@
 		"menuFocus" : "%1$s. Element menu %2$d of %3$d.",
 		"subMenuFocus" : "%1$s. Menu of subelement %2$d of %3$s."
 	};
-	var arraydata = [];     
+	var arraydata = [];
 	var addcustommenur= '{{ route("haddcustommenu") }}';
 	var updateitemr= '{{ route("hupdateitem")}}';
 	var generatemenucontrolr= '{{ route("hgeneratemenucontrol") }}';
@@ -27,6 +27,6 @@
 		}
 	});
 </script>
-<script type="text/javascript" src="{{asset('vendor/harimayco-menu/scripts.js')}}"></script>
-<script type="text/javascript" src="{{asset('vendor/harimayco-menu/scripts2.js')}}"></script>
-<script type="text/javascript" src="{{asset('vendor/harimayco-menu/menu.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/harimayco-menu/scripts.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/harimayco-menu/scripts2.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/harimayco-menu/menu.js')}}"></script>
