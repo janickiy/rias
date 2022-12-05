@@ -7,7 +7,7 @@ use App\Models\{
     Settings,
     Pages,
     News,
-    Feedback
+    FeedBack
 };
 use Illuminate\Support\Facades\Auth;
 use DataTables;
