@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Pages,Feedback};
+use App\Models\{Pages,FeedBack};
 use App\Events\{FeedbackMailEvent};
 use URL;
 use Validator;
