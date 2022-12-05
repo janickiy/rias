@@ -107,18 +107,18 @@ class PagesController extends Controller
         $row->parent_id = $request->input('parent_id');
         $row->slug = $request->input('slug');
 
-        $published = 'false';
+        $published = 0;
 
         if ($request->input('published')) {
-            $published = 'true';
+            $published = 1;
         }
 
         $row->published = $published;
 
-        $page_path = 'false';
+        $page_path = 0;
 
         if ($request->input('page_path')) {
-            $page_path = 'true';
+            $page_path = 1;
         }
 
         $row->page_path = $page_path;

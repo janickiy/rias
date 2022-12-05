@@ -14,39 +14,39 @@
     <!-- #CSS Links -->
     <!-- Basic Styles -->
 
-{!! Html::style('/css/bootstrap.min.css') !!}
+    {!! Html::style('/css/bootstrap.min.css') !!}
 
-{!! Html::style('/admin/css/font-awesome.min.css') !!}
+    {!! Html::style('/admin/css/font-awesome.min.css') !!}
 
-{!! Html::style('/admin/css/admin.css') !!}
+    {!! Html::style('/admin/css/admin.css') !!}
 
-<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+    <!-- SmartAdmin Styles : Caution! DO NOT change the order -->
 
-{!! Html::style('/admin/css/smartadmin-production-plugins.min.css') !!}
+    {!! Html::style('/admin/css/smartadmin-production-plugins.min.css') !!}
 
-{!! Html::style('/admin/css/smartadmin-production.min.css') !!}
+    {!! Html::style('/admin/css/smartadmin-production.min.css') !!}
 
-{!! Html::style('/admin/css/smartadmin-skins.min.css') !!}
+    {!! Html::style('/admin/css/smartadmin-skins.min.css') !!}
 
-<!-- SmartAdmin RTL Support -->
+    <!-- SmartAdmin RTL Support -->
 
-{!! Html::style('/admin/css/smartadmin-rtl.min.css') !!}
+    {!! Html::style('/admin/css/smartadmin-rtl.min.css') !!}
 
-{!! Html::style('/admin/js/plugin/daterangepicker/daterangepicker.css') !!}
+    {!! Html::style('/admin/js/plugin/daterangepicker/daterangepicker.css') !!}
 
-<!-- We recommend you use "your_style.css" to override SmartAdmin
+    <!-- We recommend you use "your_style.css" to override SmartAdmin
          specific styles this will also ensure you retrain your customization with each SmartAdmin update.
     <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
 
-{!! Html::style('/admin/js/plugin/sweetalert/sweetalert.css') !!}
+    {!! Html::style('/admin/js/plugin/sweetalert/sweetalert.css') !!}
 
-{!! Html::style('/admin/js/plugin/jquery-treeview-master/jquery.treeview.css') !!}
+    {!! Html::style('/admin/js/plugin/jquery-treeview-master/jquery.treeview.css') !!}
 
-{!! Html::style('/admin/js/plugin/datetimepicker/jquery.datetimepicker.css') !!}
+    {!! Html::style('/admin/js/plugin/datetimepicker/jquery.datetimepicker.css') !!}
 
-{!! Html::style('/admin/js/plugin/jquery-treeview-master/jquery.treeview.css') !!}
+    {!! Html::style('/admin/js/plugin/jquery-treeview-master/jquery.treeview.css') !!}
 
-<!-- #GOOGLE FONT -->
+        <!-- #GOOGLE FONT -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
     @yield('css')
@@ -194,6 +194,10 @@ Use search to find needed section.
                     </li>
 
                 </ul>
+            </li>
+
+            <li {!! Request::is('cp/catalog*') ? ' class="active"' : '' !!}>
+                <a href="{{URL::route('cp.catalog.index')}}"><i class="fa fa-fw fa-th-list"></i> <span class="menu-item-parent"> Категории</span></a>
             </li>
 
             <li class="">

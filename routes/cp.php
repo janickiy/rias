@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\{
     MenuController,
     NewsController,
     RobotsController,
+    CatalogController,
     SitemapController,
     FeedbackController,
     AjaxController,
@@ -50,9 +51,17 @@ Route::group(['prefix' => 'cp'], function () {
     });
 
     Route::get('feedback',FeedbackController::class)->name('cp.feedback.index');
-
-    // меню
     Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index');
+
+    Route::group(['prefix' => 'catalog'], function () {
+        Route::get('',[CatalogController::class, 'index'])->name('cp.catalog.index');
+        Route::get('create/{parent_id?}',[CatalogController::class, 'create'])->name('cp.catalog.create')->where('parent_id', '[0-9]+');
+        Route::post('store',[CatalogController::class, 'store'])->name('cp.catalog.store');
+        Route::get('edit/{id}',[CatalogController::class, 'edit'])->name('cp.catalog.edit')->where('id', '[0-9]+');
+        Route::put('update',[CatalogController::class, 'update'])->name('cp.catalog.update');
+        Route::get('delete/{id}',[CatalogController::class, 'delete'])->name('cp.catalog.delete')->where('id', '[0-9]+');
+    });
+
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('', [UsersController::class, 'index'])->name('cp.users.index');

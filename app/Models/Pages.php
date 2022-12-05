@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\StringHelpers;
+use App\Helpers\StringHelper;
 
 class Pages extends Model
 {
@@ -67,7 +67,7 @@ class Pages extends Model
         $content = preg_replace("/<img(.*?)>/si", "", $content);
         $content = preg_replace('/(<.*?>)|(&.*?;)/', '', $content)  ;
 
-        return StringHelpers::shortText($content,500);
+        return StringHelper::shortText($content,500);
     }
 
     /**

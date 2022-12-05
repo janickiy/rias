@@ -194,7 +194,7 @@
         </article>
         <!-- END COL -->
 
-    </div></div>
+    </div>
 
     <!-- END ROW -->
 

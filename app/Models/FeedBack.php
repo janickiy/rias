@@ -12,9 +12,10 @@ class FeedBack extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-
+        'name',
+        'email',
+        'message',
+        'ip',
     ];
-
-
 
 }

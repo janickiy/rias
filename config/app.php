@@ -256,7 +256,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'Menu' => Harimayco\Menu\Facades\Menu::class,
+        'Menu' => Harimayco\Menu\Models\Menus::class,
     ])->toArray(),
 
 ];

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\{Pages,News};
-use App\Helpers\StringHelpers;
+use App\Helpers\StringHelper;
 use URL;
 
 class AjaxController extends Controller
@@ -20,7 +20,7 @@ class AjaxController extends Controller
             switch ($request->input('action')) {
                 case 'get_content_slug':
 
-                    $slug = StringHelpers::slug(trim($request->title));
+                    $slug = StringHelper::slug(trim($request->title));
                     $count = Pages::where('slug', 'LIKE%', $slug)->count();
                     $slug = $count > 0 ? $slug . ($count + 1) : $slug;
 
@@ -28,7 +28,7 @@ class AjaxController extends Controller
 
                 case 'get_news_slug':
 
-                    $slug = StringHelpers::slug(trim($request->title));
+                    $slug = StringHelper::slug(trim($request->title));
                     $count = News::where('slug', 'LIKE%', $slug)->count();
                     $slug = $count > 0 ? $slug . ($count + 1) : $slug;
 

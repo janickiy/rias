@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class StringHelpers
+class StringHelper
 {
     /**
      * @param $data
@@ -11,7 +11,7 @@ class StringHelpers
     public static function ObjectToArray($data)
     {
         if (is_array($data) || is_object($data)) {
-            $result = array();
+            $result = [];
             foreach ($data as $key => $value) {
                 $result[$key] = self::ObjectToArray($value);
             }
@@ -64,9 +64,10 @@ class StringHelpers
 
     /**
      * @param $text
-     * @return false|mixed|null|string|string[]
+     * @param bool $toLower
+     * @return string
      */
-    public static function slug($text, $toLower = true)
+    public static function slug($text, $toLower = true): string
     {
         $text = trim($text);
 
@@ -176,7 +177,7 @@ class StringHelpers
      * @param int $chars
      * @return string
      */
-    public static function shortText($str, $chars = 500)
+    public static function shortText($str, $chars = 500): string
     {
         $pos = strpos(substr($str, $chars), " ");
         $srttmpend = strlen($str) > $chars ? '...' : '';
