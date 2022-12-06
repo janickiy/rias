@@ -229,6 +229,7 @@
 
             CKEDITOR.replace('text', {height: '380px', startupFocus: true});
             CKEDITOR.config.allowedContent = true;
+            CKEDITOR.config.removePlugins = 'spellchecker, about, save, newpage, print, templates, scayt, flash, pagebreak, smiley,preview,find';
 
             $("#title").on("change keyup input click", function () {
                 if (this.value.length >= 2) {
