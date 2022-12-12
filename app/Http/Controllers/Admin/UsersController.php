@@ -110,7 +110,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @param $id
+     * @param Request $request
      */
     public function destroy(Request $request)
     {

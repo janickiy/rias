@@ -39,7 +39,7 @@ class NewsController extends Controller
             'text' => 'required',
             'preview' => 'required|min:6|max:255',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
-            'slug' => 'required|unique:pages',
+            'slug' => 'required|unique:news',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -93,7 +93,7 @@ class NewsController extends Controller
             'text' => 'required',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'preview' => 'required|min:6|max:255',
-            'slug' => 'required|unique:pages,slug,' . $request->id,
+            'slug' => 'required|unique:news,slug,' . $request->id,
         ];
 
         $validator = Validator::make($request->all(), $rules);

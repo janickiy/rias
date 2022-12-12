@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\{Catalog};
 use Validator;
-use Image;
 use URL;
 
 class CatalogController extends Controller
@@ -15,26 +14,15 @@ class CatalogController extends Controller
      */
     public function index()
     {
-        $catalog = [];
-
-        foreach (Catalog::get()->toArray() as $row) {
-            $cats[$row['parent_id']][$row['id']] = $row;
-        }
-
-
-        return view('cp.catalog.index', compact('catalog'))->with('title', 'Катеории');
+        return view('cp.catalog.index')->with('title', 'Категории');
     }
 
     /**
-     * @param int $parent_id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create($parent_id = 0)
+    public function create()
     {
-        $options[0] = 'Выберите';
-        $options = Catalog::ShowTree($options, 0);
-
-        return view('cp.catalog.create_edit', compact('parent_id', 'options'))->with('title', 'Добавление категории');
+        return view('cp.catalog.create_edit')->with('title', 'Добавление категории');
     }
 
     /**
@@ -45,7 +33,7 @@ class CatalogController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'parent_id' => 'integer'
+            'slug' => 'required|unique:catalog',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -67,13 +55,7 @@ class CatalogController extends Controller
 
         if (!$row) abort(404);
 
-        $options[0] = 'Выберите';
-        Catalog::ShowTree($options, 0);
-        $parent_id = $row->parent_id;
-
-        unset($options[$id]);
-
-        return view('cp.catalog.create_edit', compact('row', 'parent_id', 'options'))->with('title', 'Редактирование категории');
+        return view('cp.catalog.create_edit', compact('row'))->with('title', 'Редактирование категории');
     }
 
     /**
@@ -84,7 +66,7 @@ class CatalogController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'parent_id' => 'integer'
+            'slug' => 'required|unique:catalog,slug,' . $request->id,
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -95,10 +77,11 @@ class CatalogController extends Controller
 
         if (!$catalog) abort(404);
 
-        $catalog->name = $request->name;
-        $catalog->description = $request->description;
-        $catalog->keywords = $request->keywords;
-        $catalog->parent_id = $request->parent_id;
+        $catalog->name = $request->input('name');
+        $catalog->slug = $request->input('slug');
+        $catalog->meta_title = $request->input('meta_title');
+        $catalog->meta_description = $request->input('meta_description');
+        $catalog->meta_keywords = $request->input('meta_keywords');
         $catalog->save();
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Данные обновлены');
@@ -108,28 +91,9 @@ class CatalogController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request)
+    public function destroy(Request $request)
     {
-        $parent = Catalog::findOrFail($request->id);
-        $array_of_ids = $this->getChildren($parent);
-        array_push($array_of_ids, $request->id);
-
-        Catalog::destroy($array_of_ids);
-
-        return redirect(URL::route('cp.catalog.index'))->with('success', 'Данные удалены');
+        Catalog::where('id', $request->id)->delete();
     }
 
-    /**
-     * @param $category
-     * @return array
-     */
-    private function getChildren($category)
-    {
-        $ids = [];
-        foreach ($category->children as $row) {
-            $ids[] = $row->id;
-            $ids = array_merge($ids, $this->getChildren($row));
-        }
-        return $ids;
-    }
 }

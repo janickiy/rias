@@ -16,9 +16,16 @@ use App\Http\Controllers\FrontendController;
 
 Route::get('', [FrontendController::class, 'index'])->name('frontend.index');
 
-Route::get('/page/{slug}', [FrontendController::class, 'page'])->name('frontend.page');
+Route::get('/pages/{slug}', [FrontendController::class, 'page'])->name('frontend.pages');
+
+Route::get('/news/{slug?}', [FrontendController::class, 'news'])->name('frontend.news');
+
+Route::get('/catalog/{slug?}', [FrontendController::class, 'catalog'])->name('frontend.catalog');
+
+Route::get('/product/{slug}', [FrontendController::class, 'product'])->name('frontend.product');
 
 Route::get('/contact', [FrontendController::class,'contact'])->name('frontend.contact');
+
 Route::post('/send-msg', [FrontendController::class,'sendMsg'])->name('frontend.send_msg');
 
 

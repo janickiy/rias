@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('catalog', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->text('keywords')->nullable();
-            $table->integer('parent_id')->default(0)->index('parent_id');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

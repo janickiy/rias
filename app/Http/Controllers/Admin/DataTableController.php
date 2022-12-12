@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\{
+    Catalog,
     User,
     Settings,
     Pages,
@@ -24,7 +25,7 @@ class DataTableController extends Controller
         $row = User::query();
 
         return Datatables::of($row)
-            ->addColumn('action', function ($row) {
+            ->addColumn('actions', function ($row) {
                 $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.users.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
 
                 if ($row->id != Auth::id())
@@ -34,7 +35,7 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-            ->rawColumns(['action'])->make(true);
+            ->rawColumns(['actions'])->make(true);
     }
 
     /**
@@ -101,13 +102,30 @@ class DataTableController extends Controller
         $row = Settings::query();
 
         return Datatables::of($row)
-            ->addColumn('action', function ($row) {
+            ->addColumn('actions', function ($row) {
                 $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.settings.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
                 $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-            ->rawColumns(['action'])->make(true);
+            ->rawColumns(['actions'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCatalog()
+    {
+        $row = Catalog::query();
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.catalog.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+            ->rawColumns(['actions'])->make(true);
     }
 
     /**
@@ -127,13 +145,13 @@ class DataTableController extends Controller
             ->groupBy('products.description');
 
         return Datatables::of($row)
-            ->addColumn('action', function ($row) {
+            ->addColumn('actions', function ($row) {
                 $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary" href="' . URL::route('cp.products.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
                 $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
 
-            ->rawColumns(['action'])->make(true);
+            ->rawColumns(['actions'])->make(true);
     }
 }

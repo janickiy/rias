@@ -40,15 +40,12 @@ Route::group(['prefix' => 'cp'], function () {
     Route::get('', [DashboardController::class, 'index'])->name('cp.dashbaord.index');
 
     Route::group(['prefix' => 'pages'], function () {
-
-        // страницы и разделы
         Route::get('', [PagesController::class, 'index'])->name('cp.pages.index');
         Route::get('create', [PagesController::class, 'create'])->name('cp.pages.create');
         Route::post('create', [PagesController::class, 'store'])->name('cp.pages.store');
         Route::get('edit/{id}', [PagesController::class, 'edit'])->name('cp.pages.edit')->where('id', '[0-9]+');
         Route::put('update', [PagesController::class, 'update'])->name('cp.pages.update');
         Route::delete('destroy', [PagesController::class, 'destroy'])->name('cp.pages.destroy');
-
     });
 
     Route::get('feedback',FeedbackController::class)->name('cp.feedback.index');
@@ -56,11 +53,11 @@ Route::group(['prefix' => 'cp'], function () {
 
     Route::group(['prefix' => 'catalog'], function () {
         Route::get('',[CatalogController::class, 'index'])->name('cp.catalog.index');
-        Route::get('create/{parent_id?}',[CatalogController::class, 'create'])->name('cp.catalog.create')->where('parent_id', '[0-9]+');
+        Route::get('create',[CatalogController::class, 'create'])->name('cp.catalog.create');
         Route::post('store',[CatalogController::class, 'store'])->name('cp.catalog.store');
         Route::get('edit/{id}',[CatalogController::class, 'edit'])->name('cp.catalog.edit')->where('id', '[0-9]+');
         Route::put('update',[CatalogController::class, 'update'])->name('cp.catalog.update');
-        Route::get('delete/{id}',[CatalogController::class, 'delete'])->name('cp.catalog.delete')->where('id', '[0-9]+');
+        Route::get('destroy',[CatalogController::class, 'destroy'])->name('cp.catalog.destroy');
     });
 
     Route::group(['prefix' => 'users'], function () {
@@ -114,6 +111,7 @@ Route::group(['prefix' => 'cp'], function () {
     Route::any('ajax', AjaxController::class)->name('cp.ajax.action');
 
     Route::group(['prefix' => 'datatable'], function () {
+        Route::any('catalog', [DataTableController::class, 'getCatalog'])->name('cp.datatable.catalog');
         Route::any('users', [DataTableController::class, 'getUsers'])->name('cp.datatable.users');
         Route::any('pages', [DataTableController::class, 'getPages'])->name('cp.datatable.pages');
         Route::any('products', [DataTableController::class, 'getProducts'])->name('cp.datatable.products');

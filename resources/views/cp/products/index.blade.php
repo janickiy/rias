@@ -127,7 +127,7 @@
                     {data: 'description', name: 'description'},
                     {data: 'slug', name: 'slug'},
                     {data: 'created_at', name: 'created_at'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'actions', name: 'actions', orderable: false, searchable: false},
                 ],
             });
             $('#itemList').on('click', 'a.deleteRow', function () {

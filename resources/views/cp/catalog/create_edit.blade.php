@@ -46,10 +46,6 @@
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
-                        {!! isset($parent_id) ? Form::hidden('parent_id', $parent_id) : '' !!}
-
-                        {!! Form::hidden('pic', isset($row) && $row->image ? $row->image : 'NULL') !!}
-
                         <header>
                             *-обязательные поля
                         </header>
@@ -58,11 +54,11 @@
 
                             <section>
 
-                                {!! Form::label('name', 'Имя*', ['class' => 'label']) !!}
+                                {!! Form::label('name', 'Название*', ['class' => 'label']) !!}
 
                                 <label class="input">
 
-                                    {!! Form::text('name', old('name', isset($row) ? $row->name : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+                                    {!! Form::text('name', old('name', isset($row) ? $row->name : ''), ['class' => 'form-control', 'autocomplete' => 'off', 'id' => 'name']) !!}
 
                                 </label>
 
@@ -74,56 +70,67 @@
 
                             <section>
 
-                                {!! Form::label('description', 'Описание', ['class' => 'label']) !!}
+                                {!! Form::label('slug', 'ЧПУ*', ['class' => 'label']) !!}
 
-                                <label class="textarea textarea-resizable">
+                                <label class="input">
 
-                                    {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), ['placeholder' => 'Описание', 'class' => 'custom-scroll', 'rows' => 3]) !!}
+                                    {!! Form::text('slug', old('slug', isset($row) ? $row->slug : null), ['class' => 'form-control', 'id' => 'slug']) !!}
 
                                 </label>
 
-                                @if ($errors->has('description'))
-                                    <p class="text-danger">{{ $errors->first('description') }}</p>
+                                @if ($errors->has('slug'))
+                                    <p class="text-danger">{{ $errors->first('slug') }}</p>
                                 @endif
 
                             </section>
 
                             <section>
 
-                                {!! Form::label('keywords', 'Ключевые слова', ['class' => 'label']) !!}
+                                {!! Form::label('meta_title', 'Seo title', ['class' => 'label']) !!}
 
-                                <label class="textarea textarea-resizable">
+                                <label class="input">
 
-                                    {!! Form::textarea('keywords', old('keywords', isset($row) ? $row->keywords : null), ['class' => 'custom-scroll', 'rows' => 2]) !!}
+                                    {!! Form::text('meta_title', old('meta_title', isset($row) ? $row->meta_title : null), ['class' => 'form-control']) !!}
 
                                 </label>
 
-                                @if ($errors->has('keywords'))
-                                    <p class="text-danger">{{ $errors->first('keywords') }}</p>
+                                @if ($errors->has('meta_title'))
+                                    <p class="text-danger">{{ $errors->first('meta_title') }}</p>
                                 @endif
 
                             </section>
 
+                            <section>
 
-                            @if (($parent_id == 0 && !isset($row)) || isset($row))
+                                {!! Form::label('meta_title', 'Meta description', ['class' => 'label']) !!}
 
-                                <section>
+                                <label class="textarea textarea-resizable">
 
-                                    {!! Form::label('parent_id',  "Раздел", ['class' => 'label']) !!}
+                                    {!! Form::textarea('meta_description', old('meta_description', isset($row) ? $row->meta_description : null), ['rows' => "3", 'class' => 'custom-scroll']) !!}
 
-                                    <label class="input">
+                                </label>
 
-                                        {!! Form::select('parent_id', $options, old('parent_id', isset($row) ? $row->parent_id : 0), ['class' => 'form-control custom-scroll']) !!}
+                                @if ($errors->has('meta_description'))
+                                    <p class="text-danger">{{ $errors->first('meta_description') }}</p>
+                                @endif
 
-                                    </label>
+                            </section>
 
-                                    @if ($errors->has('parent_id'))
-                                        <p class="text-danger">{{ $errors->first('parent_id') }}</p>
-                                    @endif
+                            <section>
 
-                                </section>
+                                {!! Form::label('meta_keywords', 'Meta keywords', ['class' => 'label']) !!}
 
-                            @endif
+                                <label class="textarea textarea-resizable">
+
+                                    {!! Form::textarea('meta_keywords', old('meta_keywords', isset($row) ? $row->meta_keywords : null), ['rows' => "3", 'class' => 'custom-scroll']) !!}
+
+                                </label>
+
+                                @if ($errors->has('meta_keywords'))
+                                    <p class="text-danger">{{ $errors->first('meta_keywords') }}</p>
+                                @endif
+
+                            </section>
 
                         </fieldset>
 
@@ -144,14 +151,42 @@
                 </div>
                 <!-- end widget -->
             </div>
+
         </article>
+
     </div>
 
 @endsection
 
 @section('js')
 
+    <script>
+        $(document).ready(function () {
 
+            $("#name").on("change keyup input click", function () {
+                if (this.value.length >= 2) {
+                    var name = this.value;
+                    var request = $.ajax({
+                        url: '{!! URL::route('cp.ajax.action') !!}',
+                        method: "POST",
+                        data: {
+                            action: "get_catalog_slug",
+                            name: name
+                        },
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        dataType: "json"
+                    });
+                    request.done(function (data) {
+                        if (data.slug != null && data.slug != '') {
+                            $("#slug").val(data.slug);
+                        }
+                    });
+                }
+                console.log(html);
+            });
+
+        });
+    </script>
 
 
 @endsection

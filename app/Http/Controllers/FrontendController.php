@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Pages,FeedBack};
+use App\Models\{News, Pages, FeedBack};
 use App\Events\{FeedbackMailEvent};
 use URL;
 use Validator;
@@ -11,6 +11,9 @@ use stdClass;
 
 class FrontendController
 {
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $page = Pages::where('main', 1)->first();
@@ -31,6 +34,10 @@ class FrontendController
         return view('frontend.index', compact('page', 'meta_description', 'meta_keywords', 'meta_title', 'top_menu', 'bottom_menu'))->with('title', $title);
     }
 
+    /**
+     * @param $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function page($slug)
     {
         $page = Pages::where('slug', $slug)->first();
@@ -42,11 +49,58 @@ class FrontendController
         $meta_keywords = $page->meta_keywords ?? '';
         $meta_title = $page->meta_title ?? '';
 
-        $menu = \Harimayco\Menu\Models\Menus::where('id', 1)->with('items')->first();
+        $menu1 = \Harimayco\Menu\Models\Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu1->items->toArray();
 
-        $top_menu = $menu->items->toArray();
+        $menu2 = \Harimayco\Menu\Models\Menus::where('name', 'bottom')->with('items')->first();
+        $bottom_menu = $menu2->items->toArray();
 
         return view('frontend.index', compact('page', 'meta_description', 'meta_keywords', 'meta_title', 'top_menu'))->with('title', $title);
+    }
+
+    /**
+     * @param null $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function news($slug = null)
+    {
+        $menu1 = \Harimayco\Menu\Models\Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu1->items->toArray();
+
+        $menu2 = \Harimayco\Menu\Models\Menus::where('name', 'bottom')->with('items')->first();
+        $bottom_menu = $menu2->items->toArray();
+
+        if ($slug) {
+            $news = News::where('slug', $slug)->first();
+
+            if (!$news) abort (404);
+
+            $title = $news->title;
+            $meta_description = $news->meta_description ?? '';
+            $meta_keywords = $news->meta_keywords ?? '';
+            $meta_title = $news->meta_title ?? '';
+        } else {
+            $news = News::paginate(5);
+
+            $title = 'Новости';
+
+            $meta_description = '';
+            $meta_keywords = '';
+            $meta_title = '';
+
+        }
+
+        return view('frontend.news', compact('news', 'meta_description', 'meta_keywords', 'meta_title', 'top_menu', 'bottom_menu'))->with('title', $title);
+    }
+
+    public function catalog($slug = null)
+    {
+
+    }
+
+    public function product($slug)
+    {
+
     }
 
     /**

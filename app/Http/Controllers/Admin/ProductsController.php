@@ -24,8 +24,11 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $options = [0 => '-Разное'];
-        $options = Catalog::ShowTree($options, 0);
+        $options = [];
+
+        foreach (Catalog::orderBy('name')->get() as $row) {
+            $options[$row->id] = $row->name;
+        }
 
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -77,8 +80,11 @@ class ProductsController extends Controller
 
         if (!$row) abort(404);
 
-        $options = [0 => '-Разное'];
-        $options = Catalog::ShowTree($options, 0);
+        $options = [];
+
+        foreach (Catalog::orderBy('name')->get() as $row) {
+            $options[$row->id] = $row->name;
+        }
 
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -95,7 +101,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required',
             'description' => 'required',
-            'slug' => 'required|unique:links,url,' . $request->id,
+            'slug' => 'required|unique:products,url,' . $request->id,
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'catalog_id' => 'integer|required',
         ];
@@ -108,10 +114,14 @@ class ProductsController extends Controller
 
         if (!$product) abort(404);
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->keywords = $request->keywords;
-        $product->parent_id = $request->parent_id;
+        $product->title = $request->input('title');
+        $product->description = $request->input('description');
+        $product->keywords = $request->input('keywords');
+        $product->catalog_id = $request->catalog_id;
+        $product->meta_title = $request->input('meta_title');
+        $product->meta_description = $request->input('meta_description');
+        $product->meta_keywords = $request->input('meta_keywords');
+        $product->slug = $request->input('slug');
 
         $pic = $request->file('image');
 
