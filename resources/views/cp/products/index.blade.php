@@ -21,7 +21,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.news.create') }}"
+                                <a href="{{ URL::route('cp.products.create') }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить
                                 </a>
@@ -36,11 +36,11 @@
                             <thead>
                             <tr>
                                 <th>Название</th>
-                                <th>Краткое описание</th>
-                                <th>ЧПУ</th>
-                                <th>Создан</th>
-                                <th>Изменен</th>
-                                <th data-hide="phone,tablet">Действия</th>
+                                <th>Категория</th>
+                                <th>Описание</th>
+                                <th>slug</th>
+                                <th>Добавлен</th>
+                                <th width="20px">Действия</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -119,15 +119,15 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.news') }}'
+                    url: '{{ URL::route('cp.datatable.products') }}'
                 },
                 columns: [
                     {data: 'title', name: 'title'},
-                    {data: 'preview', name: 'preview'},
+                    {data: 'catalog', name: 'catalog.name'},
+                    {data: 'description', name: 'description'},
                     {data: 'slug', name: 'slug'},
                     {data: 'created_at', name: 'created_at'},
-                    {data: 'updated_at', name: 'updated_at'},
-                    {data: "actions", name: 'actions', orderable: false, searchable: false}
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
             });
             $('#itemList').on('click', 'a.deleteRow', function () {
@@ -145,7 +145,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.news.destroy') }}',
+                            url: '{{ URL::route('cp.products.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

@@ -137,7 +137,7 @@
 
                                 <section>
 
-                                    {!! Form::label('meta_keywords', 'Meta keywordsn', ['class' => 'label']) !!}
+                                    {!! Form::label('meta_keywords', 'Meta keywords', ['class' => 'label']) !!}
 
                                     <label class="textarea textarea-resizable">
 

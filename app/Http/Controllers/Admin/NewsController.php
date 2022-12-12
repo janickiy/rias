@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use Illuminate\Http\Request;
 use App\Models\{News};
+use App\Helpers\StringHelper;
 use Illuminate\Support\Facades\Validator;
 use URL;
 
@@ -23,7 +23,9 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('cp.news.create_edit')->with('title', 'Добавление новости');
+        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+
+        return view('cp.news.create_edit', compact('maxUploadFileSize'))->with('title', 'Добавление новости');
     }
 
     /**
@@ -36,6 +38,7 @@ class NewsController extends Controller
             'title' => 'required|min:6|max:200',
             'text' => 'required',
             'preview' => 'required|min:6|max:255',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'slug' => 'required|unique:pages',
         ];
 
@@ -45,7 +48,19 @@ class NewsController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        News::create($request->all());
+        $pic = $request->file('image');
+
+        if (isset($pic)) {
+            $destinationPath = public_path('/uploads/news/');
+            $filename = time() . '.' . $pic->getClientOriginalExtension();
+            $img = Image::make($request->file('image')->getRealPath());
+
+            $img->resize(150, 150, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath . '/' . $filename);
+        }
+
+        News::create(array_merge(array_merge($request->all()), ['image' => $filename ?? null]));
 
         return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно добавлены');
 
@@ -61,7 +76,9 @@ class NewsController extends Controller
 
         if (!$row) abort(404);
 
-        return view('cp.pages.create_edit', compact('row'))->with('title', 'Редактирование новости');
+        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+
+        return view('cp.news.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование новости');
 
     }
 
@@ -74,6 +91,7 @@ class NewsController extends Controller
         $rules = [
             'title' => 'required|min:6|max:200',
             'text' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'preview' => 'required|min:6|max:255',
             'slug' => 'required|unique:pages,slug,' . $request->id,
         ];
@@ -95,9 +113,35 @@ class NewsController extends Controller
         $row->meta_description = $request->input('meta_description');
         $row->meta_keywords = $request->input('meta_keywords');
         $row->slug = $request->input('slug');
+
+        $pic = $request->file('image');
+
+        if (isset($pic)) {
+
+            $image = $request->pic;
+
+            if ($image != null) {
+                $dir = public_path("/uploads/news/$image");
+                if (file_exists($dir)) {
+                    @unlink($dir);
+                }
+            }
+
+            $destinationPath = public_path('/uploads/news/');
+            $filename = time() . '.' . $pic->getClientOriginalExtension();
+
+            $img = Image::make($request->file('image')->getRealPath());
+
+            $img->resize(150, 150, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath . '/' . $filename);
+
+            $row->image = $filename;
+        }
+
         $row->save();
 
-        return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно обновлены');
+        return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно обновлены');
 
     }
 

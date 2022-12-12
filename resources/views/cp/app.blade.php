@@ -196,8 +196,26 @@ Use search to find needed section.
                 </ul>
             </li>
 
-            <li {!! Request::is('cp/catalog*') ? ' class="active"' : '' !!}>
-                <a href="{{URL::route('cp.catalog.index')}}"><i class="fa fa-fw fa-th-list"></i> <span class="menu-item-parent"> Категории</span></a>
+            <li class="">
+                <a href="#">
+                    <i class="fa fa-fw fa-th-list"></i> <span class="menu-item-parent">Продукция</span>
+                </a>
+
+                <ul class="treeview-menu">
+
+                    <li {!! Request::is('cp/catalog*') ? ' class="active"' : '' !!}>
+                        <a href="{{ URL::route('cp.catalog.index') }}">
+                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Каталог</span>
+                        </a>
+                    </li>
+
+                    <li {!! Request::is('cp/products*') ? ' class="active"' : '' !!}>
+                        <a href="{{ URL::route('cp.products.index') }}">
+                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Продукция</span>
+                        </a>
+                    </li>
+
+                </ul>
             </li>
 
             <li class="">

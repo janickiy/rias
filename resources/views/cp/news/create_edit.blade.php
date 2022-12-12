@@ -153,7 +153,7 @@
 
                                 <section>
 
-                                    {!! Form::label('meta_keywords', 'Meta keywordsn', ['class' => 'label']) !!}
+                                    {!! Form::label('meta_keywords', 'Meta keywords', ['class' => 'label']) !!}
 
                                     <label class="textarea textarea-resizable">
 
@@ -164,6 +164,35 @@
                                     @if ($errors->has('meta_keywords'))
                                         <p class="text-danger">{{ $errors->first('meta_keywords') }}</p>
                                     @endif
+
+                                </section>
+
+                                <section>
+
+                                    {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+
+                                    <div class="input input-file">
+                                    <span class="button">
+
+                                        {!! Form::file('image',  ['id' => 'image', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
+
+                                    </span><input type="text" placeholder="выберите файл" readonly="">
+
+                                        <br>
+                                        @if (isset($row) && !empty($row->image))
+                                            <img src='{{ url("uploads/news/$row->image") }}' width="150"
+                                            >
+                                        @endif
+
+                                    </div>
+
+                                    @if ($errors->has('image'))
+                                        <span class="text-danger">{{ $errors->first('image') }}</span>
+                                    @endif
+
+                                    <div class="note">
+                                        Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
+                                    </div>
 
                                 </section>
 

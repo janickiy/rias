@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\{
     RobotsController,
     CatalogController,
     SitemapController,
+    ProductsController,
     FeedbackController,
     AjaxController,
 };
@@ -62,7 +63,6 @@ Route::group(['prefix' => 'cp'], function () {
         Route::get('delete/{id}',[CatalogController::class, 'delete'])->name('cp.catalog.delete')->where('id', '[0-9]+');
     });
 
-
     Route::group(['prefix' => 'users'], function () {
         Route::get('', [UsersController::class, 'index'])->name('cp.users.index');
         Route::get('create', [UsersController::class, 'create'])->name('cp.users.create');
@@ -70,6 +70,15 @@ Route::group(['prefix' => 'cp'], function () {
         Route::get('edit/{id}', [UsersController::class, 'edit'])->name('cp.users.edit')->where('id', '[0-9]+');
         Route::put('update', [UsersController::class, 'update'])->name('cp.users.update');
         Route::post('destroy', [UsersController::class, 'destroy'])->name('cp.users.destroy');
+    });
+
+    Route::group(['prefix' => 'products'], function () {
+        Route::get('', [ProductsController::class, 'index'])->name('cp.products.index');
+        Route::get('create', [ProductsController::class, 'create'])->name('cp.products.create');
+        Route::post('create', [ProductsController::class, 'store'])->name('cp.products.store');
+        Route::get('edit/{id}', [ProductsController::class, 'edit'])->name('cp.products.edit')->where('id', '[0-9]+');
+        Route::put('update', [ProductsController::class, 'update'])->name('cp.products.update');
+        Route::post('destroy', [ProductsController::class, 'destroy'])->name('cp.products.destroy');
     });
 
     Route::group(['prefix' => 'news'], function () {
@@ -107,6 +116,7 @@ Route::group(['prefix' => 'cp'], function () {
     Route::group(['prefix' => 'datatable'], function () {
         Route::any('users', [DataTableController::class, 'getUsers'])->name('cp.datatable.users');
         Route::any('pages', [DataTableController::class, 'getPages'])->name('cp.datatable.pages');
+        Route::any('products', [DataTableController::class, 'getProducts'])->name('cp.datatable.products');
         Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings');
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
         Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');

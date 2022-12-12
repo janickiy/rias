@@ -7,6 +7,7 @@ use App\Models\{
     Settings,
     Pages,
     News,
+    Products,
     FeedBack
 };
 use Illuminate\Support\Facades\Auth;
@@ -106,6 +107,33 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
+            ->rawColumns(['action'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducts()
+    {
+        $row = Products::selectRaw('products.id,products.title,products.catalog_id,products.slug,products.created_at,products.description,catalog.name AS catalog')
+            ->leftJoin('catalog', 'catalog.id', '=', 'products.catalog_id')
+            ->groupBy('catalog.name')
+            ->groupBy('products.id')
+            ->groupBy('products.title')
+            ->groupBy('products.catalog_id')
+            ->groupBy('products.slug')
+            ->groupBy('products.description')
+            ->groupBy('products.created_at')
+            ->groupBy('products.description');
+
+        return Datatables::of($row)
+            ->addColumn('action', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary" href="' . URL::route('cp.products.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+
             ->rawColumns(['action'])->make(true);
     }
 }
