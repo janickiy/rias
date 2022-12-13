@@ -11,6 +11,6 @@ Breadcrumbs::register('page', function ($breadcrumbs, $page) {
 
     $breadcrumbs->parent('main');
 
-    $breadcrumbs->push($page->title, route('frontend.page', ['slug' => $page->slug]));
+    $breadcrumbs->push($page->title, route('frontend.pages', ['slug' => $page->slug]));
 
 });

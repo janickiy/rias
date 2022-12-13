@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\StringHelper;
 use App\Models\{
     Catalog,
     User,
@@ -150,6 +151,10 @@ class DataTableController extends Controller
                 $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+
+            ->editColumn('description', function ($row) {
+                return StringHelper::shortText(strip_tags($row->description), 1000);
             })
 
             ->rawColumns(['actions'])->make(true);

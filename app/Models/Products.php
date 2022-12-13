@@ -20,4 +20,13 @@ class Products extends Model
         'meta_keywords',
         'slug',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function catalog()
+    {
+        return $this->belongsTo(Catalog::class, 'id', 'catalog_id');
+    }
+
 }

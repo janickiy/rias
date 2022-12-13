@@ -124,7 +124,7 @@
                 columns: [
                     {data: 'title', name: 'title'},
                     {data: 'catalog', name: 'catalog.name'},
-                    {data: 'description', name: 'description'},
+                    {data: 'description', name: 'description', searchable: false},
                     {data: 'slug', name: 'slug'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false},

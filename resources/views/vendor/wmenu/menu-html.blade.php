@@ -36,7 +36,7 @@ $currentUrl = url()->current();
 										<div id="side-sortables" class="accordion-container">
 											<ul class="outer-border">
 												<li class="control-section accordion-section  open add-page" id="add-page">
-													<h3 class="accordion-section-title hndle" tabindex="0"> Custom Link <span class="screen-reader-text">Нажмите «Ввод» или «Ввод», чтобы развернуть</span></h3>
+													<h3 class="accordion-section-title hndle" tabindex="0"> Пользовательская ссылка <span class="screen-reader-text">Нажмите «Ввод» или «Ввод», чтобы развернуть</span></h3>
 													<div class="accordion-section-content ">
 														<div class="inside">
 															<div class="customlinkdiv" id="customlinkdiv">
@@ -143,7 +143,7 @@ $currentUrl = url()->current();
 																<div class="menu-item-settings" id="menu-item-settings-{{$m->id}}">
 																	<input type="hidden" class="edit-menu-item-id" name="menuid_{{$m->id}}" value="{{$m->id}}" />
 																	<p class="description description-thin">
-																		<label for="edit-menu-item-title-{{$m->id}}"> Label
+																		<label for="edit-menu-item-title-{{$m->id}}"> Название
 																			<br>
 																			<input type="text" id="idlabelmenu_{{$m->id}}" class="widefat edit-menu-item-title" name="idlabelmenu_{{$m->id}}" value="{{$m->label}}">
 																		</label>
@@ -178,7 +178,7 @@ $currentUrl = url()->current();
 																	@endif
 
 																	<p class="field-move hide-if-no-js description description-wide">
-																		<label> <span>Переместить</span> <a href="{{ $currentUrl }}" class="menus-move-up" style="display: none;">Вверх</a> <a href="{{ $currentUrl }}" class="menus-move-down" title="" style="display: inline;">Вниз</a> <a href="{{ $currentUrl }}" class="menus-move-left" style="display: none;"></a> <a href="{{ $currentUrl }}" class="menus-move-right" style="display: none;"></a> <a href="{{ $currentUrl }}" class="menus-move-top" style="display: none;">Top</a> </label>
+																		<label> <span>Переместить</span> <a href="{{ $currentUrl }}" class="menus-move-up" style="display: none;">Вверх</a> <a href="{{ $currentUrl }}" class="menus-move-down" title="" style="display: inline;">Вниз</a> <a href="{{ $currentUrl }}" class="menus-move-left" style="display: none;"></a> <a href="{{ $currentUrl }}" class="menus-move-right" style="display: none;"></a> <a href="{{ $currentUrl }}" class="menus-move-top" style="display: none;">Вверх</a> </label>
 																	</p>
 
 																	<div class="menu-item-actions description-wide submitbox">
@@ -187,7 +187,7 @@ $currentUrl = url()->current();
 																		<span class="meta-sep hide-if-no-js"> | </span>
 																		<a class="item-cancel submitcancel hide-if-no-js button-secondary" id="cancel-{{$m->id}}" href="{{ $currentUrl }}?edit-menu-item={{$m->id}}&cancel=1424297719#menu-item-settings-{{$m->id}}">Отменить</a>
 																		<span class="meta-sep hide-if-no-js"> | </span>
-																		<a onclick="getmenus()" class="button button-primary updatemenu" id="update-{{$m->id}}" href="javascript:void(0)">Update item</a>
+																		<a onclick="getmenus()" class="button button-primary updatemenu" id="update-{{$m->id}}" href="javascript:void(0)">Обновить элемент</a>
 
 																	</div>
 

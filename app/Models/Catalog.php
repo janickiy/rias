@@ -19,4 +19,20 @@ class Catalog extends Model
         'slug',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany(Products::class, 'catalog_id', 'id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getOption()
+    {
+        return self::orderBy('name')->get()->pluck('name', 'id');
+    }
+
 }

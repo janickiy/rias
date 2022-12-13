@@ -24,11 +24,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $options = [];
-
-        foreach (Catalog::orderBy('name')->get() as $row) {
-            $options[$row->id] = $row->name;
-        }
+        $options = Catalog::getOption();
 
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -44,7 +40,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required',
             'description' => 'required',
-            'slug' => 'required|unique:products ',
+            'slug' => 'required|unique:products',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'catalog_id' => 'integer|required'
         ];
@@ -60,7 +56,7 @@ class ProductsController extends Controller
             $filename = time() . '.' . $pic->getClientOriginalExtension();
             $img = Image::make($request->file('image')->getRealPath());
 
-            $img->resize(150, 150, function ($constraint) {
+            $img->resize(600, 600, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
         }
@@ -80,11 +76,7 @@ class ProductsController extends Controller
 
         if (!$row) abort(404);
 
-        $options = [];
-
-        foreach (Catalog::orderBy('name')->get() as $row) {
-            $options[$row->id] = $row->name;
-        }
+        $options = Catalog::getOption();
 
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -141,7 +133,7 @@ class ProductsController extends Controller
 
             $img = Image::make($request->file('image')->getRealPath());
 
-            $img->resize(150, 150, function ($constraint) {
+            $img->resize(600, 600, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
 

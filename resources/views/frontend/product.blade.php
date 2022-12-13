@@ -72,26 +72,7 @@
 
         <h1>{{ $title }}</h1>
 
-        @if ($slug)
-            <?php $products = $catalog->products()->paginate(2) ?>
-            <ul>
-                @foreach($products as $product)
-                    <li><a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">{{ $product->title }}</a></li>
-                @endforeach
-            </ul>
-
-            {!! $products->links() !!}
-
-        @else
-
-            <ul>
-                @foreach($catalog as $row)
-
-                    <li><a href="{{ URL::route('frontend.catalog', ['slug' => $row->slug]) }}">{{ $row->name }}</a></li>
-
-                @endforeach
-            </ul>
-        @endif
+        {!! $product->description !!}
 
     </div>
 

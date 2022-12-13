@@ -42,7 +42,7 @@
                     <!-- widget content -->
                     <div class="widget-body">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.products.update') : URL::route('cp.products.store'), 'method' => isset($row) ? 'put' : 'post', 'class' => "smart-form"]) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.products.update') : URL::route('cp.products.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'class' => "smart-form"]) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -167,7 +167,7 @@
 
                             <section>
 
-                                {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+                                {!! Form::label('image', 'Фото (jpeg,png)', ['class' => 'label']) !!}
 
                                 <div class="input input-file">
                                     <span class="button">
@@ -178,8 +178,7 @@
 
                                     <br>
                                     @if (isset($row) && !empty($row->image))
-                                        <img src='{{ url("uploads/products/$row->image") }}' width="150"
-                                            >
+                                        <img src='{{ url("uploads/products/$row->image") }}' width="150">
                                     @endif
 
                                 </div>
