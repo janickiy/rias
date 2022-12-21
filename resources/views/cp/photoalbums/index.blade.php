@@ -21,7 +21,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.settings.create') }}"
+                                <a href="{{ URL::route('cp.photoalbums.create') }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить
                                 </a>
@@ -36,9 +36,8 @@
                             <thead>
                             <tr>
                                 <th>Название</th>
-                                <th>Значение</th>
-                                <th>Описание</th>
-                                <th width="20px">Действия</th>
+                                <th>Создан</th>
+                                <th data-hide="phone,tablet">Действия</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -117,13 +116,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.settings') }}'
+                    url: '{{ URL::route('cp.datatable.photoalbums') }}'
                 },
                 columns: [
                     {data: 'name', name: 'name'},
-                    {data: 'value', name: 'value'},
-                    {data: 'description', name: 'description', orderable: false},
-                    {data: 'actions', name: 'actions', orderable: false, searchable: false},
+                    {data: 'created_at', name: 'created_at'},
+                    {data: "actions", name: 'actions', orderable: false, searchable: false}
                 ],
             });
             $('#itemList').on('click', 'a.deleteRow', function () {
@@ -141,7 +139,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.settings.destroy') }}',
+                            url: '{{ URL::route('cp.photoalbums.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

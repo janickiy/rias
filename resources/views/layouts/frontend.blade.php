@@ -37,7 +37,7 @@
 
         @yield('content')
 
-        <div class="col-sm-12"><p style="margin-bottom: 15px; margin-top: 15px;">© {{ date("Y") }}, РИАС</p> </div>
+        <div class="col-sm-12"><p style="margin-bottom: 15px; margin-top: 15px;">© {{ date("Y") }}, {{ \App\Helpers\SettingsHelper::getSetting('SITE_NAME') }}</p> </div>
 
     </div>
 

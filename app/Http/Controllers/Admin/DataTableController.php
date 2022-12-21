@@ -10,7 +10,8 @@ use App\Models\{
     Pages,
     News,
     Products,
-    FeedBack
+    FeedBack,
+    Photoalbums,
 };
 use Illuminate\Support\Facades\Auth;
 use DataTables;
@@ -155,6 +156,21 @@ class DataTableController extends Controller
 
             ->editColumn('description', function ($row) {
                 return StringHelper::shortText(strip_tags($row->description), 1000);
+            })
+
+            ->rawColumns(['actions'])->make(true);
+    }
+
+    public function getPhotoalbums()
+    {
+        $row = Photoalbums::query();
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.news.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
 
             ->rawColumns(['actions'])->make(true);

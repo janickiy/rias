@@ -20,8 +20,7 @@ class Pages extends Model
         'meta_keywords',
         'slug',
         'parent_id',
-        'published',
-        'page_path'
+        'published'
     ];
 
     /**
@@ -73,14 +72,6 @@ class Pages extends Model
     /**
      * @return string
      */
-    public function getPagePathTypeAttribute()
-    {
-        return $this->attributes['page_path'] ? 'Страница' : 'Раздел';
-    }
-
-    /**
-     * @return string
-     */
     public function getUrlPathAttribute()
     {
         return ($this->attributes['page_path'] ? 'page/' : 'path/') . $this->attributes['slug'];
@@ -109,12 +100,4 @@ class Pages extends Model
         return $this->hasMany($this, 'parent_id', 'id');
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getContentTypeAttribute()
-    {
-        return $this->attributes['page_path'];
-    }
 }

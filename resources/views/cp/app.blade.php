@@ -240,6 +240,10 @@ Use search to find needed section.
                 </ul>
             </li>
 
+            <li {!! Request::is('cp/photoalbums*') ? ' class="active"' : '' !!}>
+                <a href="{{URL::route('cp.photoalbums.index')}}"><i class="fa fa-fw fa-file-photo-o"></i> <span class="menu-item-parent"> Фотоальбом</span></a>
+            </li>
+
             <li {!! Request::is('cp/users*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
             </li>

@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\{
     SitemapController,
     ProductsController,
     FeedbackController,
+    PhotoAlbumsController,
     AjaxController,
 };
 
@@ -78,6 +79,15 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('destroy', [ProductsController::class, 'destroy'])->name('cp.products.destroy');
     });
 
+    Route::group(['prefix' => 'photoalbums'], function () {
+        Route::get('', [PhotoAlbumsController::class, 'index'])->name('cp.photoalbums.index');
+        Route::get('create', [PhotoAlbumsController::class, 'create'])->name('cp.photoalbums.create');
+        Route::post('create', [PhotoAlbumsController::class, 'store'])->name('cp.photoalbums.store');
+        Route::get('edit/{id}', [PhotoAlbumsController::class, 'edit'])->name('cp.photoalbums.edit')->where('id', '[0-9]+');
+        Route::put('update', [PhotoAlbumsControllerr::class, 'update'])->name('cp.photoalbums.update');
+        Route::post('destroy', [PhotoAlbumsController::class, 'destroy'])->name('cp.photoalbums.destroy');
+    });
+
     Route::group(['prefix' => 'news'], function () {
         Route::get('', [NewsController::class, 'index'])->name('cp.news.index');
         Route::get('create', [NewsController::class, 'create'])->name('cp.news.create');
@@ -118,6 +128,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings');
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
         Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');
+        Route::any('photoalbums', [DataTableController::class, 'getPhotoalbums'])->name('cp.datatable.photoalbums');
     });
 
 });

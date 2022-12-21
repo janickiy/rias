@@ -43,9 +43,11 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => URL::route('cp.sitemap.import'), 'files' => true, 'method' => 'post', 'id' => 'smart-form']) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.photoalbums.update') : URL::route('cp.photoalbums.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
                         <div class="smart-form">
+
+                            {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
                             <header>
                                 *-Обязательные поля
@@ -54,24 +56,28 @@
                             <fieldset>
 
                                 <section>
-                                    <label class="label">Файл sitemap.xml*</label>
-                                    <div class="input input-file">
-                                        <span class="button"><input type="file" id="file" name="file" onchange="this.parentNode.nextSibling.value = this.value">Выбрать</span>
-                                        <input type="text" placeholder="Include some files" readonly="">
-                                    </div>
 
-                                    @if ($errors->has('file'))
-                                        <p class="text-danger">{{ $errors->first('file') }}</p>
+                                    {!! Form::label('title', 'Название*', ['class' => 'label']) !!}
+
+                                    <label class="input">
+
+                                        {!! Form::text('title', old('title', isset($row) ? $row->title : null), ['class' => 'form-control', 'id' => 'title']) !!}
+
+                                    </label>
+
+                                    @if ($errors->has('title'))
+                                        <p class="text-danger">{{ $errors->first('title') }}</p>
                                     @endif
+
                                 </section>
 
                             </fieldset>
 
                             <footer>
                                 <button type="submit" class="btn btn-primary button-apply">
-                                    Загрузить
+                                    {{ isset($row) ? 'Изменить' : 'Добавить' }}
                                 </button>
-                                <a class="btn btn-default" href="{{ URL::route('cp.sitemap.index') }}">
+                                <a class="btn btn-default" href="{{ URL::route('cp.photoalbums.index') }}">
                                     Назад
                                 </a>
                             </footer>
