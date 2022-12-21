@@ -37,7 +37,14 @@
 
         @yield('content')
 
-        <div class="col-sm-12"><p style="margin-bottom: 15px; margin-top: 15px;">© {{ date("Y") }}, {{ \App\Helpers\SettingsHelper::getSetting('SITE_NAME') }}</p> </div>
+        <div class="col-sm-12">
+            <p style="margin-bottom: 15px; margin-top: 15px;">
+                © {{ date("Y") }}, {{ SettingsHelper::getSetting('SITE_NAME') }} <br><br>
+                {{ SettingsHelper::getSetting('ADRESS') }},
+                тел. {{ SettingsHelper::getSetting('PHONE') }}
+
+            </p>
+        </div>
 
     </div>
 

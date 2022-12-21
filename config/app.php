@@ -259,6 +259,9 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Menu' => Harimayco\Menu\Models\Menus::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'PermissionsHelper' => App\Helpers\PermissionsHelper::class,
+        'SettingsHelper' => App\Helpers\SettingsHelper::class,
+        'StringHelper' => App\Helpers\SettingsHelper::class,
     ])->toArray(),
 
 ];
