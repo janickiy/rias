@@ -113,6 +113,8 @@ class NewsController extends Controller
         $row->meta_description = $request->input('meta_description');
         $row->meta_keywords = $request->input('meta_keywords');
         $row->slug = $request->input('slug');
+        $row->seo_h1 = $request->input('seo_h1');
+        $row->seo_url_canonical = $request->input('seo_url_canonical');
 
         $pic = $request->file('image');
 

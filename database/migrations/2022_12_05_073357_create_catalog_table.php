@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('slug')->unique();
+
             $table->timestamps();
         });
     }

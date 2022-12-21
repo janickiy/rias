@@ -24,7 +24,7 @@ class PagesController extends Controller
     {
         $options = [];
 
-        foreach (Pages::orderBy('id')->published()->where('page_path', 'false')->get() as $row) {
+        foreach (Pages::orderBy('id')->published()->get() as $row) {
             $options[$row->id] = $row->title;
         }
 
@@ -68,7 +68,7 @@ class PagesController extends Controller
 
         $options = [];
 
-        foreach (Pages::orderBy('id')->published()->where('page_path', 'false')->get() as $row) {
+        foreach (Pages::orderBy('id')->published()->get() as $row) {
             $options[$row->id] = $row->title;
         }
 
@@ -106,6 +106,8 @@ class PagesController extends Controller
         $row->meta_keywords = $request->input('meta_keywords');
         $row->parent_id = $request->input('parent_id');
         $row->slug = $request->input('slug');
+        $row->seo_h1 = $request->input('seo_h1');
+        $row->seo_url_canonical = $request->input('seo_url_canonical');
 
         $published = 0;
 
@@ -114,14 +116,6 @@ class PagesController extends Controller
         }
 
         $row->published = $published;
-
-        $page_path = 0;
-
-        if ($request->input('page_path')) {
-            $page_path = 1;
-        }
-
-        $row->page_path = $page_path;
         $row->save();
 
         return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно обновлены');

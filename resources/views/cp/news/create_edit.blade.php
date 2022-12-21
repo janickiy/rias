@@ -121,6 +121,37 @@
 
                                 <section>
 
+                                    {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+
+                                    <div class="input input-file">
+                                    <span class="button">
+
+                                        {!! Form::file('image',  ['id' => 'image', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
+
+                                    </span><input type="text" placeholder="выберите файл" readonly="">
+
+                                        <br>
+                                        @if (isset($row) && !empty($row->image))
+                                            <img src='{{ url("uploads/news/$row->image") }}' width="150"
+                                            >
+                                        @endif
+
+                                    </div>
+
+                                    @if ($errors->has('image'))
+                                        <span class="text-danger">{{ $errors->first('image') }}</span>
+                                    @endif
+
+                                    <div class="note">
+                                        Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
+                                    </div>
+
+                                </section>
+
+                                <h3>SEO</h3>
+
+                                <section>
+
                                     {!! Form::label('meta_title', 'Seo title', ['class' => 'label']) !!}
 
                                     <label class="input">
@@ -169,30 +200,33 @@
 
                                 <section>
 
-                                    {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+                                    {!! Form::label('seo_h1', 'Seo h1', ['class' => 'label']) !!}
 
-                                    <div class="input input-file">
-                                    <span class="button">
+                                    <label class="input">
 
-                                        {!! Form::file('image',  ['id' => 'image', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
+                                        {!! Form::text('seo_h1', old('seo_h1', isset($row) ? $row->seo_h1 : null), ['class' => 'form-control']) !!}
 
-                                    </span><input type="text" placeholder="выберите файл" readonly="">
+                                    </label>
 
-                                        <br>
-                                        @if (isset($row) && !empty($row->image))
-                                            <img src='{{ url("uploads/news/$row->image") }}' width="150"
-                                            >
-                                        @endif
-
-                                    </div>
-
-                                    @if ($errors->has('image'))
-                                        <span class="text-danger">{{ $errors->first('image') }}</span>
+                                    @if ($errors->has('seo_h1'))
+                                        <p class="text-danger">{{ $errors->first('seo_h1') }}</p>
                                     @endif
 
-                                    <div class="note">
-                                        Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
-                                    </div>
+                                </section>
+
+                                <section>
+
+                                    {!! Form::label('seo_url_canonical', 'Seo url canonical', ['class' => 'label']) !!}
+
+                                    <label class="input">
+
+                                        {!! Form::text('seo_url_canonical', old('seo_url_canonical', isset($row) ? $row->seo_url_canonical : null), ['class' => 'form-control']) !!}
+
+                                    </label>
+
+                                    @if ($errors->has('seo_url_canonical'))
+                                        <p class="text-danger">{{ $errors->first('seo_url_canonical') }}</p>
+                                    @endif
 
                                 </section>
 

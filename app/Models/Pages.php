@@ -20,7 +20,9 @@ class Pages extends Model
         'meta_keywords',
         'slug',
         'parent_id',
-        'published'
+        'published',
+        'seo_h1',
+        'seo_url_canonical',
     ];
 
     /**

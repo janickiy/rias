@@ -117,6 +117,8 @@
 
                             </section>
 
+                            <h3>SEO</h3>
+
                             <section>
 
                                 {!! Form::label('meta_title', 'Seo title', ['class' => 'label']) !!}
@@ -161,6 +163,38 @@
 
                                 @if ($errors->has('meta_keywords'))
                                     <p class="text-danger">{{ $errors->first('meta_keywords') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('seo_h1', 'Seo h1', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('seo_h1', old('seo_h1', isset($row) ? $row->seo_h1 : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('seo_h1'))
+                                    <p class="text-danger">{{ $errors->first('seo_h1') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('seo_url_canonical', 'Seo url canonical', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('seo_url_canonical', old('seo_url_canonical', isset($row) ? $row->seo_url_canonical : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('seo_url_canonical'))
+                                    <p class="text-danger">{{ $errors->first('seo_url_canonical') }}</p>
                                 @endif
 
                             </section>

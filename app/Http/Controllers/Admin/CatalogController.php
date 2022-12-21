@@ -73,16 +73,18 @@ class CatalogController extends Controller
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        $catalog = Catalog::find($request->id);
+        $row = Catalog::find($request->id);
 
-        if (!$catalog) abort(404);
+        if (!$row) abort(404);
 
-        $catalog->name = $request->input('name');
-        $catalog->slug = $request->input('slug');
-        $catalog->meta_title = $request->input('meta_title');
-        $catalog->meta_description = $request->input('meta_description');
-        $catalog->meta_keywords = $request->input('meta_keywords');
-        $catalog->save();
+        $row->name = $request->input('name');
+        $row->slug = $request->input('slug');
+        $row->meta_title = $request->input('meta_title');
+        $row->meta_description = $request->input('meta_description');
+        $row->meta_keywords = $request->input('meta_keywords');
+        $row->seo_h1 = $request->input('seo_h1');
+        $row->seo_url_canonical = $request->input('seo_url_canonical');
+        $row->save();
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Данные обновлены');
     }

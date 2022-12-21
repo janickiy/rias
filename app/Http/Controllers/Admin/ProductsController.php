@@ -140,6 +140,9 @@ class ProductsController extends Controller
             $product->image = $filename;
         }
 
+        $product->seo_h1 = $request->input('seo_h1');
+        $product->seo_url_canonical = $request->input('seo_url_canonical');
+
         $product->save();
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Данные обновлены');

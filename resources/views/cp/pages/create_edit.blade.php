@@ -105,6 +105,22 @@
 
                                 <section>
 
+                                    <label class="checkbox">
+
+                                        {!! Form::checkbox('published', 1, isset($row) ? ($row->published == true ? 1 : 0): 1) !!}
+
+                                        <i></i>Публиковать</label>
+
+                                    @if ($errors->has('published'))
+                                        <span class="text-danger">{{ $errors->first('published') }}</span>
+                                    @endif
+
+                                </section>
+
+                                <h3>SEO</h3>
+
+                                <section>
+
                                     {!! Form::label('meta_title', 'Seo title', ['class' => 'label']) !!}
 
                                     <label class="input">
@@ -153,39 +169,36 @@
 
                                 <section>
 
-                                    {!! Form::label('page_path', 'Тип контента', ['class' => 'label']) !!}
+                                    {!! Form::label('seo_h1', 'Seo h1', ['class' => 'label']) !!}
 
-                                    <div class="inline-group">
-                                        <label class="radio">
+                                    <label class="input">
 
-                                            {!! Form::radio('page_path',1, (isset($row) && $row->contentType == 1) or !isset($row) ? true : false) !!}
+                                        {!! Form::text('seo_h1', old('seo_h1', isset($row) ? $row->seo_h1 : null), ['class' => 'form-control']) !!}
 
-                                            <i></i>Страница
-                                        </label>
-                                        <label class="radio">
+                                    </label>
 
-                                            {!! Form::radio('page_path',0, isset($row->contentType) && $row->contentType == 0 ? true : false) !!}
-
-                                            <i></i>Раздел
-                                        </label>
-
-                                    </div>
+                                    @if ($errors->has('seo_h1'))
+                                        <p class="text-danger">{{ $errors->first('seo_h1') }}</p>
+                                    @endif
 
                                 </section>
 
                                 <section>
 
-                                    <label class="checkbox">
+                                    {!! Form::label('seo_url_canonical', 'Seo url canonical', ['class' => 'label']) !!}
 
-                                        {!! Form::checkbox('published', 1, isset($row) ? ($row->published == 1 ? 1 : 0): 1) !!}
+                                    <label class="input">
 
-                                        <i></i>Публиковать</label>
+                                        {!! Form::text('seo_url_canonical', old('seo_url_canonical', isset($row) ? $row->seo_url_canonical : null), ['class' => 'form-control']) !!}
 
-                                    @if ($errors->has('published'))
-                                        <span class="text-danger">{{ $errors->first('published') }}</span>
+                                    </label>
+
+                                    @if ($errors->has('seo_url_canonical'))
+                                        <p class="text-danger">{{ $errors->first('seo_url_canonical') }}</p>
                                     @endif
 
                                 </section>
+
 
                             </fieldset>
 

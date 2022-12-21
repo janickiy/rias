@@ -17,6 +17,8 @@ class Catalog extends Model
         'meta_description',
         'meta_keywords',
         'slug',
+        'seo_h1',
+        'seo_url_canonical',
     ];
 
     /**
