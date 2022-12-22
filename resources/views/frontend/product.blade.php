@@ -67,10 +67,14 @@
         </div>
     @endif
 
+    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('product', $product) }}</div>
+
 
     <div class="col-sm-12">
 
         <h1>{{ $title }}</h1>
+
+       @if($product->image) <img src="{{ url('uploads/products/' . $product->image)  }}" alt="Вернуться на главную страницу"> @endif
 
         {!! $product->description !!}
 

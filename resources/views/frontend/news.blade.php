@@ -68,6 +68,8 @@
     @endif
 
 
+    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('news', $news) }}</div>
+
     <div class="col-sm-12">
 
         <h1>{{ $title }}</h1>

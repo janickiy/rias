@@ -93,7 +93,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required',
             'description' => 'required',
-            'slug' => 'required|unique:products,url,' . $request->id,
+            'slug' => 'required|unique:products,slug,' . $request->id,
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'catalog_id' => 'integer|required',
         ];
@@ -108,7 +108,6 @@ class ProductsController extends Controller
 
         $product->title = $request->input('title');
         $product->description = $request->input('description');
-        $product->keywords = $request->input('keywords');
         $product->catalog_id = $request->catalog_id;
         $product->meta_title = $request->input('meta_title');
         $product->meta_description = $request->input('meta_description');
@@ -142,7 +141,6 @@ class ProductsController extends Controller
 
         $product->seo_h1 = $request->input('seo_h1');
         $product->seo_url_canonical = $request->input('seo_url_canonical');
-
         $product->save();
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Данные обновлены');

@@ -66,7 +66,7 @@
         </div>
     @endif
 
-    <div class="col-sm-12" style="margin-top:10px"></div>
+    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('contact') }}</div>
 
     <div class="col-sm-12">
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Catalog, News, Pages, FeedBack, Products};
+use App\Models\{Catalog,News,Pages,FeedBack,Products};
 use App\Events\{FeedbackMailEvent};
 use Harimayco\Menu\Models\Menus;
 use URL;
@@ -37,10 +37,10 @@ class FrontendController
     }
 
     /**
-     * @param $slug
+     * @param string $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function page($slug)
+    public function page(string $slug)
     {
         $page = Pages::where('slug', $slug)->first();
 
@@ -68,10 +68,10 @@ class FrontendController
     }
 
     /**
-     * @param null $slug
+     * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function news($slug = null)
+    public function news(string $slug = null)
     {
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
@@ -109,10 +109,10 @@ class FrontendController
     }
 
     /**
-     * @param null $slug
+     * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function catalog($slug = null)
+    public function catalog(string $slug = null)
     {
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
@@ -150,10 +150,10 @@ class FrontendController
     }
 
     /**
-     * @param $slug
+     * @param string $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function product($slug)
+    public function product(string $slug)
     {
         $product = Products::where('slug', $slug)->first();
 
