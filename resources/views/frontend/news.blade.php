@@ -6,6 +6,8 @@
 
 @section('keywords', $meta_keywords)
 
+@section('seo_url_canonical', $seo_url_canonical)
+
 @section('css')
 
     <style>
@@ -72,7 +74,7 @@
 
     <div class="col-sm-12">
 
-        <h1>{{ $title }}</h1>
+        <h1>{{ $news->seo_h1 ?? $title }}</h1>
 
         @if ($slug)
 

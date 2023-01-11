@@ -22,10 +22,12 @@ class FrontendController
 
         if (!$page) abort(404);
 
+
         $title = $page->title ?? 'Главная страница';
         $meta_description = $page->meta_description ?? '';
         $meta_keywords = $page->meta_keywords ?? '';
         $meta_title = $page->meta_title ?? '';
+        $seo_url_canonical = $page->seo_url_canonical ?? '';
 
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
@@ -33,7 +35,15 @@ class FrontendController
         $menu2 = Menus::where('name', 'bottom')->with('items')->first();
         $bottom_menu = $menu2->items->toArray();
 
-        return view('frontend.index', compact('page', 'meta_description', 'meta_keywords', 'meta_title', 'top_menu', 'bottom_menu'))->with('title', $title);
+        return view('frontend.index', compact(
+            'page',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'seo_url_canonical',
+            'top_menu',
+            'bottom_menu')
+        )->with('title', $title);
     }
 
     /**
@@ -50,6 +60,7 @@ class FrontendController
         $meta_description = $page->meta_description ?? '';
         $meta_keywords = $page->meta_keywords ?? '';
         $meta_title = $page->meta_title ?? '';
+        $seo_url_canonical = $page->seo_url_canonical ?? '';
 
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
@@ -62,6 +73,7 @@ class FrontendController
             'meta_description',
             'meta_keywords',
             'meta_title',
+            'seo_url_canonical',
             'top_menu',
             'bottom_menu')
         )->with('title', $title);
@@ -88,14 +100,15 @@ class FrontendController
             $meta_description = $news->meta_description ?? '';
             $meta_keywords = $news->meta_keywords ?? '';
             $meta_title = $news->meta_title ?? '';
+            $seo_url_canonical = $news->seo_url_canonical ?? '';
         } else {
             $news = News::paginate(5);
 
             $title = 'Новости';
-
             $meta_description = '';
             $meta_keywords = '';
             $meta_title = '';
+            $seo_url_canonical = '';
         }
 
         return view('frontend.news', compact(
@@ -104,6 +117,7 @@ class FrontendController
             'meta_description',
             'meta_keywords',
             'meta_title',
+            'seo_url_canonical',
             'top_menu',
             'bottom_menu'))->with('title', $title);
     }
@@ -129,13 +143,14 @@ class FrontendController
             $meta_description = $catalog->meta_description ?? '';
             $meta_keywords = $catalog->meta_keywords ?? '';
             $meta_title = $catalog->meta_title ?? '';
-
+            $seo_url_canonical = $catalog->seo_url_canonical ?? '';
         } else {
             $catalog = Catalog::orderBy('name')->get();
             $title = 'Каталог';
             $meta_description = '';
             $meta_keywords = '';
             $meta_title = '';
+            $seo_url_canonical = '';
         }
 
         return view('frontend.catalog', compact(
@@ -144,6 +159,7 @@ class FrontendController
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'seo_url_canonical',
                 'top_menu',
                 'bottom_menu')
         )->with('title', $title);
@@ -163,6 +179,7 @@ class FrontendController
         $meta_description = $product->meta_description ?? '';
         $meta_keywords = $product->meta_keywords ?? '';
         $meta_title = $product->meta_title ?? '';
+        $seo_url_canonical = $product->seo_url_canonical ?? '';
 
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
@@ -170,7 +187,16 @@ class FrontendController
         $menu2 = Menus::where('name', 'bottom')->with('items')->first();
         $bottom_menu = $menu2->items->toArray();
 
-        return view('frontend.product', compact('product', 'slug', 'meta_description', 'meta_keywords', 'meta_title', 'top_menu', 'bottom_menu'))->with('title', $title);
+        return view('frontend.product', compact(
+            'product',
+            'slug',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'seo_url_canonical',
+            'top_menu',
+            'bottom_menu')
+        )->with('title', $title);
     }
 
     /**

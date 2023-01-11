@@ -6,6 +6,8 @@
 
 @section('keywords', $meta_keywords)
 
+@section('seo_url_canonical', $seo_url_canonical)
+
 @section('css')
 
     <style>
@@ -71,7 +73,7 @@
 
     <div class="col-sm-12">
 
-        <h1>{{ $meta_title ? $meta_title : $page->title }}</h1>
+        <h1>{{ $page->seo_h1 ?? $page->title }}</h1>
 
         {!! $page->text !!}
 

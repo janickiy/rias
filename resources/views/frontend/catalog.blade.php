@@ -6,6 +6,8 @@
 
 @section('keywords', $meta_keywords)
 
+@section('seo_url_canonical', $seo_url_canonical)
+
 @section('css')
 
     <style>
@@ -72,10 +74,11 @@
 
     <div class="col-sm-12">
 
-        <h1>{{ $title }}</h1>
-
         @if ($slug)
             <?php $products = $catalog->products()->paginate(2) ?>
+
+            <h1>{{ $catalog->seo_h1 ?? $title }}</h1>
+
             <ul>
                 @foreach($products as $product)
                     <li><a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">{{ $product->title }}</a></li>
@@ -85,6 +88,8 @@
             {!! $products->links() !!}
 
         @else
+
+            <h1>{{ $title }}</h1>
 
             <ul>
                 @foreach($catalog as $row)
