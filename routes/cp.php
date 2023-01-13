@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\{
     FeedbackController,
     PhotoAlbumsController,
     AjaxController,
+    ImagesController,
 };
 
 
@@ -46,7 +47,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('create', [PagesController::class, 'store'])->name('cp.pages.store');
         Route::get('edit/{id}', [PagesController::class, 'edit'])->name('cp.pages.edit')->where('id', '[0-9]+');
         Route::put('update', [PagesController::class, 'update'])->name('cp.pages.update');
-        Route::delete('destroy', [PagesController::class, 'destroy'])->name('cp.pages.destroy');
+        Route::post('destroy', [PagesController::class, 'destroy'])->name('cp.pages.destroy');
     });
 
     Route::get('feedback',FeedbackController::class)->name('cp.feedback.index');
@@ -58,7 +59,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('store',[CatalogController::class, 'store'])->name('cp.catalog.store');
         Route::get('edit/{id}',[CatalogController::class, 'edit'])->name('cp.catalog.edit')->where('id', '[0-9]+');
         Route::put('update',[CatalogController::class, 'update'])->name('cp.catalog.update');
-        Route::get('destroy',[CatalogController::class, 'destroy'])->name('cp.catalog.destroy');
+        Route::post('destroy',[CatalogController::class, 'destroy'])->name('cp.catalog.destroy');
     });
 
     Route::group(['prefix' => 'users'], function () {
@@ -82,10 +83,18 @@ Route::group(['prefix' => 'cp'], function () {
     Route::group(['prefix' => 'photoalbums'], function () {
         Route::get('', [PhotoAlbumsController::class, 'index'])->name('cp.photoalbums.index');
         Route::get('create', [PhotoAlbumsController::class, 'create'])->name('cp.photoalbums.create');
-        Route::post('create', [PhotoAlbumsController::class, 'store'])->name('cp.photoalbums.store');
+        Route::post('store', [PhotoAlbumsController::class, 'store'])->name('cp.photoalbums.store');
         Route::get('edit/{id}', [PhotoAlbumsController::class, 'edit'])->name('cp.photoalbums.edit')->where('id', '[0-9]+');
-        Route::put('update', [PhotoAlbumsControllerr::class, 'update'])->name('cp.photoalbums.update');
+        Route::put('update', [PhotoAlbumsController::class, 'update'])->name('cp.photoalbums.update');
         Route::post('destroy', [PhotoAlbumsController::class, 'destroy'])->name('cp.photoalbums.destroy');
+        Route::get('{photoalbum_id}', [PhotoAlbumsController::class, 'show'])->name('cp.photoalbums.show')->where('photoalbum_id', '[0-9]+');
+        Route::post('upload', [PhotoAlbumsController::class, 'upload'])->name('cp.photoalbums.upload');
+    });
+
+    Route::group(['prefix' => 'images'], function () {
+        Route::get('edit/{id}', [ImagesController::class, 'edit'])->name('cp.images.edit')->where('id', '[0-9]+');
+        Route::put('update', [ImagesController::class, 'update'])->name('cp.images.update');
+        Route::post('destroy', [ImagesController::class, 'destroy'])->name('cp.images.destroy');
     });
 
     Route::group(['prefix' => 'news'], function () {
@@ -129,6 +138,8 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
         Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');
         Route::any('photoalbums', [DataTableController::class, 'getPhotoalbums'])->name('cp.datatable.photoalbums');
+        Route::any('images/{photoalbum_id}', [DataTableController::class, 'getImages'])->name('cp.datatable.images')->where('photoalbum_id', '[0-9]+');
+
     });
 
 });

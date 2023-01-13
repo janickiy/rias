@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\StringHelper;
+use Storage;
 
 class News extends Model
 {
@@ -36,6 +37,14 @@ class News extends Model
         $content = preg_replace('/(<.*?>)|(&.*?;)/', '', $content)  ;
 
         return StringHelper::shortText($content,500);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return Storage::disk('public')->url('app/public/news/' . $this->image);
     }
 
 }

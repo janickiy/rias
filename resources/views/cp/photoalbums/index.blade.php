@@ -119,7 +119,7 @@
                     url: '{{ URL::route('cp.datatable.photoalbums') }}'
                 },
                 columns: [
-                    {data: 'name', name: 'name'},
+                    {data: 'title', name: 'title'},
                     {data: 'created_at', name: 'created_at'},
                     {data: "actions", name: 'actions', orderable: false, searchable: false}
                 ],

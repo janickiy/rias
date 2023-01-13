@@ -9,15 +9,14 @@
 
 @section('content')
 
-    <!-- START ROW -->
+    <!-- row -->
     <div class="row">
 
-        <!-- NEW COL START -->
+        <!-- NEW WIDGET START -->
         <article class="col-sm-12 col-md-12 col-lg-12">
 
             <!-- Widget ID (each widget will need unique ID)-->
-            <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false"
-                 data-widget-custombutton="false">
+            <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
                 <!-- widget options:
                 usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
                 data-widget-colorbutton="false"
@@ -41,9 +40,9 @@
                     <!-- end widget edit box -->
 
                     <!-- widget content -->
-                    <div class="widget-body no-padding">
+                    <div class="widget-body">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.photoalbums.update') : URL::route('cp.photoalbums.store'), 'method' => isset($row) ? 'put' : 'post', 'class' => "smart-form"]) !!}
+                        {!! Form::open(['url' => URL::route('cp.images.update'), 'method' => 'put', 'class' => "smart-form"]) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -55,16 +54,16 @@
 
                             <section>
 
-                                {!! Form::label('title', 'Название*', ['class' => 'label']) !!}
+                                {!! Form::label('name', 'Название*', ['class' => 'label']) !!}
 
                                 <label class="input">
 
-                                    {!! Form::text('title', old('title', isset($row) ? $row->title : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+                                    {!! Form::text('name', old('name', $row->name), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
 
                                 </label>
 
-                                @if ($errors->has('title'))
-                                    <p class="text-danger">{{ $errors->first('title') }}</p>
+                                @if ($errors->has('name'))
+                                    <p class="text-danger">{{ $errors->first('name') }}</p>
                                 @endif
 
                             </section>
@@ -73,9 +72,9 @@
 
                         <footer>
                             <button type="submit" class="btn btn-primary button-apply">
-                                {{ isset($row) ? 'Изменить' : 'Добавить' }}
+                                Изменить
                             </button>
-                            <a class="btn btn-default" href="{{ URL::route('cp.photoalbums.index') }}">
+                            <a class="btn btn-default" href="{{ URL::route('cp.photoalbums.show', ['photoalbum_id' => $row->photoalbum_id]) }}">
                                 Назад
                             </a>
                         </footer>
@@ -83,20 +82,13 @@
                         {!! Form::close() !!}
 
                     </div>
-                    <!-- end widget content -->
 
+                    <!-- end widget div -->
                 </div>
-                <!-- end widget div -->
-
+                <!-- end widget -->
             </div>
-            <!-- end widget -->
-
         </article>
-        <!-- END COL -->
-
     </div>
-
-    <!-- END ROW -->
 
 @endsection
 

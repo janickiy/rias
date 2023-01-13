@@ -12,7 +12,7 @@ class Photoalbums extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'name',
+        'title',
     ];
 
     /**
@@ -20,7 +20,7 @@ class Photoalbums extends Model
      */
     public function photos()
     {
-        return $this->hasMany(Photos::class,'photoalbum_id','id');
+        return $this->hasMany(Images::class,'photoalbum_id','id');
     }
 
 }

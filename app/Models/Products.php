@@ -12,7 +12,6 @@ class Products extends Model
 
     protected $fillable = [
         'title',
-        'image',
         'description',
         'catalog_id',
         'meta_title',
@@ -20,7 +19,9 @@ class Products extends Model
         'meta_keywords',
         'slug',
         'seo_h1',
-        'seo_url_canonical'
+        'seo_url_canonical',
+        'thumbnail',
+        'origin',
     ];
 
     /**
@@ -29,6 +30,22 @@ class Products extends Model
     public function catalog()
     {
         return $this->belongsTo(Catalog::class,'catalog_id','id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getThumbnailUrl()
+    {
+        return Storage::disk('public')->url('app/public/products/' . $this->thumbnail);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginUrl()
+    {
+        return Storage::disk('public')->url('app/public/products/' . $this->origin);
     }
 
 }

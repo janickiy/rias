@@ -78,6 +78,8 @@
 
         @if ($slug)
 
+            @if($news->image) <img src="{{ url($news->getImage())  }}" alt=""> @endif
+
             {!! $news->text !!}
 
         @else

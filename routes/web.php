@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,5 +28,7 @@ Route::get('/product/{slug}', [FrontendController::class, 'product'])->name('fro
 Route::get('/contact', [FrontendController::class,'contact'])->name('frontend.contact');
 
 Route::post('/send-msg', [FrontendController::class,'sendMsg'])->name('frontend.send_msg');
+
+
 
 

@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.news.update') : URL::route('cp.news.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.news.update') : URL::route('cp.news.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
                         <div class="smart-form">
 
@@ -132,7 +132,7 @@
 
                                         <br>
                                         @if (isset($row) && !empty($row->image))
-                                            <img src='{{ url("uploads/news/$row->image") }}' width="150"
+                                            <img src='{{ url($row->getImage()) }}' width="150"
                                             >
                                         @endif
 

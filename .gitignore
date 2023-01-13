@@ -17,6 +17,4 @@ yarn-error.log
 /.idea
 .composer.lock
 /.vscode
-/public/uploads/news/
-/public/uploads/products/
 /composer.lock

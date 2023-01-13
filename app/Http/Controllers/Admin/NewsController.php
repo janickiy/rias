@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Models\{News};
+use App\Models\News;
 use App\Helpers\StringHelper;
 use Illuminate\Support\Facades\Validator;
 use URL;
+use Storage;
+use Image;
 
 class NewsController extends Controller
 {
@@ -48,16 +50,17 @@ class NewsController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $pic = $request->file('image');
+        if ($request->hasFile('image')) {
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
 
-        if (isset($pic)) {
-            $destinationPath = public_path('/uploads/news/');
-            $filename = time() . '.' . $pic->getClientOriginalExtension();
-            $img = Image::make($request->file('image')->getRealPath());
-
-            $img->resize(150, 150, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath . '/' . $filename);
+            if ($request->file('image')->storeAs('public/news', $filename)) {
+                $img = Image::make(Storage::path('/public/news/') . $filename);
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save(Storage::path('/public/news/') . $filename);
+            }
         }
 
         News::create(array_merge(array_merge($request->all()), ['image' => $filename ?? null]));
@@ -67,10 +70,10 @@ class NewsController extends Controller
     }
 
     /**
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param int $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         $row = News::find($id);
 
@@ -116,29 +119,30 @@ class NewsController extends Controller
         $row->seo_h1 = $request->input('seo_h1');
         $row->seo_url_canonical = $request->input('seo_url_canonical');
 
-        $pic = $request->file('image');
-
-        if (isset($pic)) {
+        if ($request->hasFile('image')) {
 
             $image = $request->pic;
 
             if ($image != null) {
-                $dir = public_path("/uploads/news/$image");
-                if (file_exists($dir)) {
-                    @unlink($dir);
-                }
+                if (Storage::disk('public')->exists('news/' . $row->image) === true) Storage::disk('public')->delete('news/' . $row->image);
             }
 
-            $destinationPath = public_path('/uploads/news/');
-            $filename = time() . '.' . $pic->getClientOriginalExtension();
+            if ($request->hasFile('image')) {
 
-            $img = Image::make($request->file('image')->getRealPath());
+                if (Storage::disk('public')->exists('news/' . $row->image) === true) Storage::disk('public')->delete('news/' . $row->image);
 
-            $img->resize(150, 150, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath . '/' . $filename);
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
 
-            $row->image = $filename;
+                if ($request->file('image')->storeAs('public/news', $filename)) {
+                    $img = Image::make(Storage::path('/public/news/') . $filename);
+                    $img->resize(null, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                    if ($img->save(Storage::path('/public/news/') . $filename)) $row->image = $filename;
+                }
+            }
         }
 
         $row->save();
@@ -152,6 +156,12 @@ class NewsController extends Controller
      */
     public function destroy(Request $request)
     {
-        News::where('id', $request->id)->delete();
+        $news = News::find($request->id);
+
+        if ($news) {
+            if (Storage::disk('public')->exists('news/' . $news->image) === true) Storage::disk('public')->delete('news/' . $news->image);
+        }
+
+        $news->delete();
     }
 }

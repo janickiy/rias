@@ -74,7 +74,7 @@
 
         <h1>{{ $product->seo_h1 ?? $title }}</h1>
 
-       @if($product->image) <img src="{{ url('uploads/products/' . $product->image)  }}" alt="Вернуться на главную страницу"> @endif
+       @if($product->thumbnail) <img src="{{ url($product->getThumbnailUrl())  }}" alt=""> @endif
 
         {!! $product->description !!}
 

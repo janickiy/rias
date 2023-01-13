@@ -49,19 +49,25 @@ class ProductsController extends Controller
 
         if ($validator->fails())  return back()->withErrors($validator)->withInput();
 
-        $pic = $request->file('image');
+        if ($request->hasFile('image')) {
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $fileNameToStore = 'origin_' . $filename;
+            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
 
-        if (isset($pic)) {
-            $destinationPath = public_path('/uploads/products/');
-            $filename = time() . '.' . $pic->getClientOriginalExtension();
-            $img = Image::make($request->file('image')->getRealPath());
-
-            $img->resize(600, 600, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath . '/' . $filename);
+            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore);
+            }
         }
 
-        Products::create(array_merge(array_merge($request->all()), ['image' => $filename ?? null]));
+        Products::create(array_merge(array_merge($request->all()), [
+            'thumbnail' => $fileNameToStore ?? null,
+            'origin' => $thumbnailFileNameToStore
+        ]));
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Информация успешно добавлена');
     }
@@ -102,46 +108,53 @@ class ProductsController extends Controller
 
         if ($validator->fails())  return back()->withErrors($validator)->withInput();
 
-        $product = Products::find($request->id);
+        $row = Products::find($request->id);
 
-        if (!$product) abort(404);
+        if (!$row) abort(404);
 
-        $product->title = $request->input('title');
-        $product->description = $request->input('description');
-        $product->catalog_id = $request->catalog_id;
-        $product->meta_title = $request->input('meta_title');
-        $product->meta_description = $request->input('meta_description');
-        $product->meta_keywords = $request->input('meta_keywords');
-        $product->slug = $request->input('slug');
+        $row->title = $request->input('title');
+        $row->description = $request->input('description');
+        $row->catalog_id = $request->catalog_id;
+        $row->meta_title = $request->input('meta_title');
+        $row->meta_description = $request->input('meta_description');
+        $row->meta_keywords = $request->input('meta_keywords');
+        $row->slug = $request->input('slug');
+        $row->seo_h1 = $request->input('seo_h1');
+        $row->seo_url_canonical = $request->input('seo_url_canonical');
 
-        $pic = $request->file('image');
-
-        if (isset($pic)) {
+        if ($request->hasFile('image')) {
 
             $image = $request->pic;
 
             if ($image != null) {
-                $dir = public_path("/uploads/products/$image");
-                if (file_exists($dir)) {
-                    @unlink($dir);
-                }
+                if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
+                if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
             }
 
-            $destinationPath = public_path('/uploads/products/');
-            $filename = time() . '.' . $pic->getClientOriginalExtension();
+            if ($request->hasFile('image')) {
+                if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
+                if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);;
 
-            $img = Image::make($request->file('image')->getRealPath());
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $fileNameToStore = 'origin_' . $filename;
+                $thumbnailFileNameToStore = 'thumbnail_' . $filename;
 
-            $img->resize(600, 600, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath . '/' . $filename);
+                if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
+                    $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
+                    $img->resize(null, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
 
-            $product->image = $filename;
+                    if ($img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore)) {
+                        $row->thumbnail = $thumbnailFileNameToStore;
+                        $row->origin = $thumbnailFileNameToStore;
+                    }
+                }
+            }
         }
 
-        $product->seo_h1 = $request->input('seo_h1');
-        $product->seo_url_canonical = $request->input('seo_url_canonical');
-        $product->save();
+        $row->save();
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Данные обновлены');
 
@@ -152,6 +165,13 @@ class ProductsController extends Controller
      */
     public function destroy(Request $request)
     {
-        Products::find($request->id)->delete();
+        $row = Products::find($request->id);
+
+        if ($row) {
+            if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
+            if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
+
+            $row->delete();
+        }
     }
 }
