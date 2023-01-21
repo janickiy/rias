@@ -3,17 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\StringHelper;
-use App\Models\{
-    Catalog,
-    User,
-    Settings,
-    Pages,
-    News,
-    Products,
-    FeedBack,
-    Photoalbums,
-    Images
-};
+use App\Models\{Catalog, ProductParameters, User, Settings, Pages, News, Products, FeedBack, Photoalbums, Images};
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use URL;
@@ -149,10 +139,16 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
+
+            ->editColumn('title', function ($row) {
+                return '<a href="' . URL::route('cp.product_parameters.index', ['product_id' => $row->id]) . '">' . $row->title . '</a>';
+            })
+
             ->editColumn('description', function ($row) {
                 return StringHelper::shortText(strip_tags($row->description), 1000);
             })
-            ->rawColumns(['actions'])->make(true);
+
+            ->rawColumns(['actions', 'title'])->make(true);
     }
 
     /**
@@ -200,5 +196,23 @@ class DataTableController extends Controller
             })
 
             ->rawColumns(['actions', 'thumbnail'])->make(true);
+    }
+
+    /**
+     * @param int $product_id
+     * @return mixed
+     */
+    public function getProductParameters(int $product_id)
+    {
+        $row = ProductParameters::where('product_id', $product_id);
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.product_parameters.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+            ->rawColumns(['actions'])->make(true);
     }
 }

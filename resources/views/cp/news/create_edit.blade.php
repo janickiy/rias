@@ -45,11 +45,10 @@
 
                         {!! Form::open(['url' => isset($row) ? URL::route('cp.news.update') : URL::route('cp.news.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
+                        {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
+
                         <div class="smart-form">
-
-                            {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
-
-                            <header>
+  <header>
                                 *-Обязательные поля
                             </header>
 

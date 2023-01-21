@@ -51,7 +51,7 @@ class CatalogController extends Controller
      */
     public function edit(int $id)
     {
-        $row = Catalog::where('id', $id)->first();
+        $row = Catalog::find($id);
 
         if (!$row) abort(404);
 

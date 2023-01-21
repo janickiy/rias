@@ -78,7 +78,7 @@ class ProductsController extends Controller
      */
     public function edit(int $id)
     {
-        $row = Products::where('id', $id)->first();
+        $row = Products::find($id);
 
         if (!$row) abort(404);
 
@@ -170,6 +170,8 @@ class ProductsController extends Controller
         if ($row) {
             if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
             if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
+
+            $row->parameters->delete();
 
             $row->delete();
         }

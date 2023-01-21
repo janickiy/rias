@@ -45,9 +45,9 @@
 
                         {!! Form::open(['url' => isset($row) ? URL::route('cp.pages.update') : URL::route('cp.pages.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
-                        <div class="smart-form">
+                        {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
-                            {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
+                        <div class="smart-form">
 
                             <header>
                                 *-Обязательные поля

@@ -69,14 +69,26 @@
 
     <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('product', $product) }}</div>
 
-
     <div class="col-sm-12">
 
         <h1>{{ $product->seo_h1 ?? $title }}</h1>
 
-       @if($product->thumbnail) <img src="{{ url($product->getThumbnailUrl())  }}" alt=""> @endif
+        @if($product->thumbnail) <img src="{{ url($product->getThumbnailUrl())  }}" alt=""> @endif
 
         {!! $product->description !!}
+
+        @if($product->parameters)
+            <h2>Технические характеристики</h2>
+            <table class="table">
+            @foreach($product->parameters as $parameter)
+                    <tr>
+                        <th scope="row">{{$parameter->name}}</th>
+                        <td>{{$parameter->value}}</td>
+                    </tr>
+            @endforeach
+            </table>
+        @endif
+
 
     </div>
 

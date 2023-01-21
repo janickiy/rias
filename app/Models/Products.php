@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class Products extends Model
 {
@@ -46,6 +47,14 @@ class Products extends Model
     public function getOriginUrl()
     {
         return Storage::disk('public')->url('app/public/products/' . $this->origin);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function parameters()
+    {
+        return $this->hasMany(ProductParameters::class, 'product_id', 'id');
     }
 
 }
