@@ -8,6 +8,7 @@ use App\Helpers\StringHelper;
 use URL;
 use Validator;
 use Image;
+use Storage;
 
 class ProductsController extends Controller
 {
