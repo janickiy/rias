@@ -66,8 +66,8 @@ class ProductsController extends Controller
         }
 
         Products::create(array_merge(array_merge($request->all()), [
-            'thumbnail' => $fileNameToStore ?? null,
-            'origin' => $thumbnailFileNameToStore
+            'thumbnail' => $thumbnailFileNameToStore ?? null,
+            'origin' => $fileNameToStore
         ]));
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Информация успешно добавлена');
@@ -149,7 +149,7 @@ class ProductsController extends Controller
 
                     if ($img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore)) {
                         $row->thumbnail = $thumbnailFileNameToStore;
-                        $row->origin = $thumbnailFileNameToStore;
+                        $row->origin = $fileNameToStore;
                     }
                 }
             }
