@@ -192,7 +192,7 @@ class DataTableController extends Controller
             })
 
             ->editColumn('thumbnail', function ($row) {
-                return '<img src="' . $row->getThumbnailUrl() .'" alt="">';
+                return '<img  height="150" src="' . $row->getThumbnailUrl() .'" alt="">';
             })
 
             ->rawColumns(['actions', 'thumbnail'])->make(true);
