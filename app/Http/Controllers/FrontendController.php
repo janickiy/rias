@@ -23,7 +23,7 @@ class FrontendController
         if (!$page) abort(404);
 
 
-        $title = $page->title ?? 'Главная страница';
+        $title = $page->title ?? 'Главная';
         $meta_description = $page->meta_description ?? '';
         $meta_keywords = $page->meta_keywords ?? '';
         $meta_title = $page->meta_title ?? '';
@@ -32,8 +32,6 @@ class FrontendController
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
 
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
 
         return view('frontend.index', compact(
             'page',
@@ -41,8 +39,7 @@ class FrontendController
             'meta_keywords',
             'meta_title',
             'seo_url_canonical',
-            'top_menu',
-            'bottom_menu')
+            'top_menu')
         )->with('title', $title);
     }
 

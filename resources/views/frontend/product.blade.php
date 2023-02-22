@@ -8,14 +8,6 @@
 
 @section('css')
 
-    <style>
-
-        nav {
-            margin-top: 20px;
-            box-shadow: 5px 4px 5px #000;
-        }
-
-    </style>
 
 @endsection
 
