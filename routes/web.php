@@ -29,6 +29,8 @@ Route::get('/contact', [FrontendController::class,'contact'])->name('frontend.co
 
 Route::post('/send-msg', [FrontendController::class,'sendMsg'])->name('frontend.send_msg');
 
+Route::get('/converter', [FrontendController::class,'converter'])->name('frontend.converter');
 
+Route::get('/application', [FrontendController::class,'application'])->name('frontend.application');
 
-
+Route::post('/send-application', [FrontendController::class,'sendApplication'])->name('frontend.send.application');

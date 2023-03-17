@@ -261,7 +261,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'PermissionsHelper' => App\Helpers\PermissionsHelper::class,
         'SettingsHelper' => App\Helpers\SettingsHelper::class,
-        'StringHelper' => App\Helpers\SettingsHelper::class,
+        'StringHelper' => App\Helpers\StringHelper::class,
     ])->toArray(),
 
 ];

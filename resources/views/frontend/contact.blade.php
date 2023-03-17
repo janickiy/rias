@@ -13,139 +13,69 @@
 
 @section('content')
 
-    @if($top_menu)
-        <div class="body-wrap">
-            <div class="container">
-                <nav class="navbar navbar-inverse" role="navigation">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-
-                            <a class="navbar-brand" href="/">Главная </a>
-                        </div>
-
-                        <!-- Collect the nav links, forms, and other content for toggling -->
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
-                                @foreach($top_menu as $menu)
-
-                                    @if( $menu['child'] )
-
-                                        <li class="dropdown">
-
-                                            <a href="#" class="dropdown-toggle"
-                                               data-toggle="dropdown">{{ $menu['label'] }} <b
-                                                    class="caret"></b></a>
-
-                                            <ul class="dropdown-menu">
-                                                @foreach( $menu['child'] as $child )
-                                                    <li><a href="{{ $child['link'] }}">{{ $child['label'] }}</a></li>
-                                                @endforeach
-                                            </ul>
-
-                                        </li>
-                                    @else
-                                        <li class="active"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
-
-                        </div>
-                        <!-- /.navbar-collapse -->
+    <div class="contacts">
+        <div class="container container--xl">
+            <div class="contacts__content">
+                <div class="title1 main__title">
+                    <h1>Контакты компании РИАС</h1>
+                </div>
+                <div class="contacts__main">
+                    <div class="contacts__item">
+                        <p class="contacts__item-text">{{ SettingsHelper::getSetting('ADRESS') }}</p>
                     </div>
-                    <!-- /.container-fluid -->
-                </nav>
+                    <div class="contacts__item">
+                        <a class="contacts__item-text" href="tel:{{ StringHelper::phone(SettingsHelper::getSetting('PHONE')) }}">{{ SettingsHelper::getSetting('PHONE') }}</a>
+                    </div>
+                    <div class="contacts__item ">
+                        <a class="contacts__item-text" href="mailto:{{ SettingsHelper::getSetting('EMAIL') }}">{{ SettingsHelper::getSetting('EMAIL') }}</a>
+                    </div>
+                    <div class="contacts__item">
+                        <p class="contacts__item-text">{{ SettingsHelper::getSetting('SITE_NAME') }}</p>
+                    </div>
+                    <div class="contacts__item">
+                        <p class="contacts__item-text">ИНН: {{ SettingsHelper::getSetting('INN') }}</p>
+                    </div>
+                    <div class="contacts__item">
+                        <div class="contacts__item-img">
+                            <img src="{{ url('img/contacts-img.svg') }}" width="236" height="140" alt="">
+                        </div>
+                    </div>
+                    <div class="contacts__item">
+                        <p class="contacts__item-text">КПП: {{ SettingsHelper::getSetting('KPP') }}</p>
+                    </div>
+                    <div class="contacts__item">
+                        <p class="contacts__item-text">ОГРН: {{ SettingsHelper::getSetting('OGRN') }}</p>
+                    </div>
+                </div>
+                <div class="contacts__map">
+                    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad925cae335e97d055abc6fc86103920423ef139f8c92ccc1ed112b7f5f8e437c&amp;source=constructor"></iframe>
+                </div>
             </div>
         </div>
-    @endif
-
-    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('contact') }}</div>
-
-    <div class="col-sm-12">
-
-        <h1>Контакты</h1>
-
-        @if (!session('success'))
-
-            <p>*-обязательные поля</p>
-
-            {!! Form::open(['url' =>  URL::route('frontend.send_msg'), 'method' => 'post', 'class' => 'form-horizontal']) !!}
-
-            <div class="form-group">
-                {!! Form::label('name', 'Ваше имя*', ['class'=> 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-                    {!! Form::text('name', old('name', null), ['class' => 'form-control', 'placeholder'=>'Ваше имя']) !!}
-
-                    @if ($errors->has('name'))
-                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                    @endif
-                </div>
-            </div>
-
-            <div class="form-group">
-                {!! Form::label('email', 'Email*', ['class'=> 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-                    {!! Form::text('email', old('email', null), ['class' => 'form-control', 'placeholder'=>'Email']) !!}
-
-                    @if ($errors->has('email'))
-                        <span class="text-danger">{{ $errors->first('email') }}</span>
-                    @endif
-                </div>
-
-            </div>
-
-            <div class="form-group">
-                {!! Form::label('message', 'Сообщение*', ['class'=> 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-                    {!! Form::textarea('message', old('message', null), ['placeholder' =>'Ваше сообщение','class' => 'form-control', 'rows' => 3]) !!}
-
-                    @if ($errors->has('message'))
-                        <span class="text-danger">{{ $errors->first('message') }}</span>
-                    @endif
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                {!! Form::label('captcha', 'Защитный код*', ['class'=> 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-
-                    {!! Form::text('captcha', null, ['class' => 'form-control', 'placeholder'=>'Название', 'id' => 'captcha']) !!}
-
-                    <br>
-                    @captcha
-                    <br>
-
-                    @if ($errors->has('captcha'))
-                        <span class="text-danger">{{ $errors->first('captcha') }}</span>
-                    @endif
-                </div>
-
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {!! Form::submit( 'Отправить', ['class'=>'btn btn-success']) !!}
-                </div>
-            </div>
-
-            {!! Form::close() !!}
-
-        @endif
-
-
-
-
     </div>
 
-    @if($bottom_menu)
-        <div class="col-12 col-md-8">
-            <ul class="list-inline">
-                @foreach( $bottom_menu as $menu )
-                    <li class="list-inline-item"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                @endforeach
-            </ul>
+    <section class="callback">
+        <div class="container container--xl">
+            <div class="callback__content">
+                <div class="callback__main">
+                    <div class="breadcrumbs">
+                        <div class="breadcrumbs__list">
+                            <div class="breadcrumbs__item">
+                                <span class="breadcrumbs__current">Заявка на расчет проекта</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="callback__info">
+                        <div class="title1 callback__title">
+                            <h2>Нужна помощь с подбором? Оформите заявку</h2>
+                        </div>
+                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    @endif
+    </section>
+
 
 @endsection
 

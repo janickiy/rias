@@ -22,7 +22,6 @@ class FrontendController
 
         if (!$page) abort(404);
 
-
         $title = $page->title ?? 'Главная';
         $meta_description = $page->meta_description ?? '';
         $meta_keywords = $page->meta_keywords ?? '';
@@ -31,7 +30,6 @@ class FrontendController
 
         $menu1 = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu1->items->toArray();
-
 
         return view('frontend.index', compact(
             'page',
@@ -252,5 +250,56 @@ class FrontendController
         event(new FeedbackMailEvent($data));
 
         return redirect(URL::route('frontend.contact'))->with('success', 'Ваше сообщение успешно отправлено');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function converter()
+    {
+        $title = 'Конвертер единиц измерения концентрации';
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_title = '';
+        $seo_url_canonical = '';
+
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
+
+        return view('frontend.converter', compact(
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
+        )->with('title', $title);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function application()
+    {
+        $title = 'Заявка на расчет проекта';
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_title = '';
+        $seo_url_canonical = '';
+
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
+
+        return view('frontend.application', compact(
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
+        )->with('title', $title);
+    }
+
+    public function sendApplication(Request $request)
+    {
+
     }
 }

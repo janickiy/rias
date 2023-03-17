@@ -245,4 +245,13 @@ class StringHelper
 
         return self::formatSizeInMb($maxUploadFileSize);
     }
+
+    /**
+     * @param $string
+     * @return array|string|string[]
+     */
+    public static function phone($string)
+    {
+        return str_replace([' ', '(', ')', '-'], '', $string);
+    }
 }
