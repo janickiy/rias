@@ -77,17 +77,21 @@
                                 <span class="menu__lines menu__lines--close"></span>
                             </button>
                         </div>
+
+                        @if(isset($top_menu) && $top_menu)
                         <ul class="menu__list">
 
-                            @if($top_menu)
+
 
                                 @foreach( $top_menu as $menu )
                                     <li class="menu__item">
-                                        <a class="menu__link" href="{{ $menu['link'] }}">{{ $menu['label'] }}
-                                        </a></li>
+                                        <a class="menu__link {{ Request::getRequestUri() == $menu['link'] ? 'menu__active' : '' }}" href="{{ $menu['link'] }}">
+                                            {{ $menu['label'] }}
+                                        </a>
+                                    </li>
                                 @endforeach
 
-                            @endif
+
 
                             <li class="menu__item menu__item--mobile">
                                 <a class="menu__link" href="{{ URL::route('frontend.converter') }}">
@@ -96,6 +100,8 @@
                                 </a>
                             </li>
                         </ul>
+                        @endif
+
                         <div class="menu__lang-box">
                             <span>Язык на сайте:</span>
                             <div class="lang lang--menu dropdown">

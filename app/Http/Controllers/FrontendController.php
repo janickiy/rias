@@ -28,8 +28,8 @@ class FrontendController
         $meta_title = $page->meta_title ?? '';
         $seo_url_canonical = $page->seo_url_canonical ?? '';
 
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
         return view('frontend.index', compact(
             'page',
@@ -80,31 +80,16 @@ class FrontendController
      */
     public function news(string $slug = null)
     {
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
+        $news = News::paginate(5);
 
-        if ($slug) {
-            $news = News::where('slug', $slug)->first();
-
-            if (!$news) abort(404);
-
-            $title = $news->title;
-            $meta_description = $news->meta_description ?? '';
-            $meta_keywords = $news->meta_keywords ?? '';
-            $meta_title = $news->meta_title ?? '';
-            $seo_url_canonical = $news->seo_url_canonical ?? '';
-        } else {
-            $news = News::paginate(5);
-
-            $title = 'Новости';
-            $meta_description = '';
-            $meta_keywords = '';
-            $meta_title = '';
-            $seo_url_canonical = '';
-        }
+        $title = 'Новости компании РИАС';
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_title = '';
+        $seo_url_canonical = '';
 
         return view('frontend.news', compact(
             'news',
@@ -113,8 +98,7 @@ class FrontendController
             'meta_keywords',
             'meta_title',
             'seo_url_canonical',
-            'top_menu',
-            'bottom_menu'))->with('title', $title);
+            'top_menu'))->with('title', $title);
     }
 
     /**

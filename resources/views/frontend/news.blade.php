@@ -15,102 +15,52 @@
 
 @section('content')
 
-
-    @if($top_menu)
-        <div class="body-wrap">
-            <div class="container">
-                <nav class="navbar navbar-inverse" role="navigation">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-
-                            <a class="navbar-brand" href="/">Главная </a>
-                        </div>
-
-                        <!-- Collect the nav links, forms, and other content for toggling -->
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
-                                @foreach($top_menu as $menu)
-
-                                    @if( $menu['child'] )
-
-                                        <li class="dropdown">
-
-                                            <a href="#" class="dropdown-toggle"
-                                               data-toggle="dropdown">{{ $menu['label'] }} <b
-                                                    class="caret"></b></a>
-
-                                            <ul class="dropdown-menu">
-                                                @foreach( $menu['child'] as $child )
-                                                    <li><a href="{{ $child['link'] }}">{{ $child['label'] }}</a></li>
-                                                @endforeach
-                                            </ul>
-
-                                        </li>
-                                    @else
-                                        <li class="active"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
-
-                        </div>
-                        <!-- /.navbar-collapse -->
-                    </div>
-                    <!-- /.container-fluid -->
-                </nav>
+    <section class="news">
+        <div class="container container--xl">
+            <div class="title1 main__title">
+                <h1>{{ $catalog->seo_h1 ?? $title }}</h1>
             </div>
-        </div>
-    @endif
 
+            <div class="news__list">
 
-    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('news', $news) }}</div>
-
-    <div class="col-sm-12">
-
-        <h1>{{ $news->seo_h1 ?? $title }}</h1>
-
-        @if ($slug)
-
-            @if($news->image) <img src="{{ url($news->getImage())  }}" alt=""> @endif
-
-            {!! $news->text !!}
-
-        @else
-
-            <ul>
                 @foreach($news as $row)
 
-                    <li><a href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">{{ $row->title }}</a></li>
+                <div class="news-item news__item">
+                    <div class="news-item__content">
+
+                        <a class="news-item__img" href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">
+                            @if($row->image)
+                                <img src="{{ url($row->getImage()) }}" width="351" height="275" alt="">
+                            @endif
+                        </a>
+
+                        <div class="news-item__main">
+                            <div class="news-item__meta">
+                                <span class="news-item__date">{{ $row->created_at }}</span>
+                                <a class="news-item__more" href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">
+                                    <img src="{{ url('img/icons/arrow-right.svg') }}" alt="">
+                                </a>
+                            </div>
+                            <div class="title2 news-item__title">
+                                <h2>
+                                    <a href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">{{ $row->title }}</a>
+                                </h2>
+                            </div>
+                            <p class="text news-item__text">{{ $row->preview }}</p>
+                        </div>
+                    </div>
+                </div>
 
                 @endforeach
-            </ul>
 
-            {!! $news->links() !!}
-
-        @endif
-
-    </div>
-
-    @if($bottom_menu)
-        <div class="col-12 col-md-8">
-            <ul class="list-inline">
-                @foreach( $bottom_menu as $menu )
-                    <li class="list-inline-item"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                @endforeach
-            </ul>
+            </div>
         </div>
-    @endif
+    </section>
 
 @endsection
 
 @section('js')
 
-    <script>
-        $('ul.nav li.dropdown').hover(function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-        }, function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-        });
 
-    </script>
 
 @endsection
