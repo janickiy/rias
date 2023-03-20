@@ -28,7 +28,7 @@
                 <div class="news-item news__item">
                     <div class="news-item__content">
 
-                        <a class="news-item__img" href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">
+                        <a class="news-item__img" href="{{ URL::route('frontend.open_news', ['slug' => $row->slug]) }}">
                             @if($row->image)
                                 <img src="{{ url($row->getImage()) }}" width="351" height="275" alt="">
                             @endif
@@ -43,7 +43,7 @@
                             </div>
                             <div class="title2 news-item__title">
                                 <h2>
-                                    <a href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">{{ $row->title }}</a>
+                                    <a href="{{ URL::route('frontend.open_news', ['slug' => $row->slug]) }}">{{ $row->title }}</a>
                                 </h2>
                             </div>
                             <p class="text news-item__text">{{ $row->preview }}</p>
