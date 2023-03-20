@@ -78,7 +78,7 @@ class FrontendController
      * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function news(string $slug = null)
+    public function news()
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -93,12 +93,40 @@ class FrontendController
 
         return view('frontend.news', compact(
             'news',
-            'slug',
             'meta_description',
             'meta_keywords',
             'meta_title',
             'seo_url_canonical',
             'top_menu'))->with('title', $title);
+    }
+
+    /**
+     * @param string $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function openNews(string $slug)
+    {
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
+
+        $news = News::where('slug', $slug)->first();
+
+        if (!$news) abort(404);
+
+        $title = $news->title;
+        $meta_description = $news->meta_description ?? '';
+        $meta_keywords = $news->meta_keywords ?? '';
+        $meta_title = $news->meta_title ?? '';
+        $seo_url_canonical = $news->seo_url_canonical ?? '';
+
+        return view('frontend.open_news', compact(
+            'news',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'seo_url_canonical',
+            'top_menu'))->with('title', $title);
+
     }
 
     /**
