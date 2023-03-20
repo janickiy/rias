@@ -1063,10 +1063,10 @@
     <!-- Basic Styles -->
 {!! Html::style('css/swiper.min.css') !!}
 {!! Html::style('css/overlayscrollbars.min.css') !!}
-{!! Html::style('css/normalize.css?v=12') !!}
-{!! Html::style('css/fonts.css?v=12') !!}
-{!! Html::style('css/main.css?v=12') !!}
-{!! Html::style('css/media.css?v=12') !!}
+{!! Html::style('css/normalize.css') !!}
+{!! Html::style('css/fonts.css') !!}
+{!! Html::style('css/main.css') !!}
+{!! Html::style('css/media.css') !!}
 
 @yield('css')
 
