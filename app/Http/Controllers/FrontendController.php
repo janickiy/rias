@@ -153,7 +153,7 @@ class FrontendController
             $seo_url_canonical = $catalog->seo_url_canonical ?? '';
         } else {
             $catalog = Catalog::orderBy('name')->get();
-            $title = 'Каталог';
+            $title = 'Наше оборудование';
             $meta_description = '';
             $meta_keywords = '';
             $meta_title = '';

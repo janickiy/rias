@@ -48,7 +48,7 @@
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
                         <div class="smart-form">
-  <header>
+                            <header>
                                 *-Обязательные поля
                             </header>
 

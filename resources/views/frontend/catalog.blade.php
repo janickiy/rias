@@ -11,111 +11,75 @@
 @section('css')
 
 
-
 @endsection
 
 @section('content')
 
+    <section class="products products--pt-0">
+        <div class="container container--xl">
+            <div class="products__content">
+                <div class="title1 main__title">
+                    <h1>{{ $catalog->seo_h1 ?? $title }}</h1>
+                </div>
+                <div class="products__models-list">
 
-    @if($top_menu)
-        <div class="body-wrap">
-            <div class="container">
-                <nav class="navbar navbar-inverse" role="navigation">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
+                    @foreach($products as $product)
 
-                            <a class="navbar-brand" href="/">Главная </a>
+                    <div class="product-models products__models">
+                        <div class="product-models__main">
+                            <div class="title2 product-models__title">
+                                <h2>{{ $product->title }}</h2>
+                            </div>
                         </div>
-
-                        <!-- Collect the nav links, forms, and other content for toggling -->
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
-                                @foreach($top_menu as $menu)
-
-                                    @if( $menu['child'] )
-
-                                        <li class="dropdown">
-
-                                            <a href="#" class="dropdown-toggle"
-                                               data-toggle="dropdown">{{ $menu['label'] }} <b
-                                                    class="caret"></b></a>
-
-                                            <ul class="dropdown-menu">
-                                                @foreach( $menu['child'] as $child )
-                                                    <li><a href="{{ $child['link'] }}">{{ $child['label'] }}</a></li>
-                                                @endforeach
-                                            </ul>
-
-                                        </li>
-                                    @else
-                                        <li class="active"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
-
+                        <a class="link-more product-models__more" href="catalog-lonhot.html">Все модели</a>
+                        <div class="product-models__img">
+                            <picture>
+                                <source srcset="{{ url('') }}img/products/1.png" type="image/png">
+                                <img src="{{ url('') }}img/products/1.png" width="234" height="218" alt="">
+                            </picture>
                         </div>
-                        <!-- /.navbar-collapse -->
+                        <div class="product-models__items">
+                            <a class="text product-models__item" href="catalog-card.html">Анализатор следовых концентраций кислорода TP‑96 O2</a>
+                            <a class="text product-models__item" href="catalog-card.html">Переносные газовые анализаторы SPGAS</a>
+                            <a class="text product-models__item" href="catalog-card.html">Общепромышленные газовые анализаторы S‑200</a>
+                            <a class="text product-models__item" href="catalog-card.html">Взрывозащищенные газовые анализаторы S‑200 ATEX</a>
+                        </div>
                     </div>
-                    <!-- /.container-fluid -->
-                </nav>
+
+                    @endforeach
+
+                </div>
             </div>
         </div>
-    @endif
+    </section>
 
-
-    <div class="col-sm-12" style="margin-top:10px">{{ Breadcrumbs::render('catalog') }}</div>
-
-    <div class="col-sm-12">
-
-        @if ($slug)
-            <?php $products = $catalog->products()->paginate(2) ?>
-
-            <h1>{{ $catalog->seo_h1 ?? $title }}</h1>
-
-            <ul>
-                @foreach($products as $product)
-                    <li><a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">{{ $product->title }}</a></li>
-                @endforeach
-            </ul>
-
-            {!! $products->links() !!}
-
-        @else
-
-            <h1>{{ $title }}</h1>
-
-            <ul>
-                @foreach($catalog as $row)
-
-                    <li><a href="{{ URL::route('frontend.catalog', ['slug' => $row->slug]) }}">{{ $row->name }}</a></li>
-
-                @endforeach
-            </ul>
-        @endif
-
-    </div>
-
-    @if($bottom_menu)
-        <div class="col-12 col-md-8">
-            <ul class="list-inline">
-                @foreach( $bottom_menu as $menu )
-                    <li class="list-inline-item"><a href="{{ $menu['link'] }}">{{ $menu['label'] }}</a></li>
-                @endforeach
-            </ul>
+    <section class="callback">
+        <div class="container container--xl">
+            <div class="callback__content">
+                <div class="callback__main">
+                    <div class="breadcrumbs">
+                        <div class="breadcrumbs__list">
+                            <div class="breadcrumbs__item">
+                                <span class="breadcrumbs__current">Заявка на расчет проекта</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="callback__info">
+                        <div class="title1 callback__title">
+                            <h2>Нужна помощь с подбором? Оформите заявку</h2>
+                        </div>
+                        <a class="btn btn--black callback__btn" href="application.html">Оформить заявку на расчет проекта</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    @endif
+    </section>
+
 
 @endsection
 
 @section('js')
 
-    <script>
-        $('ul.nav li.dropdown').hover(function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-        }, function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-        });
 
-    </script>
 
 @endsection

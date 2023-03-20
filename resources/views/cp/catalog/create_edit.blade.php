@@ -84,6 +84,35 @@
 
                             </section>
 
+                            <section>
+
+                                {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+
+                                <div class="input input-file">
+                                    <span class="button">
+
+                                        {!! Form::file('image',  ['id' => 'image', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
+
+                                    </span><input type="text" placeholder="выберите файл" readonly="">
+
+                                    <br>
+                                    @if (isset($row) && !empty($row->image))
+                                        <img src='{{ url($row->getImage()) }}' width="150"
+                                        >
+                                    @endif
+
+                                </div>
+
+                                @if ($errors->has('image'))
+                                    <span class="text-danger">{{ $errors->first('image') }}</span>
+                                @endif
+
+                                <div class="note">
+                                    Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
+                                </div>
+
+                            </section>
+
                             <h3>SEO</h3>
 
                             <section>

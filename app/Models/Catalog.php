@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class Catalog extends Model
 {
@@ -16,6 +17,7 @@ class Catalog extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'image',
         'slug',
         'seo_h1',
         'seo_url_canonical',
@@ -35,6 +37,14 @@ class Catalog extends Model
     public static function getOption()
     {
         return self::orderBy('name')->get()->pluck('name', 'id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return Storage::disk('public')->url('app/public/catalog/' . $this->image);
     }
 
 }

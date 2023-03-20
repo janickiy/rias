@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
 use App\Models\{Catalog};
 use Validator;
+use Storage;
+use Image;
 use URL;
 
 class CatalogController extends Controller
@@ -22,7 +25,9 @@ class CatalogController extends Controller
      */
     public function create()
     {
-        return view('cp.catalog.create_edit')->with('title', 'Добавление категории');
+        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+
+        return view('cp.catalog.create_edit', compact('maxUploadFileSize'))->with('title', 'Добавление категории');
     }
 
     /**
@@ -33,6 +38,7 @@ class CatalogController extends Controller
     {
         $rules = [
             'name' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'slug' => 'required|unique:catalog',
         ];
 
@@ -40,7 +46,20 @@ class CatalogController extends Controller
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        Catalog::create($request->all());
+        if ($request->hasFile('image')) {
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+
+            if ($request->file('image')->storeAs('public/catalog', $filename)) {
+                $img = Image::make(Storage::path('/public/catalog/') . $filename);
+                $img->resize(null, 400, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save(Storage::path('/public/catalog/') . $filename);
+            }
+        }
+
+        Catalog::create(array_merge($request->all()), ['image' => $filename ?? null]);
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
     }
@@ -55,7 +74,9 @@ class CatalogController extends Controller
 
         if (!$row) abort(404);
 
-        return view('cp.catalog.create_edit', compact('row'))->with('title', 'Редактирование категории');
+        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+
+        return view('cp.catalog.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование категории');
     }
 
     /**
@@ -66,6 +87,7 @@ class CatalogController extends Controller
     {
         $rules = [
             'name' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'slug' => 'required|unique:catalog,slug,' . $request->id,
         ];
 
@@ -84,6 +106,33 @@ class CatalogController extends Controller
         $row->meta_keywords = $request->input('meta_keywords');
         $row->seo_h1 = $request->input('seo_h1');
         $row->seo_url_canonical = $request->input('seo_url_canonical');
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->pic;
+
+            if ($image != null) {
+                if (Storage::disk('public')->exists('catalog/' . $row->image) === true) Storage::disk('public')->delete('catalog/' . $row->image);
+            }
+
+            if ($request->hasFile('image')) {
+
+                if (Storage::disk('public')->exists('catalog/' . $row->image) === true) Storage::disk('public')->delete('catalog/' . $row->image);
+
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+
+                if ($request->file('image')->storeAs('public/catalog', $filename)) {
+                    $img = Image::make(Storage::path('/public/catalog/') . $filename);
+                    $img->resize(null, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                    if ($img->save(Storage::path('/public/catalog/') . $filename)) $row->image = $filename;
+                }
+            }
+        }
+
         $row->save();
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Данные обновлены');
@@ -95,7 +144,13 @@ class CatalogController extends Controller
      */
     public function destroy(Request $request)
     {
-        Catalog::where('id', $request->id)->delete();
+        $catalog = Catalog::find($request->id);
+
+        if ($catalog) {
+            if (Storage::disk('public')->exists('catalog/' . $catalog->image) === true) Storage::disk('public')->delete('catalog/' . $catalog->image);
+        }
+
+        $catalog->delete();
     }
 
 }
