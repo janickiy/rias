@@ -39,7 +39,7 @@ class NewsController extends Controller
         $rules = [
             'title' => 'required|min:6|max:200',
             'text' => 'required',
-            'preview' => 'required|min:6|max:255',
+            'preview' => 'required|min:6|max:400',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'slug' => 'required|unique:news',
         ];
@@ -95,7 +95,7 @@ class NewsController extends Controller
             'title' => 'required|min:6|max:200',
             'text' => 'required',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
-            'preview' => 'required|min:6|max:255',
+            'preview' => 'required|min:6|max:400',
             'slug' => 'required|unique:news,slug,' . $request->id,
         ];
 
