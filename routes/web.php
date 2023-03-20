@@ -19,7 +19,9 @@ Route::get('', [FrontendController::class, 'index'])->name('frontend.index');
 
 Route::get('/pages/{slug}', [FrontendController::class, 'page'])->name('frontend.pages');
 
-Route::get('/news/{slug?}', [FrontendController::class, 'news'])->name('frontend.news');
+Route::get('/news', [FrontendController::class, 'news'])->name('frontend.news');
+
+Route::get('/news/{slug}', [FrontendController::class, 'openNews'])->name('frontend.open_news');
 
 Route::get('/catalog/{slug?}', [FrontendController::class, 'catalog'])->name('frontend.catalog');
 

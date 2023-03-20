@@ -36,7 +36,7 @@
 
                         <div class="news-item__main">
                             <div class="news-item__meta">
-                                <span class="news-item__date">{{ $row->created_at }}</span>
+                                <span class="news-item__date">{{ date('d.m.Y', strtotime($row->created_at)) }}</span>
                                 <a class="news-item__more" href="{{ URL::route('frontend.news', ['slug' => $row->slug]) }}">
                                     <img src="{{ url('img/icons/arrow-right.svg') }}" alt="">
                                 </a>
