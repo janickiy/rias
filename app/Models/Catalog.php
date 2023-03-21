@@ -47,4 +47,6 @@ class Catalog extends Model
         return Storage::disk('public')->url('app/public/catalog/' . $this->image);
     }
 
+
+
 }
