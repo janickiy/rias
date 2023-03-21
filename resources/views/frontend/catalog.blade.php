@@ -19,23 +19,23 @@
         <div class="container container--xl">
             <div class="products__content">
                 <div class="title1 main__title">
-                    <h1>{{ $catalog->seo_h1 ?? $title }}</h1>
+                    <h1>{{ $title }}</h1>
                 </div>
                 <div class="products__models-list">
 
-                    @foreach($products as $product)
+                    @foreach($catalogs as $catalog)
 
                     <div class="product-models products__models">
                         <div class="product-models__main">
                             <div class="title2 product-models__title">
-                                <h2>{{ $product->title }}</h2>
+                                <h2>{{ $catalog->title }}</h2>
                             </div>
                         </div>
                         <a class="link-more product-models__more" href="catalog-lonhot.html">Все модели</a>
                         <div class="product-models__img">
                             <picture>
-                                <source srcset="{{ url('') }}img/products/1.png" type="image/png">
-                                <img src="{{ url('') }}img/products/1.png" width="234" height="218" alt="">
+                                <source srcset="{{ url($catalog->getImage()) }}" type="{{ \File::mimeType($catalog->getImage()) }}">
+                                <img src="{{ url($catalog->getImage()) }}" width="234" height="218" alt="">
                             </picture>
                         </div>
                         <div class="product-models__items">
@@ -68,7 +68,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="application.html">Оформить заявку на расчет проекта</a>
+                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
                     </div>
                 </div>
             </div>
