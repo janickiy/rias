@@ -34,7 +34,7 @@
                         <a class="link-more product-models__more" href="catalog-lonhot.html">Все модели</a>
                         <div class="product-models__img">
                             <picture>
-                                <source srcset="{{ url($catalog->getImage()) }}" type="{{ \File::mimeType($catalog->getImage()) }}">
+                                <source srcset="{{ url($catalog->getImage()) }}" type="">
                                 <img src="{{ url($catalog->getImage()) }}" width="234" height="218" alt="">
                             </picture>
                         </div>
