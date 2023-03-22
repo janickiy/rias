@@ -91,12 +91,28 @@
 
                                 <label class="input">
 
-                                    {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), ['placeholder' =>'Описание','class' => 'form-control', 'rows' => 5]) !!}
+                                    {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), ['placeholder' =>'Описание','class' => 'form-control', 'rows' => 3]) !!}
 
                                 </label>
 
                                 @if ($errors->has('description'))
                                     <p class="text-danger">{{ $errors->first('description') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('full_description', 'Полное описание*', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::textarea('full_description', old('full_description', isset($row) ? $row->full_description : null), ['placeholder' =>'Описание','class' => 'form-control', 'rows' => 5]) !!}
+
+                                </label>
+
+                                @if ($errors->has('full_description'))
+                                    <p class="text-danger">{{ $errors->first('full_description') }}</p>
                                 @endif
 
                             </section>
@@ -258,7 +274,7 @@
     <script>
         $(document).ready(function () {
 
-            CKEDITOR.replace('description', {height: '380px', startupFocus: true});
+            CKEDITOR.replace('full_description', {height: '380px', startupFocus: true});
             CKEDITOR.config.allowedContent = true;
             CKEDITOR.config.removePlugins = 'spellchecker, about, save, newpage, print, templates, scayt, flash, pagebreak, smiley,preview,find';
 

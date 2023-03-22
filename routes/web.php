@@ -23,7 +23,7 @@ Route::get('/news', [FrontendController::class, 'news'])->name('frontend.news');
 
 Route::get('/news/{slug}', [FrontendController::class, 'openNews'])->name('frontend.open_news');
 
-Route::get('/catalog', [FrontendController::class, 'catalog'])->name('frontend.catalog');
+Route::get('/catalog/{slug?}', [FrontendController::class, 'catalog'])->name('frontend.catalog');
 
 Route::get('/product/{slug}', [FrontendController::class, 'product'])->name('frontend.product');
 

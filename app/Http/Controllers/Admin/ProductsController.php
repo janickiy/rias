@@ -41,6 +41,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required',
             'description' => 'required',
+            'full_description' => 'required',
             'slug' => 'required|unique:products',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'catalog_id' => 'integer|required'
@@ -100,6 +101,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required',
             'description' => 'required',
+            'full_description' => 'required',
             'slug' => 'required|unique:products,slug,' . $request->id,
             'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
             'catalog_id' => 'integer|required',
@@ -115,6 +117,7 @@ class ProductsController extends Controller
 
         $row->title = $request->input('title');
         $row->description = $request->input('description');
+        $row->full_description = $request->input('full_description');
         $row->catalog_id = $request->catalog_id;
         $row->meta_title = $request->input('meta_title');
         $row->meta_description = $request->input('meta_description');
