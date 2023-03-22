@@ -130,45 +130,27 @@ class FrontendController
     }
 
     /**
-     * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function catalog(string $slug = null)
+    public function catalog()
     {
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
-
-        if ($slug) {
-            $catalog = Catalog::where('slug', $slug)->first();
-
-            if (!$catalog) abort(404);
-
-            $title = $catalog->title;
-            $meta_description = $catalog->meta_description ?? '';
-            $meta_keywords = $catalog->meta_keywords ?? '';
-            $meta_title = $catalog->meta_title ?? '';
-            $seo_url_canonical = $catalog->seo_url_canonical ?? '';
-        } else {
-            $catalogs = Catalog::orderBy('name')->get();
-            $title = 'Наше оборудование';
-            $meta_description = '';
-            $meta_keywords = '';
-            $meta_title = '';
-            $seo_url_canonical = '';
-        }
+        $catalogs = Catalog::orderBy('name')->get();
+        $title = 'Наше оборудование';
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_title = '';
+        $seo_url_canonical = '';
 
         return view('frontend.catalog', compact(
                 'catalogs',
-                'slug',
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
                 'seo_url_canonical',
-                'top_menu',
-                'bottom_menu')
+                'top_menu')
         )->with('title', $title);
     }
 
@@ -188,11 +170,9 @@ class FrontendController
         $meta_title = $product->meta_title ?? '';
         $seo_url_canonical = $product->seo_url_canonical ?? '';
 
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
 
         return view('frontend.product', compact(
             'product',
@@ -201,8 +181,7 @@ class FrontendController
             'meta_keywords',
             'meta_title',
             'seo_url_canonical',
-            'top_menu',
-            'bottom_menu')
+            'top_menu')
         )->with('title', $title);
     }
 

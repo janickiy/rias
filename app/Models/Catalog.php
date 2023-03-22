@@ -32,6 +32,15 @@ class Catalog extends Model
     }
 
     /**
+     * @param int|null $limit
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getProductsList(int $limit = null)
+    {
+        return $limit ? $this->hasMany(Products::class, 'catalog_id', 'id')->limit(5) : $this->hasMany(Products::class, 'catalog_id', 'id')->limit($limit);
+    }
+
+    /**
      * @return mixed
      */
     public static function getOption()
