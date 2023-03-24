@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class ProductPhotos extends Model
 {
@@ -23,5 +24,21 @@ class ProductPhotos extends Model
     public function product()
     {
         return $this->belongsTo(Products::class,'product_id','id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getThumbnailUrl()
+    {
+        return Storage::disk('public')->url('app/public/images/' . $this->thumbnail);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginUrl()
+    {
+        return Storage::disk('public')->url('app/public/images/' . $this->origin);
     }
 }
