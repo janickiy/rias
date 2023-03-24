@@ -16,10 +16,11 @@ use App\Http\Controllers\Admin\{
     SitemapController,
     ProductsController,
     FeedbackController,
-    PhotoAlbumsController,
     AjaxController,
-    ImagesController,
     ProductParametersController,
+    ProductPhotosController,
+    ProductVideosController,
+    ProductDocumentsController,
 };
 
 
@@ -90,21 +91,30 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('destroy', [ProductParametersController::class, 'destroy'])->name('cp.product_parameters.destroy');
     });
 
-    Route::group(['prefix' => 'photoalbums'], function () {
-        Route::get('', [PhotoAlbumsController::class, 'index'])->name('cp.photoalbums.index');
-        Route::get('create', [PhotoAlbumsController::class, 'create'])->name('cp.photoalbums.create');
-        Route::post('store', [PhotoAlbumsController::class, 'store'])->name('cp.photoalbums.store');
-        Route::get('edit/{id}', [PhotoAlbumsController::class, 'edit'])->name('cp.photoalbums.edit')->where('id', '[0-9]+');
-        Route::put('update', [PhotoAlbumsController::class, 'update'])->name('cp.photoalbums.update');
-        Route::post('destroy', [PhotoAlbumsController::class, 'destroy'])->name('cp.photoalbums.destroy');
-        Route::get('{photoalbum_id}', [PhotoAlbumsController::class, 'show'])->name('cp.photoalbums.show')->where('photoalbum_id', '[0-9]+');
-        Route::post('upload', [PhotoAlbumsController::class, 'upload'])->name('cp.photoalbums.upload');
+    Route::group(['prefix' => 'product-photos'], function () {
+        Route::get('{product_id}', [ProductPhotosController::class, 'index'])->name('cp.product_photos.index')->where('product_id', '[0-9]+');
+        Route::post('upload', [ProductPhotosController::class, 'upload'])->name('cp.product_photos.upload');
+        Route::get('edit/{id}', [ProductPhotosController::class, 'edit'])->name('cp.product_photos.edit')->where('id', '[0-9]+');
+        Route::put('update', [ProductPhotosController::class, 'update'])->name('cp.product_photos.update');
+        Route::post('destroy', [ProductPhotosController::class, 'destroy'])->name('cp.product_photos.destroy');
     });
 
-    Route::group(['prefix' => 'images'], function () {
-        Route::get('edit/{id}', [ImagesController::class, 'edit'])->name('cp.images.edit')->where('id', '[0-9]+');
-        Route::put('update', [ImagesController::class, 'update'])->name('cp.images.update');
-        Route::post('destroy', [ImagesController::class, 'destroy'])->name('cp.images.destroy');
+    Route::group(['prefix' => 'product-videos'], function () {
+        Route::get('{product_id}', [ProductVideosController::class, 'index'])->name('cp.product_videos.index')->where('product_id', '[0-9]+');
+        Route::get('create/{product_id}', [ProductVideosController::class, 'create'])->name('cp.product_videos.create')->where('product_id', '[0-9]+');
+        Route::post('store', [ProductVideosController::class, 'store'])->name('cp.product_videos.store');
+        Route::get('edit/{id}', [ProductVideosController::class, 'edit'])->name('cp.product_videos.edit')->where('id', '[0-9]+');
+        Route::put('update', [ProductVideosController::class, 'update'])->name('cp.product_videos.update');
+        Route::post('destroy', [ProductVideosController::class, 'destroy'])->name('cp.product_videos.destroy');
+    });
+
+    Route::group(['prefix' => 'product-documents'], function () {
+        Route::get('{product_id}', [ProductDocumentsController::class, 'index'])->name('cp.product_documents.index')->where('product_id', '[0-9]+');
+        Route::get('create/{product_id}', [ProductDocumentsController::class, 'create'])->name('cp.product_documents.create')->where('product_id', '[0-9]+');
+        Route::post('store', [ProductDocumentsController::class, 'store'])->name('cp.product_documents.store');
+        Route::get('edit/{id}', [ProductDocumentsController::class, 'edit'])->name('cp.product_documents.edit')->where('id', '[0-9]+');
+        Route::put('update', [ProductDocumentsController::class, 'update'])->name('cp.product_documents.update');
+        Route::post('destroy', [ProductDocumentsController::class, 'destroy'])->name('cp.product_documents.destroy');
     });
 
     Route::group(['prefix' => 'news'], function () {
@@ -148,7 +158,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
         Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');
         Route::any('photoalbums', [DataTableController::class, 'getPhotoalbums'])->name('cp.datatable.photoalbums');
-        Route::any('images/{photoalbum_id}', [DataTableController::class, 'getImages'])->name('cp.datatable.images')->where('photoalbum_id', '[0-9]+');
+        Route::any('product-photos/{product_id}', [DataTableController::class, 'getPhotos'])->name('cp.datatable.product_photos')->where('product_id', '[0-9]+');
         Route::any('product-parameters/{product_id}', [DataTableController::class, 'getProductParameters'])->name('cp.datatable.product_parameters')->where('product_id', '[0-9]+');
     });
 
