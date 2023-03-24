@@ -57,7 +57,7 @@ class ProductPhotosController extends Controller
         $thumbnailFileNameToStore = 'thumbnail_' . $filename;
 
         if ($request->file('image')->storeAs('public/images', $fileNameToStore)) {
-            $thumbnail = ProductPhotos::make(Storage::path('/public/images/') . $fileNameToStore);
+            $thumbnail = Image::make(Storage::path('/public/images/') . $fileNameToStore);
             $thumbnail->resize(null, 300, function ($constraint) {
                 $constraint->aspectRatio();
             });
