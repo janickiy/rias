@@ -63,11 +63,11 @@ class ProductPhotosController extends Controller
             });
 
             if ($thumbnail->save(Storage::path('/public/images/') . $thumbnailFileNameToStore)) {
-                ProductPhotos::create(array_merge($request->all()), [
+                ProductPhotos::create(array_merge(array_merge($request->all()), [
                         'thumbnail' => $thumbnailFileNameToStore,
                         'origin' => $fileNameToStore
                     ]
-                );
+                ));
 
                 return redirect(URL::route('cp.product_photos.index', ['product_id' => $request->product_id]))->with('success', 'Данные успешно добавлены');
             }
