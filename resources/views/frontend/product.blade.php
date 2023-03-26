@@ -43,7 +43,7 @@
                             <div class="product__nav-slider swiper">
                                 <div class="swiper-wrapper">
 
-                                    @foreach($product->photos() as $photo)
+                                    @foreach($product->photos as $photo)
                                     <div class="swiper-slide product__nav-slide">
                                         <picture>
                                             <source srcset="{{ url($photo->getThumbnailUrl()) }}" type="image/png">
@@ -52,7 +52,7 @@
                                     </div>
                                     @endforeach
 
-                                    @foreach($product->photos() as $photo)
+                                    @foreach($product->photos as $photo)
                                     <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                         <picture>
                                             <source srcset="{{ $photo->getThumb() }}" type="image/png">
@@ -67,7 +67,7 @@
                         <div class="product__big-slider swiper">
                             <div class="swiper-wrapper">
 
-                                @foreach($product->photos() as $photo)
+                                @foreach($product->photos as $photo)
                                 <div class="swiper-slide product__big-slide">
                                     <picture>
                                         <source srcset="{{ $photo->getOriginUrl }}" type="image/png">
@@ -77,7 +77,7 @@
                                 @endforeach
 
 
-                               @foreach($product->videos() as $video)
+                               @foreach($product->videos as $video)
                                 <div class="swiper-slide product__big-slide product__big-slide--video">
                                     <div class="product__big-slide-video" data-src="{{ $video->getVideoUrl() }}"></div>
                                 </div>
