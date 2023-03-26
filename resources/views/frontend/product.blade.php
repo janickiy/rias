@@ -47,7 +47,7 @@
                                     <div class="swiper-slide product__nav-slide">
                                         <picture>
                                             <source srcset="{{ url($photo->getThumbnailUrl()) }}" type="image/png">
-                                            <img src="{[ url($photo->getThumbnailUrl()) }}" alt="" width="48" height="52">
+                                            <img src="{{ url($photo->getThumbnailUrl() }}" alt="" width="48" height="52">
                                         </picture>
                                     </div>
                                     @endforeach
