@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\ProductVideos;
 use Illuminate\Http\Request;
+use App\Helpers\VideoHelper;
 use Validator;
 use URL;
 
@@ -39,7 +40,6 @@ class ProductVideosController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title' => 'required',
             'video' => 'required',
             'product_id' => 'required|integer|exists:products,id'
         ];
@@ -48,7 +48,9 @@ class ProductVideosController extends Controller
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        ProductVideos::create($request->all());
+        $video = VideoHelper::detectVideoId($request->video);
+
+        ProductVideos::create(array_merge($request->all(),['provider' => $video['provider'], 'video' => $video['video']]));
 
         return redirect(URL::route('cp.product_videos.index', ['product_id' => $request->product_id]))->with('success', 'Информация успешно добавлена');
     }
@@ -63,6 +65,8 @@ class ProductVideosController extends Controller
 
         if (!$row) abort(404);
 
+        $row->video = VideoHelper::getVideoLink($row->provider, $row->video);
+
         $product_id = $row->product_id;
 
         return view('cp.product_videos.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка видео');
@@ -75,7 +79,6 @@ class ProductVideosController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'title' => 'required',
             'video' => 'required',
         ];
 
@@ -87,7 +90,6 @@ class ProductVideosController extends Controller
 
         if (!$row) abort(404);
 
-        $row->title = $request->input('title');
         $row->video = $request->input('video');
         $row->save();
 

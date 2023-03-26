@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('product_photos', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('thumbnail');
             $table->string('origin');
             $table->integer('product_id')->index('product_id');

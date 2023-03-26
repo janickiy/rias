@@ -113,7 +113,7 @@
                 <div class="tabs product__tabs" id="product-tabs">
                     <div class="tabs__btns">
                         <button class="tabs__btn tabs__btn--active">Описание</button>
-                        <button class="tabs__btn">Модели</button>
+                        <button class="tabs__btn">Характеристики</button>
                         <button class="tabs__btn">Документация</button>
                     </div>
                     <div class="tabs__list">
@@ -122,6 +122,7 @@
                                 <div class="text-content text-content--big product__column-text">
                                     <p>{{ $product->description }}</p>
                                 </div>
+
                                 @if($product->thumbnail)
                                 <div class="product__column-img">
                                     <picture>
@@ -129,7 +130,7 @@
                                         <img src="{{ $product->getThumbnailUrl() }}" alt="" width="705" height="348">
                                     </picture>
                                 </div>
-@endif
+                                @endif
 
                             </div>
                             <div class="product__column">
@@ -147,7 +148,7 @@
                                         <img class="product-model__img" src="img/products/3.jpg" alt="" width="186" height="218">
                                     </picture>
                                     <div class="text-content text-content--big product-model__main">
-                                        <h2>Электронный блок</h2>
+                                        <h2>Характеристики</h2>
                                         <ul>
                                             @foreach($product->parameters as $parameter)
                                                 <li>{{$parameter->name}}: {{$parameter->value}}</li>
@@ -159,28 +160,20 @@
                             </div>
                         </div>
                         <div class="tabs__item">
+
                             <div class="product__docs">
+
+                                @foreach($product->documents as $document)
+
                                 <a class="link-doc product__doc" href="#">
                                     <div class="link-doc__info">
-                                        ЛТД LONHOT LONOCM6000 r08.docx
-                                        <span class="text link-doc__text">Подробное описание оборудования, матрицы заказа, схемы и
-												рисунки</span>
+                                        {{ $document->path }}
+                                        <span class="text link-doc__text">{{ $document->description }}</span>
                                     </div>
                                 </a>
-                                <a class="link-doc product__doc" href="#">
-                                    <div class="link-doc__info">
-                                        ЛТД LONHOT LONOCM6000 r08.docx
-                                        <span class="text link-doc__text">Подробное описание оборудования, матрицы заказа, схемы и
-												рисунки</span>
-                                    </div>
-                                </a>
-                                <a class="link-doc product__doc" href="#">
-                                    <div class="link-doc__info">
-                                        ЛТД LONHOT LONOCM6000 r08.docx
-                                        <span class="text link-doc__text">Подробное описание оборудования, матрицы заказа, схемы и
-												рисунки</span>
-                                    </div>
-                                </a>
+
+                                @endforeach
+
                             </div>
                         </div>
                     </div>

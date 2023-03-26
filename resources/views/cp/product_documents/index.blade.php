@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-md-12">
 
-                                <a href="{{ URL::route('cp.product_parameters.create', ['product_id' => $product_id]) }}"
+                                <a href="{{ URL::route('cp.product_documents.create', ['product_id' => $product_id]) }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить
                                 </a>
@@ -40,8 +40,8 @@
                         <table id="itemList" class="table table-striped table-bordered table-hover" width="100%">
                             <thead>
                             <tr>
-                                <th>Параметр</th>
-                                <th>Значение</th>
+                                <th>Документ</th>
+                                <th>Описание</th>
                                 <th width="20px">Действия</th>
                             </tr>
                             </thead>
@@ -121,11 +121,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.product_parameters', ['product_id' => $product_id]) }}'
+                    url: '{{ URL::route('cp.datatable.product_documents', ['product_id' => $product_id]) }}'
                 },
                 columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'value', name: 'value'},
+
+                    {data: 'path', name: 'path'},
+                    {data: 'description', name: 'description'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false},
                 ],
             });
@@ -144,7 +145,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.product_parameters.destroy') }}',
+                            url: '{{ URL::route('cp.product_documents.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

@@ -11,7 +11,6 @@ class ProductVideos extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'title',
         'provider',
         'video',
         'product_id'

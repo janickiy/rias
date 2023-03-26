@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.product_parameters.update') : URL::route('cp.product_parameters.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.product_documents.update') : URL::route('cp.product_documents.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -59,32 +59,39 @@
 
                                 <section>
 
-                                    {!! Form::label('name', 'Параметр*', ['class' => 'label']) !!}
+                                    {!! Form::label('file', 'Разрешенные файлы (doc,docx,pdf,xls,xlsx,odt,ods)', ['class' => 'label']) !!}
 
-                                    <label class="input">
+                                    <div class="input input-file">
+                                        <span class="button">
 
-                                        {!! Form::text('name', old('name', isset($row) ? $row->name : null), ['class' => 'form-control', 'id' => 'title']) !!}
+                                        {!! Form::file('file',  ['id' => 'file', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
 
-                                    </label>
+                                        </span><input type="text" placeholder="выберите файл" readonly="">
 
-                                    @if ($errors->has('name'))
-                                        <p class="text-danger">{{ $errors->first('name') }}</p>
+                                    </div>
+
+                                    @if ($errors->has('file'))
+                                        <span class="text-danger">{{ $errors->first('file') }}</span>
                                     @endif
+
+                                    <div class="note">
+                                        Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
+                                    </div>
 
                                 </section>
 
                                 <section>
 
-                                    {!! Form::label('value', 'Значение*', ['class' => 'label']) !!}
+                                    {!! Form::label('description', 'Описание*', ['class' => 'label']) !!}
 
                                     <label class="input">
 
-                                        {!! Form::text('value', old('value', isset($row) ? $row->value : null), ['class' => 'form-control', 'id' => 'title']) !!}
+                                        {!! Form::text('description', old('description', isset($row) ? $row->description : null), ['class' => 'form-control', 'id' => 'description']) !!}
 
                                     </label>
 
-                                    @if ($errors->has('value'))
-                                        <p class="text-danger">{{ $errors->first('value') }}</p>
+                                    @if ($errors->has('description'))
+                                        <p class="text-danger">{{ $errors->first('description') }}</p>
                                     @endif
 
                                 </section>
@@ -95,7 +102,7 @@
                                 <button type="submit" class="btn btn-primary button-apply">
                                     {{ isset($row) ? 'Изменить' : 'Добавить' }}
                                 </button>
-                                <a class="btn btn-default" href="{{ URL::route('cp.product_parameters.index', ['product_id' => $product_id]) }}">
+                                <a class="btn btn-default" href="{{ URL::route('cp.product_documents.index', ['product_id' => $product_id]) }}">
                                     Назад
                                 </a>
                             </footer>
@@ -123,40 +130,6 @@
 @endsection
 
 @section('js')
-
-    {!! Html::script('/admin/js/plugin/ckeditor/ckeditor.js') !!}
-
-    <script>
-        $(document).ready(function () {
-
-            CKEDITOR.replace('text', {height: '380px', startupFocus: true});
-            CKEDITOR.config.allowedContent = true;
-            CKEDITOR.config.removePlugins = 'spellchecker, about, save, newpage, print, templates, scayt, flash, pagebreak, smiley,preview,find';
-
-            $("#title").on("change keyup input click", function () {
-                if (this.value.length >= 2) {
-                    var title = this.value;
-                    var request = $.ajax({
-                        url: '{!! URL::route('cp.ajax.action') !!}',
-                        method: "POST",
-                        data: {
-                            action: "get_news_slug",
-                            title: title
-                        },
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        dataType: "json"
-                    });
-                    request.done(function (data) {
-                        if (data.slug != null && data.slug != '') {
-                            $("#slug").val(data.slug);
-                        }
-                    });
-                }
-                console.log(html);
-            });
-
-        });
-    </script>
 
 
 @endsection

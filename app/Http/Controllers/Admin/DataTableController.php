@@ -6,6 +6,8 @@ use App\Models\{
     Catalog,
     ProductParameters,
     ProductPhotos,
+    ProductVideos,
+    ProductDocuments,
     User,
     Settings,
     Pages,
@@ -14,6 +16,7 @@ use App\Models\{
     FeedBack
 };
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\VideoHelper;
 use DataTables;
 use URL;
 
@@ -150,7 +153,13 @@ class DataTableController extends Controller
             })
 
             ->editColumn('title', function ($row) {
-                return $row->title . '<br><br><a href="' . URL::route('cp.product_photos.index', ['product_id' => $row->id]) . '">Фото</a>';
+                $title = $row->title;
+                $title .= '<br><br><a href="' . URL::route('cp.product_photos.index', ['product_id' => $row->id]) . '">Фото</a>';
+                $title .= '<br><a href="' . URL::route('cp.product_videos.index', ['product_id' => $row->id]) . '">Видео</a>';
+                $title .= '<br><a href="' . URL::route('cp.product_documents.index', ['product_id' => $row->id]) . '">Документы</a>';
+                $title .= '<br><a href="' . URL::route('cp.product_parameters.index', ['product_id' => $row->id]) . '">Характеристики</a>';
+
+                return $title;
             })
 
             ->rawColumns(['actions', 'title'])->make(true);
@@ -183,6 +192,29 @@ class DataTableController extends Controller
      * @param int $product_id
      * @return mixed
      */
+    public function getVideos(int $product_id)
+    {
+        $row = ProductVideos::where('product_id', $product_id );
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.product_videos.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+
+            ->addColumn('thumb', function ($row) {
+                return '<img src="' . VideoHelper::getThumb($row->provider,$row->video). '" width="250px">';
+            })
+
+            ->rawColumns(['actions','thumb'])->make(true);
+    }
+
+    /**
+     * @param int $product_id
+     * @return mixed
+     */
     public function getProductParameters(int $product_id)
     {
         $row = ProductParameters::where('product_id', $product_id);
@@ -190,6 +222,24 @@ class DataTableController extends Controller
         return Datatables::of($row)
             ->addColumn('actions', function ($row) {
                 $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.product_parameters.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+            ->rawColumns(['actions'])->make(true);
+    }
+
+    /**
+     * @param int $product_id
+     * @return mixed
+     */
+    public function getDocuments(int $product_id)
+    {
+        $row = ProductDocuments::where('product_id', $product_id);
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.product_documents.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
                 $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';

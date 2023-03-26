@@ -40,7 +40,6 @@ class ProductPhotosController extends Controller
     public function upload(Request $request)
     {
         $rules = [
-            'title' => 'required',
             'product_id' => 'required|integer|exists:products,id',
             'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
@@ -98,7 +97,7 @@ class ProductPhotosController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'title' => 'required|min:6|max:200',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
@@ -111,7 +110,6 @@ class ProductPhotosController extends Controller
 
         if (!$row) abort(404);
 
-        $row->title = $request->input('title');
         $row->save();
 
         return redirect(URL::route('cp.product_photos.index', ['product_id' => $row->product_id]))->with('success', 'Данные успешно обновлены');

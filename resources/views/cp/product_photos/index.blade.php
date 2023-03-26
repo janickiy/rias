@@ -49,6 +49,9 @@
                         <div class="smart-form">
 
                             <header>
+                                <a href="{{ URL::route('cp.products.index') }}">
+                                    назад
+                                </a><br><br>
                                 *-Обязательные поля
                             </header>
 
@@ -56,30 +59,14 @@
 
                                 <section>
 
-                                    {!! Form::label('title', 'Название*', ['class' => 'label']) !!}
-
-                                    <label class="input">
-
-                                        {!! Form::text('title', old('title'), ['class' => 'form-control']) !!}
-
-                                    </label>
-
-                                    @if ($errors->has('title'))
-                                        <p class="text-danger">{{ $errors->first('title') }}</p>
-                                    @endif
-
-                                </section>
-
-                                <section>
-
                                     {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
 
                                     <div class="input input-file">
-                                    <span class="button">
+                                        <span class="button">
 
                                         {!! Form::file('image',  ['id' => 'image', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
 
-                                    </span><input type="text" placeholder="выберите файл" readonly="">
+                                        </span><input type="text" placeholder="выберите файл" readonly="">
 
                                     </div>
 
@@ -124,7 +111,6 @@
 
     <!-- END ROW -->
 
-
     <div class="row-fluid">
 
         <div class="col">
@@ -141,7 +127,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Фото</th>
-                            <th>Название</th>
                             <th>Создан</th>
                             <th data-hide="phone,tablet">Действия</th>
                         </tr>
@@ -149,7 +134,6 @@
                         <tbody>
                         </tbody>
                     </table>
-
 
                 </div>
                 <!-- end widget content -->
@@ -227,7 +211,6 @@
                 columns: [
                     {data: 'id', name: 'id', searchable: false},
                     {data: 'thumbnail', name: 'thumbnail', orderable: false, searchable: false},
-                    {data: 'title', name: 'title'},
                     {data: 'created_at', name: 'created_at'},
                     {data: "actions", name: 'actions', orderable: false, searchable: false}
                 ],

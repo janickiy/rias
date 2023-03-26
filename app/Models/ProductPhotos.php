@@ -12,7 +12,6 @@ class ProductPhotos extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'title',
         'thumbnail',
         'origin',
         'product_id'

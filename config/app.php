@@ -262,6 +262,7 @@ return [
         'PermissionsHelper' => App\Helpers\PermissionsHelper::class,
         'SettingsHelper' => App\Helpers\SettingsHelper::class,
         'StringHelper' => App\Helpers\StringHelper::class,
+        'VideoHelper' => App\Helpers\VideoHelper::class,
     ])->toArray(),
 
 ];

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('product_videos', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('provider');
             $table->string('video');
             $table->integer('product_id')->index('product_id');
