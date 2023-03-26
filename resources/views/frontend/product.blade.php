@@ -55,8 +55,8 @@
                                     @foreach($product->photos as $photo)
                                     <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                         <picture>
-                                            <source srcset="{{ $photo->getThumb() }}" type="image/png">
-                                            <img src="{{ $photo->getThumb() }}" alt="" width="62" height="62">
+                                            <source srcset="{{ $photo->getThumb }}" type="image/png">
+                                            <img src="{{ $photo->getThumb }}" alt="" width="62" height="62">
                                         </picture>
                                     </div>
                                     @endforeach
