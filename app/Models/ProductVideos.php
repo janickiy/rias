@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\VideoHelper;
 
 class ProductVideos extends Model
 {
@@ -22,5 +23,13 @@ class ProductVideos extends Model
     public function product()
     {
         return $this->belongsTo(Products::class, 'product_id', 'id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumb()
+    {
+        return  VideoHelper::getThumb($this->provider,$this->video);
     }
 }

@@ -58,6 +58,22 @@ class VideoHelper
      * @param string $video
      * @return string
      */
+    public static function getVideoUrl(string $provider, string $video): string
+    {
+        $url = '';
+
+        if ($provider == 'youtube') {
+            $url = 'https://www.youtube.com/embed/' . $video;
+        }
+
+        return  $url;
+    }
+
+    /**
+     * @param string $provider
+     * @param string $video
+     * @return string
+     */
     public static function getVideoLink(string $provider, string $video): string
     {
         $link = '';

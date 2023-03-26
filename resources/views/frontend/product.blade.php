@@ -42,63 +42,47 @@
                         <div class="product__nav-wrapper">
                             <div class="product__nav-slider swiper">
                                 <div class="swiper-wrapper">
+
+                                    @foreach($product->photos() as $photo)
                                     <div class="swiper-slide product__nav-slide">
                                         <picture>
-                                            <source srcset="img/products/3.webp" type="image/webp">
-                                            <source srcset="img/products/3.png" type="image/png">
-                                            <img src="img/products/3.png" alt="" width="48" height="52">
+                                            <source srcset="{{ url($photo->getThumbnailUrl()) }}" type="image/png">
+                                            <img src="{[ url($photo->getThumbnailUrl()) }}" alt="" width="48" height="52">
                                         </picture>
                                     </div>
-                                    <div class="swiper-slide product__nav-slide">
-                                        <picture>
-                                            <source srcset="img/products/3-2.webp" type="image/webp">
-                                            <source srcset="img/products/3-2.png" type="image/png">
-                                            <img src="img/products/3-2.png" alt="" width="48" height="52">
-                                        </picture>
-                                    </div>
-                                    <div class="swiper-slide product__nav-slide">
-                                        <picture>
-                                            <source srcset="img/products/3-2.webp" type="image/webp">
-                                            <source srcset="img/products/3-2.png" type="image/png">
-                                            <img src="img/products/3-2.png" alt="" width="48" height="52">
-                                        </picture>
-                                    </div>
+                                    @endforeach
+
+                                    @foreach($product->photos() as $photo)
                                     <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                         <picture>
-                                            <source srcset="img/products/3-video-preview.webp" type="image/webp">
-                                            <source srcset="img/products/3-video-preview.png" type="image/png">
-                                            <img src="img/products/3-video-preview.png" alt="" width="62" height="62">
+                                            <source srcset="{{ $photo->getThumb() }}" type="image/png">
+                                            <img src="{{ $photo->getThumb() }}" alt="" width="62" height="62">
                                         </picture>
                                     </div>
+                                    @endforeach
+
                                 </div>
                             </div>
                         </div>
                         <div class="product__big-slider swiper">
                             <div class="swiper-wrapper">
+
+                                @foreach($product->photos() as $photo)
                                 <div class="swiper-slide product__big-slide">
                                     <picture>
-                                        <source srcset="img/products/3.webp" type="image/webp">
-                                        <source srcset="img/products/3.png" type="image/png">
-                                        <img src="img/products/3.png" alt="" width="186" height="218">
+                                        <source srcset="{{ $photo->getOriginUrl }}" type="image/png">
+                                        <img src="{{ $photo->getOriginUrl }}" alt="" width="186" height="218">
                                     </picture>
                                 </div>
-                                <div class="swiper-slide product__big-slide">
-                                    <picture>
-                                        <source srcset="img/products/3-2.webp" type="image/webp">
-                                        <source srcset="img/products/3-2.png" type="image/png">
-                                        <img src="img/products/3-2.png" alt="" width="232" height="104">
-                                    </picture>
-                                </div>
-                                <div class="swiper-slide product__big-slide">
-                                    <picture>
-                                        <source srcset="img/products/3-2.webp" type="image/webp">
-                                        <source srcset="img/products/3-2.png" type="image/png">
-                                        <img src="img/products/3-2.png" alt="" width="232" height="104">
-                                    </picture>
-                                </div>
+                                @endforeach
+
+
+                               @foreach($product->video() as $video)
                                 <div class="swiper-slide product__big-slide product__big-slide--video">
-                                    <div class="product__big-slide-video" data-src="https://www.youtube.com/embed/Gx543KbuGFY"></div>
+                                    <div class="product__big-slide-video" data-src="{{ $video->getVideoUrl() }}"></div>
                                 </div>
+                                @endforeach
+
                             </div>
                             <button class="product__slider-prev"></button>
                             <button class="product__slider-next"></button>
