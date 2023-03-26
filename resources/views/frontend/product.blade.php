@@ -149,8 +149,6 @@
                                     </picture>
                                     <div class="text-content text-content--big product-model__main">
 
-
-                                        {{ dd($product->documents) }}
                                         <h2>Характеристики</h2>
                                         <ul>
                                             @foreach($product->parameters as $parameter)
