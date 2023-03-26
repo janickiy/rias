@@ -77,7 +77,7 @@
                                 @endforeach
 
 
-                               @foreach($product->video() as $video)
+                               @foreach($product->videos() as $video)
                                 <div class="swiper-slide product__big-slide product__big-slide--video">
                                     <div class="product__big-slide-video" data-src="{{ $video->getVideoUrl() }}"></div>
                                 </div>
