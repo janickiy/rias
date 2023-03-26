@@ -148,6 +148,9 @@
                                         <img class="product-model__img" src="img/products/3.jpg" alt="" width="186" height="218">
                                     </picture>
                                     <div class="text-content text-content--big product-model__main">
+
+
+                                        {{ dd($product->documents) }}
                                         <h2>Характеристики</h2>
                                         <ul>
                                             @foreach($product->parameters as $parameter)
