@@ -23,4 +23,12 @@ class ProductDocuments extends Model
     {
         return $this->belongsTo(Products::class, 'product_id', 'id');
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDocument()
+    {
+        return Storage::disk('public')->url('app/public/documents/' . $this->path);
+    }
 }

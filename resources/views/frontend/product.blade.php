@@ -166,7 +166,7 @@
 
                                 @foreach($product->documents as $document)
 
-                                <a class="link-doc product__doc" href="#">
+                                <a class="link-doc product__doc" href="{{ url($document->getDocument()) }}">
                                     <div class="link-doc__info">
                                         {{ $document->path }}
                                         <span class="text link-doc__text">{{ $document->description }}</span>
