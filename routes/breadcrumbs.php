@@ -27,7 +27,7 @@ Breadcrumbs::register('page', function ($breadcrumbs, $page) {
 
 Breadcrumbs::register('catalog', function ($breadcrumbs) {
     $breadcrumbs->parent('main');
-    $breadcrumbs->push('Продукция', URL::route('frontend.catalog'));
+    $breadcrumbs->push('Оборудование', URL::route('frontend.catalog'));
 });
 
 Breadcrumbs::register('product', function ($breadcrumbs, $product) {

@@ -132,26 +132,44 @@ class FrontendController
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function catalog()
+    public function catalog(string $slug = null)
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
 
-        $catalogs = Catalog::orderBy('name')->get();
-        $title = 'Наше оборудование';
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
-        $seo_url_canonical = '';
+        if ($slug) {
+            $catalog = Catalog::where('slug', $slug)->first();
+            $title = $catalog->name;
+            $meta_description = $catalog->meta_description;
+            $meta_keywords = $catalog->meta_keywords;
+            $meta_title = $catalog->meta_title;
+            $seo_url_canonical = $catalog->seo_url_canonical;
 
-        return view('frontend.catalog', compact(
-                'catalogs',
-                'meta_description',
-                'meta_keywords',
-                'meta_title',
-                'seo_url_canonical',
-                'top_menu')
-        )->with('title', $title);
+            return view('frontend.catalog_products', compact(
+                    'catalog',
+                    'meta_description',
+                    'meta_keywords',
+                    'meta_title',
+                    'seo_url_canonical',
+                    'top_menu')
+            )->with('title', $title);
+        } else {
+            $catalogs = Catalog::orderBy('name')->get();
+            $title = 'Наше оборудование';
+            $meta_description = '';
+            $meta_keywords = '';
+            $meta_title = '';
+            $seo_url_canonical = '';
+
+            return view('frontend.catalog', compact(
+                    'catalogs',
+                    'meta_description',
+                    'meta_keywords',
+                    'meta_title',
+                    'seo_url_canonical',
+                    'top_menu')
+            )->with('title', $title);
+        }
     }
 
     /**

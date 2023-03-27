@@ -20,14 +20,15 @@
                 <div class="product__header">
                     <div class="breadcrumbs product__breadcrumbs">
                         <div class="breadcrumbs__list">
+
                             <div class="breadcrumbs__item">
                                 <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
                             </div>
                             <div class="breadcrumbs__item">
-                                <a class="breadcrumbs__link" href="catalog-lonhot.html">Циркониевые анализаторы кислорода Lonhot</a>
+                                <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">{{ $product->catalog->name }}</a>
                             </div>
                             <div class="breadcrumbs__item">
-                                <span class="breadcrumbs__current">LONOСМ6000</span>
+                                <span class="breadcrumbs__current">{{ $product->title }}</span>
                             </div>
                         </div>
                     </div>
