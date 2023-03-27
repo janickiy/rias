@@ -76,19 +76,6 @@ class ProductPhotosController extends Controller
 
     }
 
-    /**
-     * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function edit(int $id)
-    {
-        $row = ProductPhotos::find($id);
-
-        if (!$row) abort(404);
-
-        return view('cp.product_photos.edit', compact('row',))->with('title', 'Редактирование изображения');
-
-    }
 
     /**
      * @param Request $request

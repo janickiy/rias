@@ -43,7 +43,7 @@
                             <div class="product__nav-slider swiper">
                                 <div class="swiper-wrapper">
 
-                                    @foreach($product->photos() as $photo)
+                                    @foreach($product->photos as $photo)
                                     <div class="swiper-slide product__nav-slide">
                                         <picture>
                                             <source srcset="{{ url($photo->getThumbnailUrl()) }}" type="image/png">
@@ -52,11 +52,12 @@
                                     </div>
                                     @endforeach
 
-                                    @foreach($product->photos() as $photo)
+                                    @foreach($product->photos as $photo)
+
                                     <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                         <picture>
-                                            <source srcset="{{ $photo->getThumb() }}" type="image/png">
-                                            <img src="{{ $photo->getThumb() }}" alt="" width="62" height="62">
+                                            <source srcset="{{ $photo->getThumbnailUrl() }}" type="image/png">
+                                            <img src="{{ $photo->getThumbnailUrl() }}" alt="" width="62" height="62">
                                         </picture>
                                     </div>
                                     @endforeach
@@ -67,17 +68,17 @@
                         <div class="product__big-slider swiper">
                             <div class="swiper-wrapper">
 
-                                @foreach($product->photos() as $photo)
+                                @foreach($product->photos as $photo)
                                 <div class="swiper-slide product__big-slide">
                                     <picture>
-                                        <source srcset="{{ $photo->getOriginUrl }}" type="image/png">
-                                        <img src="{{ $photo->getOriginUrl }}" alt="" width="186" height="218">
+                                        <source srcset="{{ $photo->getOriginUrl() }}" type="image/png">
+                                        <img src="{{ $photo->getOriginUrl() }}" alt="" width="186" height="218">
                                     </picture>
                                 </div>
                                 @endforeach
 
 
-                               @foreach($product->videos() as $video)
+                               @foreach($product->videos as $video)
                                 <div class="swiper-slide product__big-slide product__big-slide--video">
                                     <div class="product__big-slide-video" data-src="{{ $video->getVideoUrl() }}"></div>
                                 </div>

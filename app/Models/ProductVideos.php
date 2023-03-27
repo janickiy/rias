@@ -30,6 +30,14 @@ class ProductVideos extends Model
      */
     public function getThumb()
     {
-        return  VideoHelper::getThumb($this->provider,$this->video);
+        return VideoHelper::getThumb($this->provider,$this->video);
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideoUrl()
+    {
+        return VideoHelper::getVideoUrl($this->provider,$this->video);
     }
 }
