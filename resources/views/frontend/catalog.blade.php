@@ -31,7 +31,7 @@
                                     <h2>{{ $catalog->name }}</h2>
                                 </div>
                             </div>
-                            <a class="link-more product-models__more" href="catalog-lonhot.html">Все модели</a>
+                            <a class="link-more product-models__more" href="{{ URL::route('frontend.catalog', ['slug' => $catalog->slug]) }}">Все модели</a>
 
                             @if($catalog->image)
                                 <div class="product-models__img">

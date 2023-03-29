@@ -89,7 +89,7 @@
 
                                 {!! Form::label('description', 'Описание*', ['class' => 'label']) !!}
 
-                                <label class="input">
+                                <label class="textarea textarea-resizable">
 
                                     {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), ['placeholder' =>'Описание','class' => 'form-control', 'rows' => 3]) !!}
 

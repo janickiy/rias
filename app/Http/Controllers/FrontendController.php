@@ -153,6 +153,7 @@ class FrontendController
     }
 
     /**
+     * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function catalog(string $slug = null)
@@ -162,6 +163,11 @@ class FrontendController
 
         if ($slug) {
             $catalog = Catalog::where('slug', $slug)->first();
+
+            if (!$catalog) abort(404);
+
+            $products = Products::where('catalog_id', $catalog->id)->paginate(5);
+
             $title = $catalog->name;
             $meta_description = $catalog->meta_description;
             $meta_keywords = $catalog->meta_keywords;
@@ -170,6 +176,7 @@ class FrontendController
 
             return view('frontend.catalog_products', compact(
                     'catalog',
+                    'products',
                     'meta_description',
                     'meta_keywords',
                     'meta_title',

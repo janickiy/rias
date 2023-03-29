@@ -81,7 +81,6 @@
                                     </div>
                                 @endforeach
 
-
                                 @foreach($product->videos as $video)
                                     <div class="swiper-slide product__big-slide product__big-slide--video">
                                         <div class="product__big-slide-video"

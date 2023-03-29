@@ -70,6 +70,38 @@
 
                             <section>
 
+                                {!! Form::label('scope', 'Область применения*', ['class' => 'label']) !!}
+
+                                <label class="textarea textarea-resizable">
+
+                                    {!! Form::textarea('scope', old('scope', isset($row) ? $row->scope : null), ['rows' => "5", 'class' => 'custom-scroll']) !!}
+
+                                </label>
+
+                                @if ($errors->has('scope'))
+                                    <p class="text-danger">{{ $errors->first('scope') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('description', 'Описание*', ['class' => 'label']) !!}
+
+                                <label class="textarea textarea-resizable">
+
+                                    {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), ['rows' => "5", 'class' => 'custom-scroll']) !!}
+
+                                </label>
+
+                                @if ($errors->has('description'))
+                                    <p class="text-danger">{{ $errors->first('description') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
                                 {!! Form::label('slug', 'ЧПУ*', ['class' => 'label']) !!}
 
                                 <label class="input">
@@ -167,7 +199,7 @@
 
                                 {!! Form::label('seo_h1', 'Seo h1', ['class' => 'label']) !!}
 
-                                <label class="input">
+                                <label class="textarea textarea-resizable">
 
                                     {!! Form::text('seo_h1', old('seo_h1', isset($row) ? $row->seo_h1 : null), ['class' => 'form-control']) !!}
 
@@ -224,8 +256,14 @@
 
 @section('js')
 
+    {!! Html::script('/admin/js/plugin/ckeditor/ckeditor.js') !!}
+
     <script>
         $(document).ready(function () {
+
+            CKEDITOR.replace('description', {height: '380px', startupFocus: true});
+            CKEDITOR.config.allowedContent = true;
+            CKEDITOR.config.removePlugins = 'spellchecker, about, save, newpage, print, templates, scayt, flash, pagebreak, smiley,preview,find';
 
             $("#name").on("change keyup input click", function () {
                 if (this.value.length >= 2) {

@@ -14,6 +14,8 @@ class Catalog extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'scope',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -55,7 +57,5 @@ class Catalog extends Model
     {
         return Storage::disk('public')->url('app/public/catalog/' . $this->image);
     }
-
-
 
 }

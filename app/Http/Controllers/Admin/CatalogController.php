@@ -100,6 +100,8 @@ class CatalogController extends Controller
         if (!$row) abort(404);
 
         $row->name = $request->input('name');
+        $row->description = $request->input('description');
+        $row->scope = $request->input('scope');
         $row->slug = $request->input('slug');
         $row->meta_title = $request->input('meta_title');
         $row->meta_description = $request->input('meta_description');

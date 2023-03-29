@@ -22,28 +22,21 @@
                     <div class="breadcrumbs model__breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
-                                <a class="breadcrumbs__link" href="catalog.html">Оборудование</a>
+                                <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
                             </div>
                             <div class="breadcrumbs__item">
-                                <span class="breadcrumbs__current">Циркониевые анализаторы кислорода Lonhot</span>
+                                <span class="breadcrumbs__current">{{ $catalog->name }}</span>
                             </div>
                         </div>
                     </div>
-                    <a class="btn-back model__mobile-back" href="catalog.html">Назад</a>
+                    <a class="btn-back model__mobile-back" href="{{ URL::route('frontend.catalog') }}">Назад</a>
                     <div class="title1 model__title">
-                        <h1>&emsp;<b>Газоанализаторы LONHOT</b> предназначены для непрерывного измерения объёмной доли кислорода
-                            и/или оксида углерода (II) и продуктов неполного сгорания в пересчете на монооксид углерода (СОе) в
-                            дымовых и технологических газах, для технологического контроля и мониторинга в системах контроля
-                            выбросов</h1>
+                        {!! $catalog->description !!}
                     </div>
                     <div class="model__info">
-                        <img class="model__img" src="img/arrows.svg" alt="">
+                        <img class="model__img" src="{{ url('img/arrows.svg') }}" alt="">
                         <div class="text-content model__text">
-                            <p><b>Основные области применения:</b> автоматические системы контроля промышленных выбросов (АСКПВ/
-                                CEMS), контроль и оптимизация процессов горения в энергетических и отопительных котлах, в печах для
-                                отжига, обжига, в печах нефтеперерабатывающих и нефтехимических, металлургических, для сжигания мусора
-                                и отходов, и прочих производств в различных отраслях промышленности, в том числе, в опасных по
-                                воспламенению газовоздушной среды зонах (пожаровзрывоопасных)</p>
+                            <p><b>Основные области применения:</b> {{ $catalog->scope }}</p>
                         </div>
                     </div>
                 </div>
@@ -53,64 +46,42 @@
                             <div class="breadcrumbs">
                                 <div class="breadcrumbs__list">
                                     <div class="breadcrumbs__item">
-                                        <span class="breadcrumbs__current">Продукция Lonhot</span>
+                                        <span class="breadcrumbs__current">Продукция {{ $catalog->name }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="products__list">
+
+                            @foreach($products as $product)
+
                             <div class="product-card product-card--sm-column products__item products__item--col-4">
-                                <a class="product-card__img" href="catalog-card.html">
+                                <a class="product-card__img" href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+
+                                    @if($product->thumbnail)
+
                                     <picture>
-                                        <source srcset="img/products/4.webp" type="image/webp">
-                                        <source srcset="img/products/4.png" type="image/png">
-                                        <img src="img/products/4.png" width="390" height="175" alt="">
+                                        <source srcset="{{ url($product->getThumbnailUrl()) }}" type="{{ StringHelper::get_mime_type($product->thumbnail) }}">
+                                        <img src="{{ url($product->getThumbnailUrl()) }}" width="390" height="175" alt="{{ $product->title }}">
                                     </picture>
+
+                                    @endif
+
                                 </a>
                                 <div class="product-card__info">
                                     <h3 class="product-card__name">
-                                        <a href="catalog-card.html">
-                                            <span>LONOСМ6000</span>
+                                        <a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+                                            <span>{{ $product->title }}</span>
                                         </a>
                                     </h3>
-                                    <p class="text product-card__text">Газоанализатор кислорода</p>
+                                    <p class="text product-card__text">{{ $product->description }}</p>
                                 </div>
                             </div>
-                            <div class="product-card product-card--sm-column products__item products__item--col-4">
-                                <a class="product-card__img" href="catalog-card.html">
-                                    <picture>
-                                        <source srcset="img/products/5.webp" type="image/webp">
-                                        <source srcset="img/products/5.png" type="image/png">
-                                        <img src="img/products/5.png" width="320" height="250" alt="">
-                                    </picture>
-                                </a>
-                                <div class="product-card__info">
-                                    <h3 class="product-card__name">
-                                        <a href="catalog-card.html">
-                                            <span>LONOXT3000</span>
-                                        </a>
-                                    </h3>
-                                    <p class="text product-card__text">Циркониевый газоанализатор кислорода</p>
-                                </div>
-                            </div>
-                            <div class="product-card product-card--sm-column products__item products__item--col-4">
-                                <a class="product-card__img" href="catalog-card.html">
-                                    <picture>
-                                        <source srcset="img/products/2.webp" type="image/webp">
-                                        <source srcset="img/products/2.png" type="image/png">
-                                        <img src="img/products/2.png" width="390" height="206" alt="">
-                                    </picture>
-                                </a>
-                                <div class="product-card__info">
-                                    <h3 class="product-card__name">
-                                        <a href="catalog-card.html">
-                                            <span>LONHOT SERVOCC6100</span>
-                                        </a>
-                                    </h3>
-                                    <p class="text product-card__text">Газоанализаторы кислорода и/или оксида углерода (II) и продуктов
-                                        неполного сгорания, в пересчёте на монооксид углерода (COe)</p>
-                                </div>
-                            </div>
+
+                            @endforeach
+
+                            {{ $products->links() }}
+
                         </div>
                     </div>
                 </div>
