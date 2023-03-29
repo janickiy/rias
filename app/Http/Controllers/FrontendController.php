@@ -42,6 +42,29 @@ class FrontendController
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function about()
+    {
+        $title = 'О компании';
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_title = '';
+        $seo_url_canonical = '';
+
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
+
+        return view('frontend.about', compact(
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
+        )->with('title', $title);
+    }
+
+    /**
      * @param string $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */

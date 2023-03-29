@@ -17,6 +17,8 @@ use App\Http\Controllers\FrontendController;
 
 Route::get('', [FrontendController::class, 'index'])->name('frontend.index');
 
+Route::get('/about', [FrontendController::class, 'about'])->name('frontend.about');
+
 Route::get('/pages/{slug}', [FrontendController::class, 'page'])->name('frontend.pages');
 
 Route::get('/news', [FrontendController::class, 'news'])->name('frontend.news');

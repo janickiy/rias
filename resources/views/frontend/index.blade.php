@@ -15,101 +15,86 @@
 
 @section('content')
 
-
-    <section class="banner banner--company banner--white">
+    <section class="banner banner--index">
         <div class="container">
             <div class="banner__content">
-                <div class="breadcrumbs banner__breadcrumbs">
+                <div class="breadcrumbs breadcrumbs--white banner__breadcrumbs">
                     <div class="breadcrumbs__list">
                         <div class="breadcrumbs__item">
                             <span class="breadcrumbs__current">Промышленные аналитические системы</span>
                         </div>
                     </div>
                 </div>
-                <div class="title1 title1--big banner__title">
-                    <h1>&emsp;ООО “РИАС” — инжиниринговая компания, специализирующаяся на <b>проектировании,
-                            производстве и
-                            поставках</b>
-                        газоаналитических систем, предназначенных для контроля технологических процессов</h1>
+                <div class="title1 title1--white title1--lh-120 banner__title">
+                    <h1>Проектируем, производим и поставляем
+                        газоаналитические системы,
+                        предназначенные для контроля технологических процессов</h1>
                 </div>
-                <div class="banner__features">
+                <div class="banner__features banner__features--indent">
                     <div class="banner__features-list">
-                        <div class="banner__feature banner__feature--col-4">
-                            <p class="text banner__feature-text">Эксклюзивные представители компании <b>SIGAS
-                                    Measurement
-                                    Engineering Corp</b></p>
+                        <div class="banner__feature banner__feature--vertical">
+                            <p class="text banner__feature-text">Эксклюзивные представители компании SIGAS Measurement Engineering
+                                Corp</p>
                         </div>
-                        <div class="banner__feature banner__feature--col-4">
-                            <p class="text banner__feature-text">Предоставление комплексных аналитических решений
-                                <b>“под ключ”</b>
+                        <div class="banner__feature banner__feature--vertical">
+                            <p class="text banner__feature-text">Предоставление комплексных аналитических решений “под&nbsp;ключ”
                             </p>
                         </div>
-                        <div class="banner__feature banner__feature--col-4">
-                            <p class="text banner__feature-text"><b>Собственное</b> производство аналитических
-                                систем</p>
+                        <div class="banner__feature banner__feature--vertical">
+                            <p class="text banner__feature-text">Собственное производство аналитических систем</p>
                         </div>
-                    </div>
-                </div>
-                <div class="banner__img">
-                    <picture>
-                        <source srcset="{{ url('img/company-img.webp') }}" type="image/webp">
-                        <source srcset="{{ url('img/company-img.png') }}" type="image/png">
-                        <img src="{{ url('img/company-img.png') }}" width="1408" height="482" alt="">
-                    </picture>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="team">
-        <div class="container">
-            <div class="team__content">
-                <div class="breadcrumbs team__breadcrumbs">
-                    <div class="breadcrumbs__list">
-                        <div class="breadcrumbs__item">
-                            <span class="breadcrumbs__current">Команда</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="team__main">
-                    <div class="team__img">
-                        <img src="{{ url('img/circles.svg') }}" width="263" height="138" alt="">
-                    </div>
-                    <div class="title1 team__title">
-                        <h2>Команда наших специалистов имеет <b>большой опыт внедрения и эксплуатации</b>
-                            промышленного
-                            измерительного
-                            оборудования, а инженеры ООО “РИАС” предлагают наиболее полные решения поставленных
-                            задач и обеспечивают
-                            поставку аналитических систем как для сложнейших, так и для стандартных применений,
-                            отвечающих лучшим
-                            мировым образцам</h2>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="direct">
-        <div class="container">
-            <div class="direct__content">
-                <div class="breadcrumbs">
-                    <div class="breadcrumbs__list">
-                        <div class="breadcrumbs__item">
-                            <span class="breadcrumbs__current">Направление</span>
+    <section class="partners">
+        <div class="container container--xl">
+            <div class="partners__content">
+                <div class="partners__info">
+                    <div class="breadcrumbs">
+                        <div class="breadcrumbs__list">
+                            <div class="breadcrumbs__item">
+                                <span class="breadcrumbs__current">Наши партнеры</span>
+                            </div>
                         </div>
                     </div>
+                    <div class="title1 partners__title">
+                        <h2>Мы являемся <b>дистрибьюторами и эксклюзивными
+                                представителями</b> на территории РФ следующих заводов-производителей поточных газовых анализаторов
+                        </h2>
+                    </div>
                 </div>
-                <div class="title1 direct__title">
-                    <h2>Одним из направлений нашей компании является <b>поставка оборудования “под ключ”</b> в сфере
-                        поточного
-                        промышленного газового анализа, включая хроматографию и задачи контроля промышленных
-                        выбросов</h2>
-                </div>
-                <div class="text direct__quote">Для решения данных задач мы используем высокотехнологичное
-                    оборудование и
-                    имеем штат сотрудников с большим опытом работы
-                    в данной области
+                <div class="partners__list">
+                    <div class="partners__item">
+                        <picture>
+                            <source srcset="{{ url('img/partners/artgaz.webp') }}" type="image/webp">
+                            <source srcset="{{ url('img/partners/artgaz.png') }}" type="image/png">
+                            <img class="partners__item-img" src="{{ url('img/partners/artgaz.png') }}" width="200" height="70" alt="">
+                        </picture>
+                    </div>
+                    <div class="partners__item">
+                        <picture>
+                            <source srcset="{{ url('img/partners/metran.webp') }}" type="image/webp">
+                            <source srcset="{{ url('img/partners/metran.png') }}" type="image/png">
+                            <img class="partners__item-img" src="{{ url('img/partners/metran.png') }}" width="200" height="34" alt="">
+                        </picture>
+                    </div>
+                    <div class="partners__item">
+                        <picture>
+                            <source srcset="{{ url('img/partners/sigas.webp') }}" type="image/webp">
+                            <source srcset="{{ url('img/partners/sigas.png') }}" type="image/png">
+                            <img class="partners__item-img" src="{{ url('img/partners/sigas.png') }}" width="200" height="48" alt="">
+                        </picture>
+                    </div>
+                    <div class="partners__item">
+                        <picture>
+                            <source srcset="{{ url('img/partners/protea.webp') }}" type="image/webp">
+                            <source srcset="{{ url('img/partners/protea.png') }}" type="image/png">
+                            <img class="partners__item-img" src="{{ url('img/partners/protea.png') }}" width="200" height="64" alt="">
+                        </picture>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,8 +120,7 @@
                         <div class="services__list">
                             <div class="services__item">
                                 <div class="services__item-content">
-                                    <p class="text services__item-text">Проектирование и разработка систем газового
-                                        и жидкостного
+                                    <p class="text services__item-text">Проектирование и разработка систем газового и жидкостного
                                         анализа
                                     </p>
                                 </div>
@@ -148,8 +132,7 @@
                             </div>
                             <div class="services__item">
                                 <div class="services__item-content">
-                                    <p class="text services__item-text">Ремонт и техническое обслуживание
-                                        газоанализаторов и
+                                    <p class="text services__item-text">Ремонт и техническое обслуживание газоанализаторов и
                                         газоаналитических систем</p>
                                 </div>
                             </div>
@@ -165,56 +148,74 @@
         </div>
     </section>
 
-    <section class="partners">
+    <section class="products">
         <div class="container container--xl">
-            <div class="partners__content">
-                <div class="partners__info">
+            <div class="products__content">
+                <div class="products__info">
                     <div class="breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
-                                <span class="breadcrumbs__current">Наши партнеры</span>
+                                <span class="breadcrumbs__current">Популярное оборудование</span>
                             </div>
                         </div>
                     </div>
-                    <div class="title1 partners__title">
-                        <h2>Мы являемся <b>дистрибьюторами и эксклюзивными
-                                представителями</b> на территории РФ следующих заводов-производителей поточных
-                            газовых анализаторов
-                        </h2>
-                    </div>
                 </div>
-                <div class="partners__list">
-                    <div class="partners__item">
-                        <picture>
-                            <source srcset="{{ url('img/partners/artgaz.webp') }}" type="image/webp">
-                            <source srcset="{{ url('img/partners/artgaz.png') }}" type="image/png">
-                            <img class="partners__item-img" src="{{ url('img/partners/artgaz.png') }}" width="200"
-                                 height="70" alt="">
-                        </picture>
+                <div class="products__list">
+                    <div class="product-card products__item">
+                        <div class="product-card__img">
+                            <picture>
+                                <source srcset="{{ url('img/products/1.webp') }}" type="image/webp">
+                                <source srcset="{{ url('img/products/1.png') }}" type="image/png">
+                                <img src="{{ url('img/products/1.png') }}" width="234" height="218" alt="">
+                            </picture>
+                        </div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">
+                                <a href="#">
+                                    <span>Анализатор Sigas S-Analyzer 200 ATEX</span>
+                                </a>
+                            </h3>
+                        </div>
                     </div>
-                    <div class="partners__item">
-                        <picture>
-                            <source srcset="{{ url('img/partners/metran.webp') }}" type="image/webp">
-                            <source srcset="{{ url('img/partners/metran.png') }}" type="image/png">
-                            <img class="partners__item-img" src="{{ url('img/partners/metran.png') }}" width="200"
-                                 height="34" alt="">
-                        </picture>
+                    <div class="product-card products__item">
+                        <div class="product-card__img">
+                            <picture>
+                                <source srcset="{{ url('img/products/2.webp') }}" type="image/webp">
+                                <source srcset="{{ url('img/products/2.png') }}" type="image/png">
+                                <img src="{{ url('img/products/2.png') }}" width="302" height="158" alt="">
+                            </picture>
+                        </div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">
+                                <a href="#">
+                                    <span>Анализатор Lonhot Servocc6100</span>
+                                </a>
+                            </h3>
+                        </div>
                     </div>
-                    <div class="partners__item">
-                        <picture>
-                            <source srcset="{{ url('img/partners/sigas.webp') }}" type="image/webp">
-                            <source srcset="{{ url('img/partners/sigas.png') }}" type="image/png">
-                            <img class="partners__item-img" src="{{ url('img/partners/sigas.png') }}" width="200"
-                                 height="48" alt="">
-                        </picture>
+                    <div class="product-card products__item">
+                        <div class="product-card__img">
+                            <picture>
+                                <source srcset="{{ url('img/products/3.webp') }}" type="image/webp">
+                                <source srcset="{{ url('img/products/3.png') }}" type="image/png">
+                                <img src="{{ url('img/products/3.png') }}" width="186" height="218" alt="">
+                            </picture>
+                        </div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">
+                                <a href="#">
+                                    <span>Анализатор OCM6000</span>
+                                </a>
+                            </h3>
+                        </div>
                     </div>
-                    <div class="partners__item">
-                        <picture>
-                            <source srcset="{{ url('img/partners/protea.webp') }}" type="image/webp">
-                            <source srcset="{{ url('img/partners/protea.png') }}" type="image/png">
-                            <img class="partners__item-img" src="{{ url('img/partners/protea.png') }}" width="200"
-                                 height="64" alt="">
-                        </picture>
+                    <div class="product-card products__item">
+                        <a class="product-card__more" href="{{ URL::route('frontend.catalog') }}">
+                            <div class="product-card__more-img">
+                                <img src="{{ url('img/arrows-right.svg') }}" width="152" height="76" alt="">
+                            </div>
+                            <span class="product-card__more-text">Смотреть все оборудование</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -236,8 +237,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет
-                            проекта</a>
+                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
                     </div>
                 </div>
             </div>
