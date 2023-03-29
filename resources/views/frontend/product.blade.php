@@ -22,10 +22,12 @@
                         <div class="breadcrumbs__list">
 
                             <div class="breadcrumbs__item">
-                                <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
+                                <a class="breadcrumbs__link"
+                                   href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
                             </div>
                             <div class="breadcrumbs__item">
-                                <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">{{ $product->catalog->name }}</a>
+                                <a class="breadcrumbs__link"
+                                   href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">{{ $product->catalog->name }}</a>
                             </div>
                             <div class="breadcrumbs__item">
                                 <span class="breadcrumbs__current">{{ $product->title }}</span>
@@ -45,22 +47,23 @@
                                 <div class="swiper-wrapper">
 
                                     @foreach($product->photos as $photo)
-                                    <div class="swiper-slide product__nav-slide">
-                                        <picture>
-                                            <source srcset="{{ url($photo->getThumbnailUrl()) }}" type="image/png">
-                                            <img src="{{ url($photo->getThumbnailUrl()) }}" alt="" width="48" height="52">
-                                        </picture>
-                                    </div>
+                                        <div class="swiper-slide product__nav-slide">
+                                            <picture>
+                                                <source srcset="{{ url($photo->getThumbnailUrl()) }}"
+                                                        type="{{ StringHelper::get_mime_type($photo->thumbnail) }}">
+                                                <img src="{{ url($photo->getThumbnailUrl()) }}" alt="" width="48"
+                                                     height="52">
+                                            </picture>
+                                        </div>
                                     @endforeach
 
-                                    @foreach($product->photos as $photo)
-
-                                    <div class="swiper-slide product__nav-slide product__nav-slide--video">
-                                        <picture>
-                                            <source srcset="{{ $photo->getThumbnailUrl() }}" type="image/png">
-                                            <img src="{{ $photo->getThumbnailUrl() }}" alt="" width="62" height="62">
-                                        </picture>
-                                    </div>
+                                    @foreach($product->videos as $video)
+                                        <div class="swiper-slide product__nav-slide product__nav-slide--video">
+                                            <picture>
+                                                <source srcset="{{ $video->getThumb() }}" type="image/jpeg">
+                                                <img src="{{ $video->getThumb() }}" alt="" width="62" height="62">
+                                            </picture>
+                                        </div>
                                     @endforeach
 
                                 </div>
@@ -70,19 +73,20 @@
                             <div class="swiper-wrapper">
 
                                 @foreach($product->photos as $photo)
-                                <div class="swiper-slide product__big-slide">
-                                    <picture>
-                                        <source srcset="{{ $photo->getOriginUrl() }}" type="image/png">
-                                        <img src="{{ $photo->getOriginUrl() }}" alt="" width="186" height="218">
-                                    </picture>
-                                </div>
+                                    <div class="swiper-slide product__big-slide">
+                                        <picture>
+                                            <source srcset="{{ $photo->getOriginUrl() }}" type="image/png">
+                                            <img src="{{ $photo->getOriginUrl() }}" alt="" width="186" height="218">
+                                        </picture>
+                                    </div>
                                 @endforeach
 
 
-                               @foreach($product->videos as $video)
-                                <div class="swiper-slide product__big-slide product__big-slide--video">
-                                    <div class="product__big-slide-video" data-src="{{ $video->getVideoUrl() }}"></div>
-                                </div>
+                                @foreach($product->videos as $video)
+                                    <div class="swiper-slide product__big-slide product__big-slide--video">
+                                        <div class="product__big-slide-video"
+                                             data-src="{{ $video->getVideoUrl() }}"></div>
+                                    </div>
                                 @endforeach
 
                             </div>
@@ -92,7 +96,8 @@
                     </div>
                     <div class="text-content text-content--big product__excerpt">
                         <p>{{ $product->description }}</p>
-                        <a class="link-more link-more--down product__excerpt-more" href="#product-tabs">Полное описание</a>
+                        <a class="link-more link-more--down product__excerpt-more" href="#product-tabs">Полное
+                            описание</a>
                     </div>
                 </div>
 
@@ -110,12 +115,14 @@
                                 </div>
 
                                 @if($product->thumbnail)
-                                <div class="product__column-img">
-                                    <picture>
-                                        <source srcset="{{ $product->getThumbnailUrl() }}" type="{{ StringHelper::get_mime_type($product->origin) }}">
-                                        <img src="{{ $product->getThumbnailUrl() }}" alt="" width="705" height="348">
-                                    </picture>
-                                </div>
+                                    <div class="product__column-img">
+                                        <picture>
+                                            <source srcset="{{ $product->getThumbnailUrl() }}"
+                                                    type="{{ StringHelper::get_mime_type($product->origin) }}">
+                                            <img src="{{ $product->getThumbnailUrl() }}" alt="" width="705"
+                                                 height="348">
+                                        </picture>
+                                    </div>
                                 @endif
 
                             </div>
@@ -128,13 +135,7 @@
                         <div class="tabs__item">
                             <div class="product__models">
                                 <div class="product-model product__models-item">
-                                    <picture>
-                                        <source srcset="img/products/3.webp" type="image/webp">
-                                        <source srcset="img/products/3.png" type="image/png">
-                                        <img class="product-model__img" src="img/products/3.jpg" alt="" width="186" height="218">
-                                    </picture>
                                     <div class="text-content text-content--big product-model__main">
-
                                         <h2>Характеристики</h2>
                                         <ul>
                                             @foreach($product->parameters as $parameter)
@@ -142,7 +143,8 @@
                                             @endforeach
                                         </ul>
                                     </div>
-                                    <a class="link-more product-model__more" href="#">Матрица заказа электронного блока</a>
+                                    <a class="link-more product-model__more" href="#">Матрица заказа электронного
+                                        блока</a>
                                 </div>
                             </div>
                         </div>
@@ -152,12 +154,12 @@
 
                                 @foreach($product->documents as $document)
 
-                                <a class="link-doc product__doc" href="{{ url($document->getDocument()) }}">
-                                    <div class="link-doc__info">
-                                        {{ $document->path }}
-                                        <span class="text link-doc__text">{{ $document->description }}</span>
-                                    </div>
-                                </a>
+                                    <a class="link-doc product__doc" href="{{ url($document->getDocument()) }}">
+                                        <div class="link-doc__info">
+                                            {{ $document->path }}
+                                            <span class="text link-doc__text">{{ $document->description }}</span>
+                                        </div>
+                                    </a>
 
                                 @endforeach
 
@@ -184,7 +186,8 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
+                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить
+                            заявку на расчет проекта</a>
                     </div>
                 </div>
             </div>
