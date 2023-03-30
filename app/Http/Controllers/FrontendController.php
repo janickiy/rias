@@ -80,11 +80,8 @@ class FrontendController
         $meta_title = $page->meta_title ?? '';
         $seo_url_canonical = $page->seo_url_canonical ?? '';
 
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
-
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
         return view('frontend.index', compact(
             'page',
@@ -92,8 +89,7 @@ class FrontendController
             'meta_keywords',
             'meta_title',
             'seo_url_canonical',
-            'top_menu',
-            'bottom_menu')
+            'top_menu')
         )->with('title', $title);
     }
 
@@ -166,7 +162,7 @@ class FrontendController
 
             if (!$catalog) abort(404);
 
-            $products = Products::where('catalog_id', $catalog->id)->paginate(5);
+            $products = Products::where('catalog_id', $catalog->id)->paginate(6);
 
             $title = $catalog->name;
             $meta_description = $catalog->meta_description;
@@ -220,7 +216,6 @@ class FrontendController
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
-
 
         return view('frontend.product', compact(
             'product',

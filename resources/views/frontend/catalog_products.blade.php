@@ -80,7 +80,7 @@
 
                             @endforeach
 
-                            {{ $products->links() }}
+                            {{ $products->links('vendor.pagination.frontend_pagination') }}
 
                         </div>
                     </div>

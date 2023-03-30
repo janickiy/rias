@@ -68,7 +68,7 @@ class ProductsController extends Controller
 
         Products::create(array_merge(array_merge($request->all()), [
             'thumbnail' => $thumbnailFileNameToStore ?? null,
-            'origin' => $fileNameToStore
+            'origin' => $fileNameToStore ?? null,
         ]));
 
         return redirect(URL::route('cp.products.index'))->with('success', 'Информация успешно добавлена');
