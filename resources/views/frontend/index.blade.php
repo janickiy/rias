@@ -161,54 +161,27 @@
                     </div>
                 </div>
                 <div class="products__list">
+
+                    @foreach($products as $product)
+
                     <div class="product-card products__item">
                         <div class="product-card__img">
                             <picture>
-                                <source srcset="{{ url('img/products/1.webp') }}" type="image/webp">
-                                <source srcset="{{ url('img/products/1.png') }}" type="image/png">
-                                <img src="{{ url('img/products/1.png') }}" width="234" height="218" alt="">
+                                <source srcset="{{ url($product->getThumbnailUrl()) }}" type="{{ StringHelper::get_mime_type($product->thumbnail) }}">
+                                <img src="{{ url($product->getThumbnailUrl()) }}" width="234" height="218" alt="">
                             </picture>
                         </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">
-                                <a href="#">
-                                    <span>Анализатор Sigas S-Analyzer 200 ATEX</span>
+                                <a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+                                    <span>{{ $product->title }}</span>
                                 </a>
                             </h3>
                         </div>
                     </div>
-                    <div class="product-card products__item">
-                        <div class="product-card__img">
-                            <picture>
-                                <source srcset="{{ url('img/products/2.webp') }}" type="image/webp">
-                                <source srcset="{{ url('img/products/2.png') }}" type="image/png">
-                                <img src="{{ url('img/products/2.png') }}" width="302" height="158" alt="">
-                            </picture>
-                        </div>
-                        <div class="product-card__info">
-                            <h3 class="product-card__name">
-                                <a href="#">
-                                    <span>Анализатор Lonhot Servocc6100</span>
-                                </a>
-                            </h3>
-                        </div>
-                    </div>
-                    <div class="product-card products__item">
-                        <div class="product-card__img">
-                            <picture>
-                                <source srcset="{{ url('img/products/3.webp') }}" type="image/webp">
-                                <source srcset="{{ url('img/products/3.png') }}" type="image/png">
-                                <img src="{{ url('img/products/3.png') }}" width="186" height="218" alt="">
-                            </picture>
-                        </div>
-                        <div class="product-card__info">
-                            <h3 class="product-card__name">
-                                <a href="#">
-                                    <span>Анализатор OCM6000</span>
-                                </a>
-                            </h3>
-                        </div>
-                    </div>
+
+                    @endforeach
+
                     <div class="product-card products__item">
                         <a class="product-card__more" href="{{ URL::route('frontend.catalog') }}">
                             <div class="product-card__more-img">

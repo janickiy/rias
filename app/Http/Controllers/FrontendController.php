@@ -31,7 +31,10 @@ class FrontendController
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
 
+        $products = Products::inRandomOrder()->limit(3)->get();
+
         return view('frontend.index', compact(
+            'products',
             'page',
             'meta_description',
             'meta_keywords',
