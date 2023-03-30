@@ -53,6 +53,8 @@
 
                 @endforeach
 
+                {{ $news->links('vendor.pagination.frontend_pagination') }}
+
             </div>
         </div>
     </section>
