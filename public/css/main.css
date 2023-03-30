@@ -626,6 +626,10 @@ button {
   transition: color 0.3s;
 }
 
+.menu__active {
+    color: var(--color-primary);
+}
+
 .menu__link:hover {
   color: var(--color-primary);
 }
