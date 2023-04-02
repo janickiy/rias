@@ -49,29 +49,20 @@ class CatalogController extends Controller
         if ($request->hasFile('image')) {
             $extension = $request->file('image')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $fileNameToStore = 'origin_' . $filename;
-            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
+            $fileNameToStore = $filename;
 
-            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
-                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
-                $img->resize(null, 300, function ($constraint) {
+            if ($request->file('image')->storeAs('public/catalog', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/catalog/') . $fileNameToStore);
+                $img->resize(null, 400, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-                $img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore);
+                $img->save(Storage::path('/public/catalog/') . $fileNameToStore);
             }
         }
 
-
-
-       // dd($thumbnailFileNameToStore);
-
         Catalog::create(array_merge(array_merge($request->all()), [
-            'image' => $thumbnailFileNameToStore ?? null,
-        //    'origin' => $fileNameToStore ?? null,
+            'image' => $fileNameToStore ?? null,
         ]));
-
-
-       // Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
     }
