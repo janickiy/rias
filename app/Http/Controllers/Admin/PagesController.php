@@ -41,7 +41,7 @@ class PagesController extends Controller
             'title' => 'required',
             'text' => 'required',
             'slug' => 'required|unique:pages',
-            'parent_id' => 'integer|nullable'
+            'main' => 'integer|nullable'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -86,7 +86,7 @@ class PagesController extends Controller
             'title' => 'required',
             'text' => 'required',
             'slug' => 'required|unique:pages,slug,' . $request->id,
-            'parent_id' => 'integer|nullable'
+            'main' => 'integer|nullable'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -104,7 +104,6 @@ class PagesController extends Controller
         $row->meta_title = $request->input('meta_title');
         $row->meta_description = $request->input('meta_description');
         $row->meta_keywords = $request->input('meta_keywords');
-        $row->parent_id = $request->input('parent_id');
         $row->slug = $request->input('slug');
         $row->seo_h1 = $request->input('seo_h1');
         $row->seo_url_canonical = $request->input('seo_url_canonical');
@@ -116,6 +115,16 @@ class PagesController extends Controller
         }
 
         $row->published = $published;
+
+
+        $main = 0;
+
+        if ($request->input('main')) {
+            $main = 1;
+            Pages::where('main', 1)->update(['main' => 0]);
+        }
+
+        $row->main = $main;
         $row->save();
 
         return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно обновлены');

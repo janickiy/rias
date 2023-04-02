@@ -117,6 +117,21 @@
 
                                 </section>
 
+
+                                <section>
+
+                                    <label class="checkbox">
+
+                                        {!! Form::checkbox('main', 1, isset($row) ? ($row->main == true ? 1 : 0): 0) !!}
+
+                                        <i></i>Главная</label>
+
+                                    @if ($errors->has('main'))
+                                        <span class="text-danger">{{ $errors->first('main') }}</span>
+                                    @endif
+
+                                </section>
+
                                 <h3>SEO</h3>
 
                                 <section>

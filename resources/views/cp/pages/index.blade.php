@@ -37,8 +37,7 @@
                             <tr>
                                 <th>Название</th>
                                 <th>ЧПУ</th>
-                                <th>Раздел</th>
-                                <th>Тип</th>
+                                <th>Главная</th>
                                 <th>Опубликовано</th>
                                 <th>Создан</th>
                                 <th>Изменен</th>
@@ -126,8 +125,7 @@
                 columns: [
                     {data: 'title', name: 'title'},
                     {data: 'slug', name: 'slug'},
-                    {data: 'pages.parent', name: 'parent_id'},
-                    {data: 'page_path', name: 'page_path'},
+                    {data: 'main', name: 'main'},
                     {data: 'published', name: 'published'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'updated_at', name: 'updated_at'},

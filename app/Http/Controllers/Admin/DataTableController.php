@@ -57,12 +57,11 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-            ->editColumn('pages.parent', function ($row) {
-                return $row->parent->title ?? '';
+
+            ->editColumn('main', function ($row) {
+                return $row->main ? 'да' : 'нет';
             })
-            ->editColumn('page_path', function ($row) {
-                return $row->PagePathType ?? '';
-            })
+
             ->rawColumns(['actions'])->make(true);
     }
 

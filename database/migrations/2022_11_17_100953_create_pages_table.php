@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('slug')->unique();
+            $table->tinyInteger('main')->default(0);
             $table->boolean('published')->default(1);
             $table->integer('parent_id')->default(0)->nullable();
             $table->timestamps();

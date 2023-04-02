@@ -18,6 +18,7 @@ class Pages extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'main',
         'slug',
         'parent_id',
         'published',
