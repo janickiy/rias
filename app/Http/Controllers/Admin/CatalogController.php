@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
-use App\Models\{Catalog, ProductDocuments, ProductPhotos};
+use App\Models\{Catalog, ProductDocuments, ProductPhotos, Products};
 use Validator;
 use Storage;
 use Image;
@@ -65,7 +65,13 @@ class CatalogController extends Controller
 
        // dd($thumbnailFileNameToStore);
 
-        Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
+        Catalog::create(array_merge(array_merge($request->all()), [
+            'image' => $thumbnailFileNameToStore ?? null,
+        //    'origin' => $fileNameToStore ?? null,
+        ]));
+
+
+       // Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
     }
