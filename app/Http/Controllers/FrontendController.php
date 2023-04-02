@@ -240,13 +240,10 @@ class FrontendController
         $meta_keywords = '';
         $meta_title = '';
 
-        $menu1 = Menus::where('name', 'top')->with('items')->first();
-        $top_menu = $menu1->items->toArray();
+        $menu = Menus::where('name', 'top')->with('items')->first();
+        $top_menu = $menu->items->toArray();
 
-        $menu2 = Menus::where('name', 'bottom')->with('items')->first();
-        $bottom_menu = $menu2->items->toArray();
-
-        return view('frontend.contact', compact('meta_description', 'meta_keywords', 'meta_title', 'top_menu', 'bottom_menu'))->with('title', 'Обратная связь');
+        return view('frontend.contact', compact('meta_description', 'meta_keywords', 'meta_title', 'top_menu'))->with('title', 'Обратная связь');
     }
 
     /**
