@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
-use App\Models\{Catalog, ProductDocuments, ProductPhotos, Products};
+use App\Models\{Catalog};
 use Validator;
 use Storage;
 use Image;

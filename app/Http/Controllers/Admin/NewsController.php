@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Catalog;
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Helpers\StringHelper;
@@ -63,7 +64,9 @@ class NewsController extends Controller
             }
         }
 
-        News::create(array_merge($request->all()), ['image' => $filename ?? null]);
+        News::create(array_merge(array_merge($request->all()), [
+            'image' => $filename ?? null,
+        ]));
 
         return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно добавлены');
 
