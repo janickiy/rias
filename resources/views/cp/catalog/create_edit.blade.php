@@ -70,7 +70,7 @@
 
                             <section>
 
-                                {!! Form::label('scope', 'Область применения*', ['class' => 'label']) !!}
+                                {!! Form::label('scope', 'Область применения', ['class' => 'label']) !!}
 
                                 <label class="textarea textarea-resizable">
 
@@ -86,7 +86,7 @@
 
                             <section>
 
-                                {!! Form::label('description', 'Описание*', ['class' => 'label']) !!}
+                                {!! Form::label('description', 'Описание', ['class' => 'label']) !!}
 
                                 <label class="textarea textarea-resizable">
 
