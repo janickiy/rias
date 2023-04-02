@@ -61,6 +61,10 @@ class CatalogController extends Controller
             }
         }
 
+
+
+        dd($thumbnailFileNameToStore);
+
         Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
