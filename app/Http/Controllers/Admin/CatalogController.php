@@ -47,23 +47,21 @@ class CatalogController extends Controller
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
         if ($request->hasFile('image')) {
-
             $extension = $request->file('image')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $fileNameToStore = $filename;
+            $fileNameToStore = 'origin_' . $filename;
+            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
 
-            if ($request->file('image')->storeAs('public/catalog', $fileNameToStore)) {
-                $img = Image::make(Storage::path('/public/catalog/') . $fileNameToStore);
-                $img->resize(null, 400, function ($constraint) {
+            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
+                $img->resize(null, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-
-                $img->save(Storage::path('/public/catalog/') . $fileNameToStore);
+                $img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore);
             }
-
         }
 
-        Catalog::create(array_merge($request->all()), ['image' => $filename ?? null]);
+        Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
 
         return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
     }
