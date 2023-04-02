@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
-use App\Models\{Catalog};
+use App\Models\{Catalog, ProductDocuments, ProductPhotos};
 use Validator;
 use Storage;
 use Image;
@@ -47,16 +47,20 @@ class CatalogController extends Controller
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
         if ($request->hasFile('image')) {
+
             $extension = $request->file('image')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
+            $fileNameToStore = $filename;
 
-            if ($request->file('image')->storeAs('public/catalog', $filename)) {
-                $img = Image::make(Storage::path('/public/catalog/') . $filename);
+            if ($request->file('image')->storeAs('public/catalog', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/catalog/') . $fileNameToStore);
                 $img->resize(null, 400, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-                $img->save(Storage::path('/public/catalog/') . $filename);
+
+                $img->save(Storage::path('/public/catalog/') . $fileNameToStore);
             }
+
         }
 
         Catalog::create(array_merge($request->all()), ['image' => $filename ?? null]);
