@@ -63,7 +63,7 @@ class CatalogController extends Controller
 
 
 
-        dd($thumbnailFileNameToStore);
+       // dd($thumbnailFileNameToStore);
 
         Catalog::create(array_merge($request->all()), ['image' => $thumbnailFileNameToStore ?? null]);
 
