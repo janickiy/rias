@@ -175,7 +175,7 @@ class ProductsController extends Controller
             if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
             if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
 
-            $row->parameters->delete();
+            $row->parameters()->delete();
 
             $row->delete();
         }
