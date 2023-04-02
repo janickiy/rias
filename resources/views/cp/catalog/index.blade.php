@@ -38,6 +38,7 @@
                             <tr>
                                 <th>Название</th>
                                 <th>ЧПУ</th>
+                                <th>Фото</th>
                                 <th>Создан</th>
                                 <th>Изменен</th>
                                 <th data-hide="phone,tablet">Действия</th>
@@ -125,6 +126,7 @@
                 columns: [
                     {data: 'name', name: 'name'},
                     {data: 'slug', name: 'slug'},
+                    {data: 'image', name: 'image', searchable: false},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'updated_at', name: 'updated_at'},
                     {data: "actions", name: 'actions', orderable: false, searchable: false}

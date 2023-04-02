@@ -129,7 +129,7 @@ class CatalogController extends Controller
 
                 if ($request->file('image')->storeAs('public/catalog', $filename)) {
                     $img = Image::make(Storage::path('/public/catalog/') . $filename);
-                    $img->resize(null, 300, function ($constraint) {
+                    $img->resize(null, 400, function ($constraint) {
                         $constraint->aspectRatio();
                     });
 

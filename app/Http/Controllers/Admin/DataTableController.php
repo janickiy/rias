@@ -124,6 +124,11 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
+
+           ->editColumn('image', function ($row) {
+               return $row->image ? 'да' : 'нет';
+           })
+
             ->rawColumns(['actions'])->make(true);
     }
 
