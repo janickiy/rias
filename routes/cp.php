@@ -53,24 +53,24 @@ Route::group(['prefix' => 'cp'], function () {
     });
 
     Route::get('feedback',FeedbackController::class)->name('cp.feedback.index');
-    Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index');
+    Route::get('manage-menus',[MenuController::class,'index'])->name('cp.menu.index')->middleware(['permission:admin|moderator']);
 
     Route::group(['prefix' => 'catalog'], function () {
-        Route::get('',[CatalogController::class, 'index'])->name('cp.catalog.index');
-        Route::get('create',[CatalogController::class, 'create'])->name('cp.catalog.create');
-        Route::post('store',[CatalogController::class, 'store'])->name('cp.catalog.store');
+        Route::get('',[CatalogController::class, 'index'])->name('cp.catalog.index')->middleware(['permission:admin|moderator']);
+        Route::get('create',[CatalogController::class, 'create'])->name('cp.catalog.create')->middleware(['permission:admin|moderator']);
+        Route::post('store',[CatalogController::class, 'store'])->name('cp.catalog.store')->middleware(['permission:admin|moderator']);
         Route::get('edit/{id}',[CatalogController::class, 'edit'])->name('cp.catalog.edit')->where('id', '[0-9]+');
-        Route::put('update',[CatalogController::class, 'update'])->name('cp.catalog.update');
-        Route::post('destroy',[CatalogController::class, 'destroy'])->name('cp.catalog.destroy');
+        Route::put('update',[CatalogController::class, 'update'])->name('cp.catalog.update')->middleware(['permission:admin|moderator']);
+        Route::post('destroy',[CatalogController::class, 'destroy'])->name('cp.catalog.destroy')->middleware(['permission:admin|moderator']);
     });
 
     Route::group(['prefix' => 'users'], function () {
-        Route::get('', [UsersController::class, 'index'])->name('cp.users.index');
-        Route::get('create', [UsersController::class, 'create'])->name('cp.users.create');
-        Route::post('store', [UsersController::class, 'store'])->name('cp.users.store');
+        Route::get('', [UsersController::class, 'index'])->name('cp.users.index')->middleware(['permission:admin']);
+        Route::get('create', [UsersController::class, 'create'])->name('cp.users.create')->middleware(['permission:admin']);
+        Route::post('store', [UsersController::class, 'store'])->name('cp.users.store')->middleware(['permission:admin']);
         Route::get('edit/{id}', [UsersController::class, 'edit'])->name('cp.users.edit')->where('id', '[0-9]+');
-        Route::put('update', [UsersController::class, 'update'])->name('cp.users.update');
-        Route::post('destroy', [UsersController::class, 'destroy'])->name('cp.users.destroy');
+        Route::put('update', [UsersController::class, 'update'])->name('cp.users.update')->middleware(['permission:admin']);
+        Route::post('destroy', [UsersController::class, 'destroy'])->name('cp.users.destroy')->middleware(['permission:admin']);
     });
 
     Route::group(['prefix' => 'products'], function () {
@@ -125,12 +125,12 @@ Route::group(['prefix' => 'cp'], function () {
     });
 
     Route::group(['prefix' => 'settings'], function () {
-        Route::get('', [SettingsController::class, 'index'])->name('cp.settings.index');
-        Route::get('create', [SettingsController::class, 'create'])->name('cp.settings.create');
-        Route::post('store', [SettingsController::class, 'store'])->name('cp.settings.store');
-        Route::get('edit/{id}', [SettingsController::class, 'edit'])->name('cp.settings.edit')->where('id', '[0-9]+');
-        Route::put('update', [SettingsController::class, 'update'])->name('cp.settings.update');
-        Route::post('destroy', [SettingsController::class, 'destroy'])->name('cp.settings.destroy');
+        Route::get('', [SettingsController::class, 'index'])->name('cp.settings.index')->middleware(['permission:admin']);
+        Route::get('create', [SettingsController::class, 'create'])->name('cp.settings.create')->middleware(['permission:admin']);
+        Route::post('store', [SettingsController::class, 'store'])->name('cp.settings.store')->middleware(['permission:admin']);
+        Route::get('edit/{id}', [SettingsController::class, 'edit'])->name('cp.settings.edit')->where('id', '[0-9]+')->middleware(['permission:admin']);
+        Route::put('update', [SettingsController::class, 'update'])->name('cp.settings.update')->middleware(['permission:admin']);
+        Route::post('destroy', [SettingsController::class, 'destroy'])->name('cp.settings.destroy')->middleware(['permission:admin']);
     });
 
     Route::group(['prefix' => 'robots'], function () {
