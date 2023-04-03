@@ -167,7 +167,7 @@ Use search to find needed section.
         -->
 
         <ul>
-            @if(Helpers::has_permission(Auth::user()->role,'admin|moderator'))
+            @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
 
             <li {!! Request::is('cp*') ? ' class="active"' : '' !!}>
                 <a href="{{ URL::route('cp.dashbaord.index') }}"><i class="fa fa-fw fa-home"></i> <span class="menu-item-parent"> Главная</span></a>
@@ -223,7 +223,7 @@ Use search to find needed section.
             </li>
 
 
-            @if(Helpers::has_permission(Auth::user()->role,'admin|moderator'))
+            @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
             <li class="">
                 <a href="#">
                     <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">SEO</span>
@@ -247,7 +247,7 @@ Use search to find needed section.
             </li>
             @endif
 
-            @if(Helpers::has_permission(Auth::user()->role,'admin'))
+            @if(PermissionsHelper::has_permission(Auth::user()->role,'admin'))
 
             <li {!! Request::is('cp/users*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
@@ -259,7 +259,7 @@ Use search to find needed section.
                 <a href="{{URL::route('cp.feedback.index')}}"><i class="fa fa-fw fa-envelope"></i> <span class="menu-item-parent"> Сообщения с сайта</span></a>
             </li>
 
-            @if(Helpers::has_permission(Auth::user()->role,'admin'))
+            @if(PermissionsHelper::has_permission(Auth::user()->role,'admin'))
 
             <li {!! Request::is('cp/settings*') ? ' class="active"' : '' !!}>
                 <a href="{{URL::route('cp.settings.index')}}"><i class="fa fa-fw fa-cog txt-color-blue"></i> <span class="menu-item-parent"> Настройки</span></a>
