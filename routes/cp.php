@@ -94,6 +94,8 @@ Route::group(['prefix' => 'cp'], function () {
     Route::group(['prefix' => 'product-photos'], function () {
         Route::get('{product_id}', [ProductPhotosController::class, 'index'])->name('cp.product_photos.index')->where('product_id', '[0-9]+');
         Route::post('upload', [ProductPhotosController::class, 'upload'])->name('cp.product_photos.upload');
+        Route::get('edit/{id}', [ProductPhotosController::class, 'edit'])->name('cp.product_photos.edit')->where('id', '[0-9]+');
+        Route::put('update', [ProductPhotosController::class, 'update'])->name('cp.product_photos.update');
         Route::post('destroy', [ProductPhotosController::class, 'destroy'])->name('cp.product_photos.destroy');
     });
 

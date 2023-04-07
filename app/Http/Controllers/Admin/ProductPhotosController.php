@@ -44,7 +44,7 @@ class ProductPhotosController extends Controller
             'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
 
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -76,6 +76,22 @@ class ProductPhotosController extends Controller
 
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function edit(int $id)
+    {
+        $row = ProductPhotos::find($id);
+
+        if (!$row) abort(404);
+
+        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+
+        return view('cp.product_photos.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование фото');
+
+    }
+
 
     /**
      * @param Request $request
@@ -87,7 +103,7 @@ class ProductPhotosController extends Controller
             'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
 
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -96,6 +112,31 @@ class ProductPhotosController extends Controller
         $row = ProductPhotos::find($request->id);
 
         if (!$row) abort(404);
+
+        $row->title = $request->input('title');
+        $row->alt = $request->input('alt');
+
+        if ($request->hasFile('image')) {
+            if (Storage::disk('public')->exists('images/' . $row->thumbnail) === true) Storage::disk('public')->delete('images/' . $row->thumbnail);
+            if (Storage::disk('public')->exists('images/' . $row->origin) === true) Storage::disk('public')->delete('images/' . $row->origin);
+
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $fileNameToStore = 'origin_' . $filename;
+            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
+
+            if ($request->file('image')->storeAs('public/images', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/images/') . $fileNameToStore);
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                if ($img->save(Storage::path('/public/images/') . $thumbnailFileNameToStore)) {
+                    $row->thumbnail = $thumbnailFileNameToStore;
+                    $row->origin = $fileNameToStore;
+                }
+            }
+        }
 
         $row->save();
 

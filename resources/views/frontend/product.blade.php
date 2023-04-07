@@ -51,7 +51,7 @@
                                             <picture>
                                                 <source srcset="{{ url($photo->getThumbnailUrl()) }}"
                                                         type="{{ StringHelper::get_mime_type($photo->thumbnail) }}">
-                                                <img src="{{ url($photo->getThumbnailUrl()) }}" alt="" width="48"
+                                                <img src="{{ url($photo->getThumbnailUrl()) }}" title="{{ $photo->title }}" alt="{{ $photo->alt }}" width="48"
                                                      height="52">
                                             </picture>
                                         </div>

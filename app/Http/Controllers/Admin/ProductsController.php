@@ -49,7 +49,7 @@ class ProductsController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails())  return back()->withErrors($validator)->withInput();
+        if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
         if ($request->hasFile('image')) {
             $extension = $request->file('image')->getClientOriginalExtension();
@@ -109,7 +109,7 @@ class ProductsController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails())  return back()->withErrors($validator)->withInput();
+        if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
         $row = Products::find($request->id);
 
@@ -135,25 +135,23 @@ class ProductsController extends Controller
                 if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
             }
 
-            if ($request->hasFile('image')) {
-                if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
-                if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);;
+            if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
+            if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);;
 
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $fileNameToStore = 'origin_' . $filename;
-                $thumbnailFileNameToStore = 'thumbnail_' . $filename;
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $fileNameToStore = 'origin_' . $filename;
+            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
 
-                if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
-                    $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
-                    $img->resize(null, 300, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
+            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
+                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
 
-                    if ($img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore)) {
-                        $row->thumbnail = $thumbnailFileNameToStore;
-                        $row->origin = $fileNameToStore;
-                    }
+                if ($img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore)) {
+                    $row->thumbnail = $thumbnailFileNameToStore;
+                    $row->origin = $fileNameToStore;
                 }
             }
         }

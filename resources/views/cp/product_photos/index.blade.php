@@ -59,7 +59,39 @@
 
                                 <section>
 
-                                    {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
+                                    {!! Form::label('title', 'Title', ['class' => 'label']) !!}
+
+                                    <label class="input">
+
+                                        {!! Form::text('title', old('title'), ['class' => 'form-control']) !!}
+
+                                    </label>
+
+                                    @if ($errors->has('title'))
+                                        <p class="text-danger">{{ $errors->first('title') }}</p>
+                                    @endif
+
+                                </section>
+
+                                <section>
+
+                                    {!! Form::label('alt', 'Alt', ['class' => 'label']) !!}
+
+                                    <label class="input">
+
+                                        {!! Form::text('alt', old('alt'), ['class' => 'form-control']) !!}
+
+                                    </label>
+
+                                    @if ($errors->has('alt'))
+                                        <p class="text-danger">{{ $errors->first('alt') }}</p>
+                                    @endif
+
+                                </section>
+
+                                <section>
+
+                                    {!! Form::label('image', 'Фото (jpg,gif,png)*', ['class' => 'label']) !!}
 
                                     <div class="input input-file">
                                         <span class="button">
@@ -127,6 +159,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Фото</th>
+                            <th>Title</th>
+                            <th>Alt</th>
                             <th>Создан</th>
                             <th data-hide="phone,tablet">Действия</th>
                         </tr>
@@ -211,6 +245,8 @@
                 columns: [
                     {data: 'id', name: 'id', searchable: false},
                     {data: 'thumbnail', name: 'thumbnail', orderable: false, searchable: false},
+                    {data: 'title', name: 'title'},
+                    {data: 'alt', name: 'alt'},
                     {data: 'created_at', name: 'created_at'},
                     {data: "actions", name: 'actions', orderable: false, searchable: false}
                 ],
