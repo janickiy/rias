@@ -42,7 +42,7 @@
                     <!-- widget content -->
                     <div class="widget-body">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.settings.update') : URL::route('cp.settings.store'), 'method' => isset($row) ? 'put' : 'post', 'class' => "smart-form"]) !!}
+                        {!! Form::open(['url' => isset($row) ? URL::route('cp.settings.update') : URL::route('cp.settings.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'class' => "smart-form"]) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -54,48 +54,93 @@
 
                             <section>
 
-                                {!! Form::label('name', 'Имя*', ['class' => 'label']) !!}
+                                {!! Form::label('key_cd', 'Ключ*', ['class' => 'label']) !!}
 
                                 <label class="input">
+                                    @if(isset($row))
 
-                                    {!! Form::text('name', old('name', isset($row) ? $row->name : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+                                        {!! Form::text('key_cd', old('key_cd', isset($row) ? $row->key_cd : null), ['class' => 'form-control', 'readonly']) !!}
+
+                                    @else
+
+                                        {!! Form::text('key_cd', old('key_cd', isset($row) ? $row->key_cd : null), ['class' => 'form-control']) !!}
+
+                                    @endif
 
                                 </label>
 
-                                @if ($errors->has('name'))
-                                    <p class="text-danger">{{ $errors->first('name') }}</p>
+                                @if ($errors->has('key_cd'))
+                                    <p class="text-danger">{{ $errors->first('key_cd') }}</p>
                                 @endif
 
                             </section>
 
                             <section>
 
-                                {!! Form::label('value', 'Значение*', ['class' => 'label']) !!}
+                                {!! Form::label('type', 'Тип*', ['class' => 'label']) !!}
 
                                 <label class="input">
 
-                                    {!! Form::text('value', old('value', isset($row) ? $row->value : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+                                    {!! Form::text('type', old('type', isset($row) ? $row->type : $type), ['class' => 'form-control', 'readonly']) !!}
 
                                 </label>
+
+                                @if ($errors->has('type'))
+                                    <p class="text-danger">{{ $errors->first('type') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('display_value', 'Описание', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('display_value', old('display_value', isset($row) ? $row->display_value : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+
+                                </label>
+
+                                @if ($errors->has('display_value'))
+                                    <p class="text-danger">{{ $errors->first('display_value') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                @if(isset($row) && $row->type == 'FILE' || $type == 'FILE' )
+
+                                    {!! Form::label('image', 'Файл* (jpg,png,txt,doc,docx,pdf,xls,xlsx,odt,ods,pdf)', ['class' => 'label']) !!}
+
+                                    <div class="input input-file">
+                                    <span class="button">
+
+                                        {!! Form::file('value',  ['id' => 'value', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
+
+                                    </span><input type="text" placeholder="выберите файл" readonly="">
+
+                                        <br>
+                                        @if (isset($row) && !empty($row->value))
+                                            <img src='{{ url("uploads/products/$row->image") }}' width="150">
+                                        @endif
+
+                                    </div>
+
+                                @else
+
+                                    {!! Form::label('value', 'Значение*', ['class' => 'label']) !!}
+
+                                    <label class="input">
+
+                                        {!! Form::text('value', old('value', isset($row) ? $row->value : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+
+                                    </label>
+
+                                @endif
 
                                 @if ($errors->has('value'))
                                     <p class="text-danger">{{ $errors->first('value') }}</p>
-                                @endif
-
-                            </section>
-
-                            <section>
-
-                                {!! Form::label('description', 'Описание', ['class' => 'label']) !!}
-
-                                <label class="textarea textarea-resizable">
-
-                                    {!! Form::textarea('description', old('description', isset($row) ? $row->description : null), [ 'rows' => 3, 'class' => 'custom-scroll']) !!}
-
-                                </label>
-
-                                @if ($errors->has('description'))
-                                    <p class="text-danger">{{ $errors->first('description') }}</p>
                                 @endif
 
                             </section>
@@ -126,5 +171,22 @@
 
 @section('js')
 
+    <script>
+        $(document).ready(function () {
+            if ($("#options-select").length > 0) {
+                var options = [];
+                $("#options-select").tagit({
+                    tags: options,
+                    field: "value[]"
+                });
+                var values = $("#options-select").data("values");
+                if (values.length > 0) {
+                    $.each(values, function (i, e) {
+                        $("#options-select").tagit("addTag", e);
+                    });
+                }
+            }
+        });
+    </script>
 
 @endsection

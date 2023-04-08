@@ -126,10 +126,10 @@ class DataTableController extends Controller
             })
 
            ->editColumn('image', function ($row) {
-               return $row->image ? 'да' : 'нет';
+               return '<img  height="150" src="' . url($row->getImage()) .'" alt="">';
            })
 
-            ->rawColumns(['actions'])->make(true);
+            ->rawColumns(['actions', 'image'])->make(true);
     }
 
     /**
@@ -166,7 +166,13 @@ class DataTableController extends Controller
                 return $title;
             })
 
-            ->rawColumns(['actions', 'title'])->make(true);
+            ->editColumn('thumbnail', function ($row) {
+                $product = Products::find($row->id);
+
+                return '<img  height="150" src="' . url($product->getThumbnailUrl()) .'" alt="">';
+            })
+
+            ->rawColumns(['actions', 'title', 'thumbnail'])->make(true);
     }
 
     /**
@@ -187,7 +193,7 @@ class DataTableController extends Controller
             })
 
             ->editColumn('thumbnail', function ($row) {
-                return '<img  height="150" src="' . $row->getThumbnailUrl() .'" alt="">';
+                return '<img  height="150" src="' . url($row->getThumbnailUrl()) .'" alt="">';
             })
 
             ->rawColumns(['actions', 'thumbnail'])->make(true);

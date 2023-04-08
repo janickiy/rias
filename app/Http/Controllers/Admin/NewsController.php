@@ -130,22 +130,20 @@ class NewsController extends Controller
                 if (Storage::disk('public')->exists('news/' . $row->image) === true) Storage::disk('public')->delete('news/' . $row->image);
             }
 
-            if ($request->hasFile('image')) {
+            if (Storage::disk('public')->exists('news/' . $row->image) === true) Storage::disk('public')->delete('news/' . $row->image);
 
-                if (Storage::disk('public')->exists('news/' . $row->image) === true) Storage::disk('public')->delete('news/' . $row->image);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
 
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
+            if ($request->file('image')->storeAs('public/news', $filename)) {
+                $img = Image::make(Storage::path('/public/news/') . $filename);
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
 
-                if ($request->file('image')->storeAs('public/news', $filename)) {
-                    $img = Image::make(Storage::path('/public/news/') . $filename);
-                    $img->resize(null, 300, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
-
-                    if ($img->save(Storage::path('/public/news/') . $filename)) $row->image = $filename;
-                }
+                if ($img->save(Storage::path('/public/news/') . $filename)) $row->image = $filename;
             }
+
         }
 
         $row->save();

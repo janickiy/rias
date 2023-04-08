@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
-            $table->string('value');
+            $table->string('key_cd')->unique();
+            $table->string('type');
+            $table->string('display_value')->nullable();
+            $table->text('value');
             $table->timestamps();
         });
     }

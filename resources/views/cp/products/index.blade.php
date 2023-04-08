@@ -36,6 +36,7 @@
                             <thead>
                             <tr>
                                 <th>Название</th>
+                                <th>Фото</th>
                                 <th>Категория</th>
                                 <th>Описание</th>
                                 <th>slug</th>
@@ -123,6 +124,7 @@
                 },
                 columns: [
                     {data: 'title', name: 'title'},
+                    {data: 'thumbnail', name: 'thumbnail', searchable: false},
                     {data: 'catalog', name: 'catalog.name'},
                     {data: 'description', name: 'description', searchable: false},
                     {data: 'slug', name: 'slug'},

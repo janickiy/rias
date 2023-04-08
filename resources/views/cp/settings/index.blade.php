@@ -21,9 +21,13 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.settings.create') }}"
+                                <a href="{{ URL::route('cp.settings.create', ['type' => 'TEXT']) }}"
                                    class="btn btn-info btn-sm pull-left">
-                                    <span class="fa fa-plus"> &nbsp;</span> Добавить
+                                    <span class="fa fa-plus"> &nbsp;</span> Добавить Text параметр
+                                </a><br><br>
+                                <a href="{{ URL::route('cp.settings.create', ['type' => 'FILE']) }}"
+                                   class="btn btn-info btn-sm pull-left">
+                                    <span class="fa fa-plus"> &nbsp;</span> Добавить File параметр
                                 </a>
                             </div>
                         </div>
@@ -35,9 +39,10 @@
                         <table id="itemList" class="table table-striped table-bordered table-hover" width="100%">
                             <thead>
                             <tr>
-                                <th>Название</th>
+                                <th>Параметр</th>
                                 <th>Значение</th>
                                 <th>Описание</th>
+                                <th>Тип</th>
                                 <th width="20px">Действия</th>
                             </tr>
                             </thead>
@@ -120,9 +125,10 @@
                     url: '{{ URL::route('cp.datatable.settings') }}'
                 },
                 columns: [
-                    {data: 'name', name: 'name'},
+                    {data: 'key_cd', name: 'key_cd'},
                     {data: 'value', name: 'value'},
-                    {data: 'description', name: 'description', orderable: false},
+                    {data: 'display_value', name: 'display_value'},
+                    {data: 'type', name: 'type'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false},
                 ],
             });

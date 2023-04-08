@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Models\{Settings};
+use App\Models\Settings;
 use Illuminate\Support\Facades\Validator;
 use URL;
+use Storage;
 
 class SettingsController extends Controller
 {
@@ -18,12 +19,12 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param string $type
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(string $type)
     {
-        return view('cp.settings.create_edit')->with('title', 'Добавление настроек');
+        return view('cp.settings.create_edit', compact('type'))->with('title', 'Добавление настроек');
     }
 
     /**
@@ -33,13 +34,24 @@ class SettingsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255|unique:settings',
             'value' => 'required',
+            'key_cd' => 'required|unique:settings|max:255',
+            'type' => 'required',
         ]);
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        Settings::create($request->all());
+
+        if ($request->hasFile('value')) {
+            $extension = $request->file('value')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+
+            $request->file('value')->storeAs('public/settings', $filename);
+        }
+
+        Settings::create(array_merge(array_merge($request->all()), [
+            'value' => $filename ?? $request->input('value')
+        ]));
 
         return redirect(URL::route('cp.settings.index'))->with('success', 'Информация успешно добавлена');
 
@@ -55,7 +67,9 @@ class SettingsController extends Controller
 
         if (!$row) abort(404);
 
-        return view('cp.settings.create_edit', compact('row'))->with('title', 'Редактирование настроек');
+        $type = $row->type;
+
+        return view('cp.settings.create_edit', compact('row', 'type'))->with('title', 'Редактирование настроек');
     }
 
     /**
@@ -64,19 +78,34 @@ class SettingsController extends Controller
      */
     public function update(Request $request)
     {
+        $settings = Settings::find($request->id);
+
+        if (!$settings) abort(404);
+
         $rules = [
-            'name' => 'required|max:255|unique:settings,name,' . $request->id . ',id',
-            'value' => 'required',
+            'value' => $settings->type == 'FILE' ? 'nullable' : 'required',
+            'key_cd' => 'required|max:255|unique:settings,key_cd,' . $request->id,
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        $settings = Settings::find($request->id);
-        $settings->name = $request->name;
-        $settings->description = $request->description;
-        $settings->value = $request->value;
+        $settings->key_cd = $request->input('key_cd');
+        $settings->display_value = $request->input('display_value');
+
+        if ($request->hasFile('value')) {
+
+            if (Storage::disk('public')->exists('settings/' . $settings->value) === true) Storage::disk('public')->delete('settings/' . $settings->value);
+
+            $extension = $request->file('value')->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $request->file('value')->storeAs('public/settings', $filename);
+
+        } else {
+            if (!empty($request->value)) $settings->value = $request->input('value');
+        }
+
         $settings->save();
 
         return redirect(URL::route('cp.settings.index'))->with('success', 'Данные обновлены');
@@ -88,6 +117,13 @@ class SettingsController extends Controller
      */
     public function destroy(Request $request)
     {
-        Settings::where(['id' => $request->id])->delete();
+        $row = Settings::find($request->id);
+
+        if ($row && $row->type == 'FILE') {
+            if (Storage::disk('public')->exists('settings/' . $row->value) === true) Storage::disk('public')->delete('settings/' . $row->value);
+        }
+
+        $row->delete();
+
     }
 }

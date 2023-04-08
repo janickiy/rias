@@ -12,7 +12,8 @@ class SettingsHelper
      */
     public static function getSetting(string $key = '')
     {
-        $setting = Settings::where('name',$key)->first();
+        $setting = Settings::whereKeyCd(strtoupper($key))->first();
+
         if ($setting) {
             return $setting->value;
         } else {

@@ -128,7 +128,7 @@ Route::group(['prefix' => 'cp'], function () {
 
     Route::group(['prefix' => 'settings'], function () {
         Route::get('', [SettingsController::class, 'index'])->name('cp.settings.index')->middleware(['permission:admin']);
-        Route::get('create', [SettingsController::class, 'create'])->name('cp.settings.create')->middleware(['permission:admin']);
+        Route::get('create/{type}', [SettingsController::class, 'create'])->name('cp.settings.create')->middleware(['permission:admin']);
         Route::post('store', [SettingsController::class, 'store'])->name('cp.settings.store')->middleware(['permission:admin']);
         Route::get('edit/{id}', [SettingsController::class, 'edit'])->name('cp.settings.edit')->where('id', '[0-9]+')->middleware(['permission:admin']);
         Route::put('update', [SettingsController::class, 'update'])->name('cp.settings.update')->middleware(['permission:admin']);

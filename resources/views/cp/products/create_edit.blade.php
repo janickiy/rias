@@ -217,7 +217,7 @@
 
                             <section>
 
-                                {!! Form::label('image', 'Фото (jpeg,png)', ['class' => 'label']) !!}
+                                {!! Form::label('image', 'Фото (jpg,gif,png)', ['class' => 'label']) !!}
 
                                 <div class="input input-file">
                                     <span class="button">
@@ -227,8 +227,8 @@
                                     </span><input type="text" placeholder="выберите файл" readonly="">
 
                                     <br>
-                                    @if (isset($row) && !empty($row->image))
-                                        <img src='{{ url("uploads/products/$row->image") }}' width="150">
+                                    @if (isset($row) && !empty($row->thumbnail))
+                                        <img src='{{ url($row->getThumbnailUrl()) }}' width="150">
                                     @endif
 
                                 </div>

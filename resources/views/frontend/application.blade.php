@@ -31,9 +31,9 @@
                             вашего производства</h1>
                     </div>
                     <div class="app__links">
-                        <a class="app__link" href="#">Для заказа газоанализатора</a>
-                        <a class="app__link" href="#">Для заказа системы жидкостного анализа</a>
-                        <a class="app__link" href="#">Для заказа системы газового анализа</a>
+                        <a class="app__link" href="{{ SettingsHelper::getSetting('BLANK_1') }}">Для заказа газоанализатора</a>
+                        <a class="app__link" href="{{ SettingsHelper::getSetting('BLANK_2') }}">Для заказа системы жидкостного анализа</a>
+                        <a class="app__link" href="{{ SettingsHelper::getSetting('BLANK_3') }}">Для заказа системы газового анализа</a>
                     </div>
                 </div>
 
