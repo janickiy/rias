@@ -320,7 +320,7 @@ class FrontendController
 
         try {
 
-            Mail::to(SettingsHelper::getSetting('EMAIL'))->send(new Notification($filename));
+            Mail::to(SettingsHelper::getSetting('EMAIL_NOTIFY'))->send(new Notification($filename));
 
         } catch (\Exception $e) {
             return redirect()->back()->with('success', $e->getMessage());

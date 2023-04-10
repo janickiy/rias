@@ -24,6 +24,6 @@ class NotificationListener {
      * @return void
      */
     public function handle(NotificationEvent $event) {
-        Mail::to(SettingsHelper::getSetting('EMAIL'))->send(new Notification($event->data));
+        Mail::to(SettingsHelper::getSetting('EMAIL_NOTIFY'))->send(new Notification($event->data));
     }
 }
