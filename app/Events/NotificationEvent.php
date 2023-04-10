@@ -5,7 +5,7 @@ namespace App\Events;
 use stdClass;
 use Illuminate\Queue\SerializesModels;
 
-class FeedbackMailEvent
+class NotificationEvent
 {
 
     use SerializesModels;

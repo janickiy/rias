@@ -2,25 +2,31 @@
 
 namespace App\Mail;
 
-use stdClass;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use App\Helpers\{SettingsHelper};
+use App\Helpers\SettingsHelper;
 
-class FeedbackMailer extends Mailable implements ShouldQueue
+class Notification extends Mailable implements ShouldQueue
 {
     use Queueable;
 
-    private $data;
+    /**
+     * The data.
+     *
+     * @var array
+     */
+    public $filename;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(stdClass $data) {
-        $this->data = $data;
+    public function __construct($filename)
+    {
+        $this->filename = $filename;
     }
 
     /**
@@ -36,12 +42,15 @@ class FeedbackMailer extends Mailable implements ShouldQueue
     }
 
     /**
-     * @return FeedbackMailer
+     * Build the message.
+     *
+     * @return $this
      */
     public function build() {
         return $this->from(SettingsHelper::getSetting('FROM'), SettingsHelper::getSetting('SITE_NAME'))
-            ->subject('Форма обратной связи')
-            ->view('mail.feedback', ['data' => $this->data]);
+            ->subject('Заявка на расчет проекта')
+            ->attach($this->filename)
+            ->view('notifications.send_application');
     }
 
 }

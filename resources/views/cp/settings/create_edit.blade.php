@@ -93,22 +93,6 @@
 
                             <section>
 
-                                {!! Form::label('display_value', 'Описание', ['class' => 'label']) !!}
-
-                                <label class="input">
-
-                                    {!! Form::text('display_value', old('display_value', isset($row) ? $row->display_value : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
-
-                                </label>
-
-                                @if ($errors->has('display_value'))
-                                    <p class="text-danger">{{ $errors->first('display_value') }}</p>
-                                @endif
-
-                            </section>
-
-                            <section>
-
                                 @if(isset($row) && $row->type == 'FILE' || $type == 'FILE' )
 
                                     {!! Form::label('image', 'Файл* (jpg,png,txt,doc,docx,pdf,xls,xlsx,odt,ods,pdf)', ['class' => 'label']) !!}
@@ -141,6 +125,22 @@
 
                                 @if ($errors->has('value'))
                                     <p class="text-danger">{{ $errors->first('value') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('display_value', 'Описание', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('display_value', old('display_value', isset($row) ? $row->display_value : ''), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+
+                                </label>
+
+                                @if ($errors->has('display_value'))
+                                    <p class="text-danger">{{ $errors->first('display_value') }}</p>
                                 @endif
 
                             </section>

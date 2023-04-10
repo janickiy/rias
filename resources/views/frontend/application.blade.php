@@ -37,7 +37,8 @@
                     </div>
                 </div>
 
-                <form class="app-form app__form" autocomplete="off" method="POST">
+                <form class="app-form app__form" action="{{ route('frontend.send.application') }}" enctype="multipart/form-data" autocomplete="off" method="POST">
+                    @csrf
                     <div class="breadcrumbs app-form__breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
@@ -50,7 +51,7 @@
                             <p class="text app-form__text">После заполнения опросного листа, вам необходимо загрузить его и
                                 отправить нам</p>
                             <label class="file-field app-form__field">
-                                <input type="file" class="file-field__input js-file-input" data-file-output="app-file">
+                                <input type="file" name="attachment" class="file-field__input js-file-input" data-file-output="app-file">
                                 <span class="file-field__name js-file-value" data-file-output="app-file">Выберите файл</span>
                                 <span class="btn btn--black-white file-field__label">Выбрать</span>
                             </label>
@@ -58,9 +59,10 @@
                         <img class="app-form__img" src="{{ url('img/arrows.svg') }}" width="309" height="193" alt="">
                     </div>
                     <div class="app-form__footer">
-                        <button class="btn app-form__submit">Отправить заявку</button>
+                        <button type="submit" class="btn app-form__submit">Отправить заявку</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </section>

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SettingsHelper;
 use Illuminate\Http\Request;
-use App\Models\{Catalog,News,Pages,FeedBack,Products};
-use App\Events\{FeedbackMailEvent};
+use App\Models\{Catalog, News, Pages, Products};
 use Harimayco\Menu\Models\Menus;
+use App\Mail\Notification;
 use URL;
 use Validator;
-use stdClass;
+use File;
+use Mail;
 
 
 class FrontendController
@@ -34,13 +36,13 @@ class FrontendController
         $products = Products::inRandomOrder()->limit(3)->get();
 
         return view('frontend.index', compact(
-            'products',
-            'page',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'seo_url_canonical',
-            'top_menu')
+                'products',
+                'page',
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
         )->with('title', $title);
     }
 
@@ -87,17 +89,17 @@ class FrontendController
         $top_menu = $menu->items->toArray();
 
         return view('frontend.index', compact(
-            'page',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'seo_url_canonical',
-            'top_menu')
+                'page',
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
         )->with('title', $title);
     }
 
+
     /**
-     * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function news()
@@ -221,13 +223,13 @@ class FrontendController
         $top_menu = $menu->items->toArray();
 
         return view('frontend.product', compact(
-            'product',
-            'slug',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'seo_url_canonical',
-            'top_menu')
+                'product',
+                'slug',
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'seo_url_canonical',
+                'top_menu')
         )->with('title', $title);
     }
 
@@ -246,45 +248,6 @@ class FrontendController
         return view('frontend.contact', compact('meta_description', 'meta_keywords', 'meta_title', 'top_menu'))->with('title', 'Обратная связь');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function sendMsg(Request $request)
-    {
-        $rules = [
-            'message' => 'required',
-            'name' => 'required',
-            'email' => 'required|email',
-            'captcha' => 'required|captcha',
-        ];
-
-        $message = [
-            'name.required' => 'Укажите Ваше имя!',
-            'email.required' => 'Не указан Email!',
-            'email.email' => 'Не верно указан Email!',
-            'message.required' => 'Введите сообщение',
-            'catalog_id.required' => 'Выберите раздел!',
-            'captcha.required' => 'Не указан защитный код!',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $message);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        Feedback::create(array_merge($request->all(), ['ip' => $request->ip()]));
-
-        $data = new stdClass();
-        $data->name = $request->name;
-        $data->email = $request->email;
-        $data->message = $request->message;
-
-        event(new FeedbackMailEvent($data));
-
-        return redirect(URL::route('frontend.contact'))->with('success', 'Ваше сообщение успешно отправлено');
-    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -332,8 +295,37 @@ class FrontendController
         )->with('title', $title);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sendApplication(Request $request)
     {
+        $input = $request->validate([
+            'attachment' => 'required',
+        ]);
 
+        $path = public_path('uploads');
+        $attachment = $request->file('attachment');
+
+        $name = time() . '.' . $attachment->getClientOriginalExtension();;
+
+        // create folder
+        if (!File::exists($path)) {
+            File::makeDirectory($path, $mode = 0777, true, true);
+        }
+
+        $attachment->move($path, $name);
+        $filename = $path . '/' . $name;
+
+        try {
+
+            Mail::to(SettingsHelper::getSetting('EMAIL'))->send(new Notification($filename));
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('success', $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Mail sent successfully.');
     }
 }
