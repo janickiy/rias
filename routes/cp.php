@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\{
     ProductPhotosController,
     ProductVideosController,
     ProductDocumentsController,
+    GazGroupController,
+    GazController,
 };
 
 
@@ -80,6 +82,24 @@ Route::group(['prefix' => 'cp'], function () {
         Route::get('edit/{id}', [ProductsController::class, 'edit'])->name('cp.products.edit')->where('id', '[0-9]+');
         Route::put('update', [ProductsController::class, 'update'])->name('cp.products.update');
         Route::post('destroy', [ProductsController::class, 'destroy'])->name('cp.products.destroy');
+    });
+
+    Route::group(['prefix' => 'gaz-group'], function () {
+        Route::get('', [GazGroupController::class, 'index'])->name('cp.gaz_group.index')->middleware(['permission:admin|moderator']);
+        Route::get('create', [GazGroupController::class, 'create'])->name('cp.gaz_group.create')->middleware(['permission:admin|moderator']);
+        Route::post('store', [GazGroupController::class, 'store'])->name('cp.gaz_group.store')->middleware(['permission:admin|moderator']);
+        Route::get('edit/{id}', [GazGroupController::class, 'edit'])->name('cp.gaz_group.edit')->where('id', '[0-9]+')->middleware(['permission:admin|moderator']);
+        Route::put('update', [GazGroupController::class, 'update'])->name('cp.gaz_group.update')->middleware(['permission:admin|moderator']);
+        Route::post('destroy', [GazGroupController::class, 'destroy'])->name('cp.gaz_group.destroy')->middleware(['permission:admin|moderator']);
+    });
+
+    Route::group(['prefix' => 'gaz'], function () {
+        Route::get('', [GazController::class, 'index'])->name('cp.gaz.index')->middleware(['permission:admin|moderator']);
+        Route::get('create', [GazController::class, 'create'])->name('cp.gaz.create')->middleware(['permission:admin|moderator']);
+        Route::post('store', [GazController::class, 'store'])->name('cp.gaz.store')->middleware(['permission:admin|moderator']);
+        Route::get('edit/{id}', [GazController::class, 'edit'])->name('cp.gaz.edit')->where('id', '[0-9]+')->middleware(['permission:admin|moderator']);
+        Route::put('update', [GazController::class, 'update'])->name('cp.gaz.update')->middleware(['permission:admin|moderator']);
+        Route::post('destroy', [GazController::class, 'destroy'])->name('cp.gaz.destroy')->middleware(['permission:admin|moderator']);
     });
 
     Route::group(['prefix' => 'product-parameters'], function () {
@@ -161,6 +181,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('product-videos/{product_id}', [DataTableController::class, 'getVideos'])->name('cp.datatable.product_videos')->where('product_id', '[0-9]+');
         Route::any('product-documents/{product_id}', [DataTableController::class, 'getDocuments'])->name('cp.datatable.product_documents')->where('product_id', '[0-9]+');
         Route::any('product-parameters/{product_id}', [DataTableController::class, 'getProductParameters'])->name('cp.datatable.product_parameters')->where('product_id', '[0-9]+');
+        Route::any('gaz-group', [DataTableController::class, 'getGazGroup'])->name('cp.datatable.gaz_group');
     });
 
 });

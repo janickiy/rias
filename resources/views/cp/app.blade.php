@@ -222,6 +222,31 @@ Use search to find needed section.
                 </ul>
             </li>
 
+            @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
+
+                    <li class="">
+                        <a href="#">
+                            <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">Конвертер газа</span>
+                        </a>
+
+                        <ul class="treeview-menu">
+
+                            <li {!! Request::is('cp/gaz-group*') ? ' class="active"' : '' !!}>
+                                <a href="{{ URL::route('cp.gaz_group.index') }}">
+                                    <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Группы газов</span>
+                                </a>
+                            </li>
+
+                            <li {!! Request::is('cp/gaz*') ? ' class="active"' : '' !!}>
+                                <a href="{{ URL::route('cp.gaz.index') }}">
+                                    <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Газы</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+            @endif
 
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
             <li class="">
