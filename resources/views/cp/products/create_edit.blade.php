@@ -72,9 +72,9 @@
 
                                 {!! Form::label('catalog_id',  "Категория*", ['class' => 'label']) !!}
 
-                                <label class="input">
+                                <label class="select">
 
-                                    {!! Form::select('catalog_id', $options, old('catalog_id', isset($row) ? $row->catalog_id : null), ['placeholder' => 'Выберите', 'class' => 'form-control custom-scroll']) !!}
+                                    {!! Form::select('catalog_id', $options, old('catalog_id', isset($row) ? $row->catalog_id : null), ['placeholder' => 'Выберите', 'class' => 'input-sm']) !!}
 
                                 </label>
 
