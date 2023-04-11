@@ -167,31 +167,6 @@ class ProductsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $row = Products::find($request->id);
-
-        if ($row) {
-            if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
-            if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
-
-
-            foreach ($row->photos as $photo) {
-                if (Storage::disk('public')->exists('images/' . $photo->thumbnail) === true) Storage::disk('public')->delete('images/' . $photo->thumbnail);
-                if (Storage::disk('public')->exists('images/' . $photo->origin) === true) Storage::disk('public')->delete('images/' . $photo->origin);
-            }
-
-            $row->photos()->delete();
-
-            foreach ($row->documents as $document) {
-                if (Storage::disk('public')->exists('documents/' . $document->path) === true) Storage::disk('public')->delete('documents/' . $document->path);
-            }
-
-            $row->documents()->delete();
-
-            $row->parameters()->delete();
-
-            $row->videos()->delete();
-
-            $row->delete();
-        }
+        Products::find($request->id)->remove();
     }
 }

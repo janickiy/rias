@@ -31,7 +31,7 @@ class Products extends Model
      */
     public function catalog()
     {
-        return $this->belongsTo(Catalog::class,'catalog_id','id');
+        return $this->belongsTo(Catalog::class, 'catalog_id', 'id');
     }
 
     /**
@@ -80,6 +80,33 @@ class Products extends Model
     public function documents()
     {
         return $this->hasMany(ProductDocuments::class, 'product_id', 'id');
+    }
+
+
+    /**
+     * @return void
+     */
+    public function scopeRemove()
+    {
+
+        if (Storage::disk('public')->exists('products/' . $this->thumbnail) === true) Storage::disk('public')->delete('products/' . $this->thumbnail);
+        if (Storage::disk('public')->exists('products/' . $this->origin) === true) Storage::disk('public')->delete('products/' . $this->origin);
+
+        foreach ($this->photos as $photo) {
+            if (Storage::disk('public')->exists('images/' . $photo->thumbnail) === true) Storage::disk('public')->delete('images/' . $photo->thumbnail);
+            if (Storage::disk('public')->exists('images/' . $photo->origin) === true) Storage::disk('public')->delete('images/' . $photo->origin);
+        }
+
+        $this->photos()->delete();
+
+        foreach ($this->documents as $document) {
+            if (Storage::disk('public')->exists('documents/' . $document->path) === true) Storage::disk('public')->delete('documents/' . $document->path);
+        }
+
+        $this->documents()->delete();
+        $this->parameters()->delete();
+        $this->videos()->delete();
+        $this->delete();
     }
 
 }

@@ -149,13 +149,8 @@ class CatalogController extends Controller
      */
     public function destroy(Request $request)
     {
-        $catalog = Catalog::find($request->id);
+        Catalog::find($request->id)->remove();
 
-        if ($catalog) {
-            if (Storage::disk('public')->exists('catalog/' . $catalog->image) === true) Storage::disk('public')->delete('catalog/' . $catalog->image);
-        }
-
-        $catalog->delete();
     }
 
 }

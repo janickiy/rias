@@ -46,7 +46,7 @@ class ProductDocumentsController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'file' => 'file|required|mimes:doc,docx,pdf,xls,xlsx,odt,ods',
+            'file' => 'required|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
             'description' => 'required',
             'product_id' => 'required|integer|exists:products,id'
         ];
@@ -87,7 +87,7 @@ class ProductDocumentsController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'file' => 'file|mimes:doc,docx,pdf,xls,xlsx,odt,ods',
+            'file' => 'nullable|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
             'description' => 'required',
         ];
 

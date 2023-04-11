@@ -58,4 +58,18 @@ class Catalog extends Model
         return Storage::disk('public')->url('app/public/catalog/' . $this->image);
     }
 
+    /**
+     * @return void
+     */
+    public function scopeRemove()
+    {
+        if (Storage::disk('public')->exists('catalog/' . $this->image) === true) Storage::disk('public')->delete('catalog/' . $this->image);
+
+        foreach ($this->products as $product) {
+            $product->remove();
+        }
+
+        $this->delete();
+    }
+
 }
