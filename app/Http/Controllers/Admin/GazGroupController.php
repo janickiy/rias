@@ -99,12 +99,6 @@ class GazGroupController extends Controller
      */
     public function destroy(Request $request)
     {
-        $row = GazGroup::find($request->id);
-
-        if ($row) {
-            $row->gaz()->delete();
-            GazToGroup::where('gaz_group_id', $request->id)->delete();
-            $row->delete();
-        }
+        GazGroup::find($request->id)->remove();
     }
 }

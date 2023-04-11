@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('gaz', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->float('weight', 8, 3);
+            $table->float('weight', 8, 3)->default(0);
             $table->string('chemical_formula', 40);
             $table->string('chemical_formula_html', 100);
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\{Catalog,
     GazGroup,
+    Gaz,
     ProductParameters,
     ProductPhotos,
     ProductVideos,
@@ -272,5 +273,33 @@ class DataTableController extends Controller
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
             ->rawColumns(['actions'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGaz()
+    {
+        $row = Gaz::query();
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.gaz.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a> &nbsp;';
+                $deleteBtn = '<a title="удалить" class="btn btn-xs btn-danger deleteRow" id="' . $row->id . '"><span class="fa fa-remove"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
+            })
+
+            ->addColumn('groups', function ($row) {
+                $arr = $row->groups->pluck('name_ru')->toArray();
+
+                return implode(', ', $arr);
+            })
+
+            ->editColumn('chemical_formula_html', function ($row) {
+                return $row->chemical_formula_html;
+            })
+
+            ->rawColumns(['actions', 'chemical_formula_html'])->make(true);
     }
 }

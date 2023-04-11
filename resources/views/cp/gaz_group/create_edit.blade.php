@@ -60,7 +60,7 @@
 
                                     <label class="input">
 
-                                        {!! Form::text('name', old('name', isset($row) ? $row->name : null), ['class' => 'form-control', 'id' => 'title']) !!}
+                                        {!! Form::text('name', old('name', isset($row) ? $row->name : null), ['class' => 'form-control']) !!}
 
                                     </label>
 
@@ -76,7 +76,7 @@
 
                                     <label class="input">
 
-                                        {!! Form::text('name_ru', old('name_ru', isset($row) ? $row->name_ru : null), ['class' => 'form-control', 'id' => 'title']) !!}
+                                        {!! Form::text('name_ru', old('name_ru', isset($row) ? $row->name_ru : null), ['class' => 'form-control']) !!}
 
                                     </label>
 

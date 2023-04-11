@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use Illuminate\Http\Request;
-use App\Models\{
-    GazGroup,
-    GazToGroup
-};
+use App\Models\{Gaz,GazGroup,GazToGroup};
 use URL;
 use Validator;
 use Image;
@@ -28,7 +24,9 @@ class GazController extends Controller
      */
     public function create()
     {
-        return view('cp.gaz.create_edit')->with('title', 'Добавление группы газов');
+        $options = GazGroup::getOption();
+
+        return view('cp.gaz.create_edit', compact('options'))->with('title', 'Добавление газа');
     }
 
     /**
@@ -38,15 +36,26 @@ class GazController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required',
-            'name_ru' => 'required',
+            'title' => 'required|max:40',
+            'weight' => 'nullable|numeric',
+            'chemical_formula' => 'required|max:20',
+            'chemical_formula_html' => 'required|max:60',
+            'gaz_group_id' => 'required|array',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        GazGroup::create($request->all());
+        $id = Gaz::create($request->all())->id;
+
+        if ($request->gaz_group_id && $id) {
+            foreach ($request->gaz_group_id as $gaz_group_id) {
+                if (is_numeric($gaz_group_id)) {
+                    GazToGroup::create(['gaz_id' => $id, 'gaz_group_id' => $gaz_group_id]);
+                }
+            }
+        }
 
         return redirect(URL::route('cp.gaz.index'))->with('success', 'Информация успешно добавлена');
     }
@@ -57,12 +66,19 @@ class GazController extends Controller
      */
     public function edit(int $id)
     {
-        $row = GazGroup::find($id);
+        $row = Gaz::find($id);
 
         if (!$row) abort(404);
 
+        $options = GazGroup::getOption();
 
-        return view('cp.gaz_group.create_edit', compact('row'))->with('title', 'Редактирование продукции');
+        $gaz_group_id = [];
+
+        foreach ($row->groups as $group) {
+            $gaz_group_id[] = $group->id;
+        }
+
+        return view('cp.gaz.create_edit', compact('row', 'options', 'gaz_group_id'))->with('title', 'Редактирование газа');
 
     }
 
@@ -73,23 +89,39 @@ class GazController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'name' => 'required',
-            'name_ru' => 'required',
+            'title' => 'required|max:40',
+            'weight' => 'nullable|numeric',
+            'chemical_formula' => 'required|max:20',
+            'chemical_formula_html' => 'required|max:60',
+            'gaz_group_id' => 'required|array',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-        $row = Products::find($request->id);
+        $row = Gaz::find($request->id);
 
         if (!$row) abort(404);
 
-        $row->name = $request->input('name');
-        $row->name_ru = $request->input('name_ru');
+        $row->title = $request->input('title');
+        $row->weight = $request->input('weight');
+        $row->chemical_formula = $request->input('chemical_formula');
+        $row->chemical_formula_html = $request->input('chemical_formula_html');
+
         $row->save();
 
-        return redirect(URL::route('cp.gaz_group.index'))->with('success', 'Данные обновлены');
+        GazToGroup::where('faz_id', $request->id)->delete();
+
+        if ($request->gaz_group_id) {
+            foreach ($request->gaz_group_id as $gaz_group_id) {
+                if (is_numeric($gaz_group_id)) {
+                    GazToGroup::create(['gaz_id' => $request->id, 'gaz_group_id' => $gaz_group_id]);
+                }
+            }
+        }
+
+        return redirect(URL::route('cp.gaz.index'))->with('success', 'Данные обновлены');
 
     }
 
@@ -98,12 +130,6 @@ class GazController extends Controller
      */
     public function destroy(Request $request)
     {
-        $row = GazGroup::find($request->id);
-
-        if ($row) {
-            $row->gaz()->delete();
-            GazToGroup::where('gaz_group_id', $request->id)->delete();
-            $row->delete();
-        }
+        Gaz::find($request->id)->remove();
     }
 }

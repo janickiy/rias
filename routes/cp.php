@@ -182,6 +182,7 @@ Route::group(['prefix' => 'cp'], function () {
         Route::any('product-documents/{product_id}', [DataTableController::class, 'getDocuments'])->name('cp.datatable.product_documents')->where('product_id', '[0-9]+');
         Route::any('product-parameters/{product_id}', [DataTableController::class, 'getProductParameters'])->name('cp.datatable.product_parameters')->where('product_id', '[0-9]+');
         Route::any('gaz-group', [DataTableController::class, 'getGazGroup'])->name('cp.datatable.gaz_group');
+        Route::any('gaz', [DataTableController::class, 'getGaz'])->name('cp.datatable.gaz');
     });
 
 });

@@ -23,5 +23,24 @@ class GazGroup extends Model
         return $this->hasManyThrough(Gaz::class, GazToGroup::class,'gaz_group_id','id','id','gaz_id');
     }
 
+    /**
+     * @return mixed
+     */
+    public static function getOption()
+    {
+        return self::orderBy('name_ru')->get()->pluck('name_ru', 'id');
+    }
+
+    /**
+     * @return void
+     */
+    public function scopeRemove()
+    {
+        $this->gaz()->delete();
+
+        GazToGroup::where('gaz_group_id', $this->id)->delete();
+
+        $this->delete();
+    }
 
 }

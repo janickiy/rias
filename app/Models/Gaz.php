@@ -86,4 +86,18 @@ class Gaz extends Model
         return $result;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function groups()
+    {
+        return $this->hasManyThrough(GazGroup::class, GazToGroup::class,'gaz_id','id','id','gaz_group_id');
+    }
+
+    public function scopeRemove()
+    {
+        GazToGroup::where('gaz_id', $this->id)->delete();
+        $this->delete();
+    }
+
 }
