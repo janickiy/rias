@@ -27,3 +27,7 @@ Route::post('/send-msg', [FrontendController::class,'sendMsg'])->name('frontend.
 Route::get('/converter', [FrontendController::class,'converter'])->name('frontend.converter');
 Route::get('/application', [FrontendController::class,'application'])->name('frontend.application');
 Route::post('/send-application', [FrontendController::class,'sendApplication'])->name('frontend.send.application');
+Route::post('/gaz-convert', [FrontendController::class,'gazСonvert'])->name('frontend.gaz_convert');
+
+
+

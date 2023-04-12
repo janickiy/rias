@@ -1192,21 +1192,6 @@
 </footer>
 
 
-<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-    if (!window.jQuery) {
-        document.write('<script src="{!! asset('js/libs/jquery-3.2.1.min.js') !!}"><\/script>');
-    }
-</script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script>
-    if (!window.jQuery.ui) {
-        document.write('<script src="{!! asset('js/libs/jquery-ui.min.js') !!}"><\/script>');
-    }
-</script>
-
 {!! Html::script('js/modernizr.min.js') !!}
 {!! Html::script('js/overlayscrollbars.min.js') !!}
 {!! Html::script('js/swiper-bundle.min.js') !!}
