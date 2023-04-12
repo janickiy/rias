@@ -70,6 +70,7 @@ class GazController extends Controller
 
         if (!$row) abort(404);
 
+
         $options = GazGroup::getOption();
 
         $gaz_group_id = [];

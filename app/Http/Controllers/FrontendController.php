@@ -3,8 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\SettingsHelper;
-use Illuminate\Http\Request;
-use App\Models\{Catalog, News, Pages, Products};
+use Illuminate\Http\{
+    Response,
+    JsonResponse
+};
+use App\Http\Requests\Frontend\{
+    SendApplicationRequest,
+    ConvertRequest,
+};
+use App\Models\{Catalog, Gaz, News, Pages, Products};
 use Harimayco\Menu\Models\Menus;
 use App\Mail\Notification;
 use URL;
@@ -260,6 +267,8 @@ class FrontendController
         $meta_title = '';
         $seo_url_canonical = '';
 
+        $options = Gaz::getOption();
+
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
 
@@ -268,7 +277,9 @@ class FrontendController
                 'meta_keywords',
                 'meta_title',
                 'seo_url_canonical',
-                'top_menu')
+                'top_menu',
+                'options'
+            )
         )->with('title', $title);
     }
 
@@ -291,19 +302,17 @@ class FrontendController
                 'meta_keywords',
                 'meta_title',
                 'seo_url_canonical',
-                'top_menu')
+                'top_menu'
+            )
         )->with('title', $title);
     }
 
     /**
-     * @param Request $request
+     * @param SendApplicationRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendApplication(Request $request)
+    public function sendApplication(SendApplicationRequest $request)
     {
-        $input = $request->validate([
-            'attachment' => 'required',
-        ]);
 
         $path = public_path('uploads');
         $attachment = $request->file('attachment');
@@ -327,5 +336,25 @@ class FrontendController
         }
 
         return redirect()->back()->with('success', 'Mail sent successfully.');
+    }
+
+    /**
+     * @param ConvertRequest $request
+     * @return JsonResponse
+     */
+    public function gazСonvert(ConvertRequest $request): JsonResponse
+    {
+        try {
+            $gaz = Gaz::find($request->gaz_id);
+
+            if (!$gaz) return response()->json(['errors' => true, 'message' => 'not found'], Response::HTTP_NOT_FOUND);
+
+            $data = $gaz->convert($request->convertType, $request->value);
+
+            return response()->json($data);
+
+        } catch (\Exception $e) {
+            return response()->json(['errors' => true, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
