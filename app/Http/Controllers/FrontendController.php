@@ -11,7 +11,7 @@ use App\Http\Requests\Frontend\{
     SendApplicationRequest,
     ConvertRequest,
 };
-use App\Models\{Catalog, Gaz, News, Pages, Products};
+use App\Models\{Catalog, Gaz, News, Pages, Products, Seo};
 use Harimayco\Menu\Models\Menus;
 use App\Mail\Notification;
 use URL;
@@ -116,11 +116,15 @@ class FrontendController
 
         $news = News::paginate(5);
 
-        $title = 'Новости компании РИАС';
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
-        $seo_url_canonical = '';
+
+        $seo = Seo::where('type', 'frontend.news')->first();
+
+        $title = $seo->h1 ?? 'Новости компании РИАС';
+        $meta_description = $seo->description ?? '';
+        $meta_keywords = $seo->keyword ?? '';
+        $meta_title = $seo->title ?? '';
+        $seo_url_canonical = $seo->url_canonical ?? '';
+
 
         return view('frontend.news', compact(
             'news',
@@ -192,12 +196,15 @@ class FrontendController
                     'top_menu')
             )->with('title', $title);
         } else {
+            $seo = Seo::where('type', 'frontend.catalog')->first();
+
+            $title = $seo->h1 ?? '	Наше оборудование';
+            $meta_description = $seo->description ?? '';
+            $meta_keywords = $seo->keyword ?? '';
+            $meta_title = $seo->title ?? '';
+            $seo_url_canonical = $seo->url_canonical ?? '';
+
             $catalogs = Catalog::orderBy('name')->get();
-            $title = 'Наше оборудование';
-            $meta_description = '';
-            $meta_keywords = '';
-            $meta_title = '';
-            $seo_url_canonical = '';
 
             return view('frontend.catalog', compact(
                     'catalogs',
@@ -245,14 +252,26 @@ class FrontendController
      */
     public function contact()
     {
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
+        $seo = Seo::where('type', 'frontend.contact')->first();
+
+        $title = $seo->h1 ?? 'Конвертер единиц измерения концентрации';
+        $meta_description = $seo->description ?? '';
+        $meta_keywords = $seo->keyword ?? '';
+        $meta_title = $seo->title ?? '';
+        $seo_url_canonical = $seo->url_canonical ?? '';
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
 
-        return view('frontend.contact', compact('meta_description', 'meta_keywords', 'meta_title', 'top_menu'))->with('title', 'Обратная связь');
+        return view('frontend.contact', compact(
+                'meta_description',
+                'meta_keywords',
+                'meta_title',
+                'top_menu',
+                'seo_url_canonical',
+                'title',
+            )
+        )->with('title', 'Обратная связь');
     }
 
 
@@ -261,11 +280,14 @@ class FrontendController
      */
     public function converter()
     {
-        $title = 'Конвертер единиц измерения концентрации';
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
-        $seo_url_canonical = '';
+
+        $seo = Seo::where('type', 'frontend.converter')->first();
+
+        $title = $seo->h1 ?? 'Конвертер единиц измерения концентрации';
+        $meta_description = $seo->description ?? '';
+        $meta_keywords = $seo->keyword ?? '';
+        $meta_title = $seo->title ?? '';
+        $seo_url_canonical = $seo->url_canonical ?? '';
 
         $options = Gaz::getOption();
 
@@ -288,11 +310,14 @@ class FrontendController
      */
     public function application()
     {
-        $title = 'Заявка на расчет проекта';
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
-        $seo_url_canonical = '';
+
+        $seo = Seo::where('type', 'frontend.application')->first();
+
+        $title = $seo->h1 ?? 'Заявка на расчет проекта';
+        $meta_description = $seo->description ?? '';
+        $meta_keywords = $seo->keyword ?? '';
+        $meta_title = $seo->title ?? '';
+        $seo_url_canonical = $seo->url_canonical ?? '';
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();

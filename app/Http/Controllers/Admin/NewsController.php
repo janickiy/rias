@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Catalog;
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Helpers\StringHelper;

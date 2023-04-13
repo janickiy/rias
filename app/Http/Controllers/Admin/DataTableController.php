@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\{Catalog,
+use App\Models\{
+    Catalog,
     GazGroup,
     Gaz,
     ProductParameters,
@@ -14,7 +15,9 @@ use App\Models\{Catalog,
     Pages,
     News,
     Products,
-    FeedBack};
+    FeedBack,
+    Seo,
+};
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\VideoHelper;
 use DataTables;
@@ -57,11 +60,9 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
             ->editColumn('main', function ($row) {
                 return $row->main ? 'да' : 'нет';
             })
-
             ->rawColumns(['actions'])->make(true);
     }
 
@@ -124,11 +125,9 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
-           ->editColumn('image', function ($row) {
-               return '<img  height="150" src="' . url($row->getImage()) .'" alt="">';
-           })
-
+            ->editColumn('image', function ($row) {
+                return '<img  height="150" src="' . url($row->getImage()) . '" alt="">';
+            })
             ->rawColumns(['actions', 'image'])->make(true);
     }
 
@@ -155,7 +154,6 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
             ->editColumn('title', function ($row) {
                 $title = $row->title;
                 $title .= '<br><br><a href="' . URL::route('cp.product_photos.index', ['product_id' => $row->id]) . '">Фото</a>';
@@ -165,13 +163,11 @@ class DataTableController extends Controller
 
                 return $title;
             })
-
             ->editColumn('thumbnail', function ($row) {
                 $product = Products::find($row->id);
 
-                return '<img  height="150" src="' . url($product->getThumbnailUrl()) .'" alt="">';
+                return '<img  height="150" src="' . url($product->getThumbnailUrl()) . '" alt="">';
             })
-
             ->rawColumns(['actions', 'title', 'thumbnail'])->make(true);
     }
 
@@ -181,7 +177,7 @@ class DataTableController extends Controller
      */
     public function getPhotos(int $product_id)
     {
-        $row = ProductPhotos::where('product_id', $product_id );
+        $row = ProductPhotos::where('product_id', $product_id);
 
         return Datatables::of($row)
             ->addColumn('actions', function ($row) {
@@ -191,11 +187,9 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
             ->editColumn('thumbnail', function ($row) {
-                return '<img  height="150" src="' . url($row->getThumbnailUrl()) .'" alt="">';
+                return '<img  height="150" src="' . url($row->getThumbnailUrl()) . '" alt="">';
             })
-
             ->rawColumns(['actions', 'thumbnail'])->make(true);
     }
 
@@ -205,7 +199,7 @@ class DataTableController extends Controller
      */
     public function getVideos(int $product_id)
     {
-        $row = ProductVideos::where('product_id', $product_id );
+        $row = ProductVideos::where('product_id', $product_id);
 
         return Datatables::of($row)
             ->addColumn('actions', function ($row) {
@@ -214,12 +208,10 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
             ->addColumn('thumb', function ($row) {
-                return '<img src="' . VideoHelper::getThumb($row->provider,$row->video). '" width="250px">';
+                return '<img src="' . VideoHelper::getThumb($row->provider, $row->video) . '" width="250px">';
             })
-
-            ->rawColumns(['actions','thumb'])->make(true);
+            ->rawColumns(['actions', 'thumb'])->make(true);
     }
 
     /**
@@ -289,17 +281,30 @@ class DataTableController extends Controller
 
                 return '<div class="nobr"> ' . $editBtn . $deleteBtn . '</div>';
             })
-
             ->addColumn('groups', function ($row) {
                 $arr = $row->groups->pluck('name_ru')->toArray();
 
                 return implode(', ', $arr);
             })
-
             ->editColumn('chemical_formula_html', function ($row) {
                 return $row->chemical_formula_html;
             })
-
             ->rawColumns(['actions', 'chemical_formula_html'])->make(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeo()
+    {
+        $row = Seo::query();
+
+        return Datatables::of($row)
+            ->addColumn('actions', function ($row) {
+                $editBtn = '<a title="редактировать" class="btn btn-xs btn-primary"  href="' . URL::route('cp.seo.edit', ['id' => $row->id]) . '"><span  class="fa fa-edit"></span></a>';
+
+                return '<div class="nobr"> ' . $editBtn . '</div>';
+            })
+            ->rawColumns(['actions'])->make(true);
     }
 }
