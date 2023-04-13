@@ -82,8 +82,8 @@
             Also see: http://legacy.datatables.net/usage/features
             */
             /* BASIC ;*/
-            var responsiveHelper_dt_basic = undefined;
-            var breakpointDefinition = {
+            let responsiveHelper_dt_basic = undefined;
+            let breakpointDefinition = {
                 tablet: 1024,
             };
             $('#itemList').dataTable({
@@ -130,7 +130,7 @@
                 ],
             });
             $('#itemList').on('click', 'a.deleteRow', function () {
-                var rowid = $(this).attr('id');
+                let rowid = $(this).attr('id');
                 swal({
                         title: "Вы уверены?",
                         text: "Вы не сможете восстановить эту информацию!",

@@ -261,8 +261,8 @@
 
             $("#title").on("change keyup input click", function () {
                 if (this.value.length >= 2) {
-                    var title = this.value;
-                    var request = $.ajax({
+                    let title = this.value;
+                    let request = $.ajax({
                         url: '{!! URL::route('cp.ajax.action') !!}',
                         method: "POST",
                         data: {

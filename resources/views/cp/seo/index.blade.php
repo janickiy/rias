@@ -19,28 +19,16 @@
                 <!-- widget div-->
                 <div>
 
-                    <div class="box-header">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a href="{{ URL::route('cp.catalog.create') }}"
-                                   class="btn btn-info btn-sm pull-left">
-                                    <span class="fa fa-plus"> &nbsp;</span> Добавить
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <br>
-
                     <div class="table-responsive">
                         <table id="itemList" class="table table-striped table-bordered table-hover" width="100%">
                             <thead>
                             <tr>
-                                <th>Название</th>
-                                <th>ЧПУ</th>
-                                <th>Фото</th>
-                                <th>Создан</th>
-                                <th>Изменен</th>
+                                <th>Страница</th>
+                                <th>H1</th>
+                                <th>Title</th>
+                                <th>Keyword</th>
+                                <th>Description</th>
+                                <th>Url canonical</th>
                                 <th data-hide="phone,tablet">Действия</th>
                             </tr>
                             </thead>
@@ -82,8 +70,8 @@
             Also see: http://legacy.datatables.net/usage/features
             */
             /* BASIC ;*/
-            let responsiveHelper_dt_basic = undefined;
-            let breakpointDefinition = {
+            var responsiveHelper_dt_basic = undefined;
+            var breakpointDefinition = {
                 tablet: 1024,
             };
             $('#itemList').dataTable({
@@ -121,47 +109,19 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.catalog') }}'
+                    url: '{{ URL::route('cp.datatable.seo') }}'
                 },
                 columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'slug', name: 'slug'},
-                    {data: 'image', name: 'image', searchable: false},
-                    {data: 'created_at', name: 'created_at'},
-                    {data: 'updated_at', name: 'updated_at'},
+                    {data: 'type', name: 'type'},
+                    {data: 'h1', name: 'h1'},
+                    {data: 'title', name: 'title'},
+                    {data: 'keyword', name: 'keyword'},
+                    {data: 'description', name: 'description', searchable: false},
+                    {data: 'url_canonical', name: 'url_canonical'},
                     {data: "actions", name: 'actions', orderable: false, searchable: false}
                 ],
             });
-            $('#itemList').on('click', 'a.deleteRow', function () {
-                let rowid = $(this).attr('id');
-                swal({
-                        title: "Вы уверены?",
-                        text: "Вы не сможете восстановить эту информацию!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Да",
-                        cancelButtonText: "Отмена",
-                        closeOnConfirm: false
-                    },
-                    function (isConfirm) {
-                        if (!isConfirm) return;
-                        $.ajax({
-                            url: '{{ URL::route('cp.catalog.destroy') }}',
-                            type: "POST",
-                            dataType: "html",
-                            data: {id: rowid},
-                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                            success: function () {
-                                $("#rowid_" + rowid).remove();
-                                swal("Сделано!", "Данные успешно удалены!", "success");
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                swal("Ошибка при удалении!", "Попробуйте еще раз", "error");
-                            }
-                        });
-                    });
-            });
+
         })
     </script>
 

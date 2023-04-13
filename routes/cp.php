@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\{
     ProductDocumentsController,
     GazGroupController,
     GazController,
+    SeoController,
 };
 
 
@@ -146,6 +147,12 @@ Route::group(['prefix' => 'cp'], function () {
         Route::post('destroy', [NewsController::class, 'destroy'])->name('cp.news.destroy');
     });
 
+    Route::group(['prefix' => 'seo'], function () {
+        Route::get('', [SeoController::class, 'index'])->name('cp.seo.index')->middleware(['permission:admin|moderator']);
+        Route::get('edit/{id}', [SeoController::class, 'edit'])->name('cp.seo.edit')->where('id', '[0-9]+')->middleware(['permission:admin|moderator']);
+        Route::put('update', [SeoController::class, 'update'])->name('cp.seo.update')->middleware(['permission:admin|moderator']);
+    });
+
     Route::group(['prefix' => 'settings'], function () {
         Route::get('', [SettingsController::class, 'index'])->name('cp.settings.index')->middleware(['permission:admin']);
         Route::get('create/{type}', [SettingsController::class, 'create'])->name('cp.settings.create')->middleware(['permission:admin']);
@@ -156,33 +163,34 @@ Route::group(['prefix' => 'cp'], function () {
     });
 
     Route::group(['prefix' => 'robots'], function () {
-        Route::get('edit', [RobotsController::class, 'edit'])->name('cp.robots.edit');
-        Route::put('update', [RobotsController::class, 'update'])->name('cp.robots.update');
+        Route::get('edit', [RobotsController::class, 'edit'])->name('cp.robots.edit')->middleware(['permission:admin|moderator']);
+        Route::put('update', [RobotsController::class, 'update'])->name('cp.robots.update')->middleware(['permission:admin|moderator']);
     });
 
     Route::group(['prefix' => 'sitemap'], function () {
-        Route::get('', [SitemapController::class, 'index'])->name('cp.sitemap.index');
-        Route::get('export', [SitemapController::class, 'export'])->name('cp.sitemap.export');
-        Route::get('import', [SitemapController::class, 'importForm'])->name('cp.sitemap.import_form');
-        Route::post('import', [SitemapController::class, 'import'])->name('cp.sitemap.import');
+        Route::get('', [SitemapController::class, 'index'])->name('cp.sitemap.index')->middleware(['permission:admin|moderator']);
+        Route::get('export', [SitemapController::class, 'export'])->name('cp.sitemap.export')->middleware(['permission:admin|moderator']);
+        Route::get('import', [SitemapController::class, 'importForm'])->name('cp.sitemap.import_form')->middleware(['permission:admin|moderator']);
+        Route::post('import', [SitemapController::class, 'import'])->name('cp.sitemap.import')->middleware(['permission:admin|moderator']);
     });
 
     Route::any('ajax', AjaxController::class)->name('cp.ajax.action');
 
     Route::group(['prefix' => 'datatable'], function () {
-        Route::any('catalog', [DataTableController::class, 'getCatalog'])->name('cp.datatable.catalog');
-        Route::any('users', [DataTableController::class, 'getUsers'])->name('cp.datatable.users');
+        Route::any('catalog', [DataTableController::class, 'getCatalog'])->name('cp.datatable.catalog')->middleware(['permission:admin|moderator']);
+        Route::any('users', [DataTableController::class, 'getUsers'])->name('cp.datatable.users')->middleware(['permission:admin']);
         Route::any('pages', [DataTableController::class, 'getPages'])->name('cp.datatable.pages');
         Route::any('products', [DataTableController::class, 'getProducts'])->name('cp.datatable.products');
-        Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings');
+        Route::any('settings', [DataTableController::class, 'getSettings'])->name('cp.datatable.settings')->middleware(['permission:admin']);
         Route::any('news', [DataTableController::class, 'getNews'])->name('cp.datatable.news');
         Route::any('feedback', [DataTableController::class, 'getFeedback'])->name('cp.datatable.feedback');
         Route::any('product-photos/{product_id}', [DataTableController::class, 'getPhotos'])->name('cp.datatable.product_photos')->where('product_id', '[0-9]+');
         Route::any('product-videos/{product_id}', [DataTableController::class, 'getVideos'])->name('cp.datatable.product_videos')->where('product_id', '[0-9]+');
         Route::any('product-documents/{product_id}', [DataTableController::class, 'getDocuments'])->name('cp.datatable.product_documents')->where('product_id', '[0-9]+');
         Route::any('product-parameters/{product_id}', [DataTableController::class, 'getProductParameters'])->name('cp.datatable.product_parameters')->where('product_id', '[0-9]+');
-        Route::any('gaz-group', [DataTableController::class, 'getGazGroup'])->name('cp.datatable.gaz_group');
-        Route::any('gaz', [DataTableController::class, 'getGaz'])->name('cp.datatable.gaz');
+        Route::any('gaz-group', [DataTableController::class, 'getGazGroup'])->name('cp.datatable.gaz_group')->middleware(['permission:admin|moderator']);
+        Route::any('gaz', [DataTableController::class, 'getGaz'])->name('cp.datatable.gaz')->middleware(['permission:admin|moderator']);
+        Route::any('seo', [DataTableController::class, 'getSeo'])->name('cp.datatable.seo')->middleware(['permission:admin|moderator']);
     });
 
 });

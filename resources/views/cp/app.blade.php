@@ -46,7 +46,7 @@
 
     {!! Html::style('/admin/js/plugin/jquery-treeview-master/jquery.treeview.css') !!}
 
-        <!-- #GOOGLE FONT -->
+    <!-- #GOOGLE FONT -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
     @yield('css')
@@ -145,7 +145,7 @@ Use search to find needed section.
     <div class="login-info">
         <span> <!-- User image size is adjusted inside CSS, it should stay as is -->
 
-            <a  id="show-shortcut" data-action="toggleShortcut">
+            <a id="show-shortcut" data-action="toggleShortcut">
                 <span>
 
                 </span>
@@ -169,9 +169,10 @@ Use search to find needed section.
         <ul>
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
 
-            <li {!! Request::is('cp*') ? ' class="active"' : '' !!}>
-                <a href="{{ URL::route('cp.dashbaord.index') }}"><i class="fa fa-fw fa-home"></i> <span class="menu-item-parent"> Главная</span></a>
-            </li>
+                <li {!! Request::is('cp*') ? ' class="active"' : '' !!}>
+                    <a href="{{ URL::route('cp.dashbaord.index') }}"><i class="fa fa-fw fa-home"></i> <span
+                            class="menu-item-parent"> Главная</span></a>
+                </li>
 
             @endif
 
@@ -224,71 +225,80 @@ Use search to find needed section.
 
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
 
-                    <li class="">
-                        <a href="#">
-                            <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">Конвертер газа</span>
-                        </a>
+                <li class="">
+                    <a href="#">
+                        <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">Конвертер газа</span>
+                    </a>
 
-                        <ul class="treeview-menu">
+                    <ul class="treeview-menu">
 
-                            <li {!! Request::is('cp/gaz-group*') ? ' class="active"' : '' !!}>
-                                <a href="{{ URL::route('cp.gaz_group.index') }}">
-                                    <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Группы газов</span>
-                                </a>
-                            </li>
+                        <li {!! Request::is('cp/gaz-group*') ? ' class="active"' : '' !!}>
+                            <a href="{{ URL::route('cp.gaz_group.index') }}">
+                                <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Группы газов</span>
+                            </a>
+                        </li>
 
-                            <li {!! Request::is('cp/gaz*') ? ' class="active"' : '' !!}>
-                                <a href="{{ URL::route('cp.gaz.index') }}">
-                                    <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Газы</span>
-                                </a>
-                            </li>
+                        <li {!! Request::is('cp/gaz*') ? ' class="active"' : '' !!}>
+                            <a href="{{ URL::route('cp.gaz.index') }}">
+                                <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Газы</span>
+                            </a>
+                        </li>
 
-                        </ul>
-                    </li>
+                    </ul>
+                </li>
 
             @endif
 
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin|moderator'))
-            <li class="">
-                <a href="#">
-                    <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">SEO</span>
-                </a>
+                <li class="">
+                    <a href="#">
+                        <i class="fa fa-fw fa-folder"></i> <span class="menu-item-parent">SEO</span>
+                    </a>
 
-                <ul class="treeview-menu">
+                    <ul class="treeview-menu">
 
-                    <li {!! Request::is('cp/robots/edit*') ? ' class="active"' : '' !!}>
-                        <a href="{{ URL::route('cp.robots.edit') }}">
-                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Robots.txt</span>
-                        </a>
-                    </li>
+                        <li {!! Request::is('cp/robots/edit*') ? ' class="active"' : '' !!}>
+                            <a href="{{ URL::route('cp.robots.edit') }}">
+                                <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Robots.txt</span>
+                            </a>
+                        </li>
 
-                    <li {!! Request::is('cp/sitemap*') ? ' class="active"' : '' !!}>
-                        <a href="{{ URL::route('cp.sitemap.index') }}">
-                            <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Sitemap.xml</span>
-                        </a>
-                    </li>
+                        <li {!! Request::is('cp/sitemap*') ? ' class="active"' : '' !!}>
+                            <a href="{{ URL::route('cp.sitemap.index') }}">
+                                <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> Sitemap.xml</span>
+                            </a>
+                        </li>
 
-                </ul>
-            </li>
+                        <li {!! Request::is('cp/seo*') ? ' class="active"' : '' !!}>
+                            <a href="{{ URL::route('cp.seo.index') }}">
+                                <i class="fa fa-fw fa-list"></i> <span class="menu-item-parent"> SEO</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
             @endif
 
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin'))
 
-            <li {!! Request::is('cp/users*') ? ' class="active"' : '' !!}>
-                <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span class="menu-item-parent"> Пользователи</span></a>
-            </li>
+                <li {!! Request::is('cp/users*') ? ' class="active"' : '' !!}>
+                    <a href="{{URL::route('cp.users.index')}}"><i class="fa fa-fw fa-users"></i> <span
+                            class="menu-item-parent"> Пользователи</span></a>
+                </li>
 
             @endif
 
             <li {!! Request::is('cp/feedback*') ? ' class="active"' : '' !!}>
-                <a href="{{URL::route('cp.feedback.index')}}"><i class="fa fa-fw fa-envelope"></i> <span class="menu-item-parent"> Сообщения с сайта</span></a>
+                <a href="{{URL::route('cp.feedback.index')}}"><i class="fa fa-fw fa-envelope"></i> <span
+                        class="menu-item-parent"> Сообщения с сайта</span></a>
             </li>
 
             @if(PermissionsHelper::has_permission(Auth::user()->role,'admin'))
 
-            <li {!! Request::is('cp/settings*') ? ' class="active"' : '' !!}>
-                <a href="{{URL::route('cp.settings.index')}}"><i class="fa fa-fw fa-cog txt-color-blue"></i> <span class="menu-item-parent"> Настройки</span></a>
-            </li>
+                <li {!! Request::is('cp/settings*') ? ' class="active"' : '' !!}>
+                    <a href="{{URL::route('cp.settings.index')}}"><i class="fa fa-fw fa-cog txt-color-blue"></i> <span
+                            class="menu-item-parent"> Настройки</span></a>
+                </li>
 
             @endif
 
@@ -330,11 +340,13 @@ Use search to find needed section.
 
     <div id="content">
 
-        @if (isset($title))<h2>{!! $title !!}</h2>@endif
+        @if (isset($title))
+            <h2>{!! $title !!}</h2>
+        @endif
 
-    @include('layouts.notifications')
+        @include('cp.notifications')
 
-    <!-- col -->
+        <!-- col -->
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 @yield('content')

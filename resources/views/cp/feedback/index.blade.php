@@ -66,8 +66,8 @@
             Also see: http://legacy.datatables.net/usage/features
             */
             /* BASIC ;*/
-            var responsiveHelper_dt_basic = undefined;
-            var breakpointDefinition = {
+            let responsiveHelper_dt_basic = undefined;
+            let breakpointDefinition = {
                 tablet: 1024,
             };
             $('#itemList').dataTable({

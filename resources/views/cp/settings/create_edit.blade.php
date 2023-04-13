@@ -169,12 +169,12 @@
     <script>
         $(document).ready(function () {
             if ($("#options-select").length > 0) {
-                var options = [];
+                let options = [];
                 $("#options-select").tagit({
                     tags: options,
                     field: "value[]"
                 });
-                var values = $("#options-select").data("values");
+                let values = $("#options-select").data("values");
                 if (values.length > 0) {
                     $.each(values, function (i, e) {
                         $("#options-select").tagit("addTag", e);
