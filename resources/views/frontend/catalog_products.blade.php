@@ -61,8 +61,8 @@
                                     @if($product->thumbnail)
 
                                     <picture>
-                                        <source srcset="{{ url($product->getThumbnailUrl()) }}" type="{{ StringHelper::get_mime_type($product->thumbnail) }}">
-                                        <img src="{{ url($product->getThumbnailUrl()) }}" width="390" height="175" alt="{{ $product->title }}">
+                                        <source title="{{ $product->title }}" srcset="{{ url($product->getThumbnailUrl()) }}" alt="{{ $product->title }}" type="{{ StringHelper::get_mime_type($product->thumbnail) }}">
+                                        <img src="{{ url($product->getThumbnailUrl()) }}" title="{{ $product->title }}" width="390" height="175" alt="{{ $product->title }}">
                                     </picture>
 
                                     @endif

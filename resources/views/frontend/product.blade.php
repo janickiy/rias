@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn-back product__mobile-back" href="catalog-lonhot.html">Назад</a>
+                    <a class="btn-back product__mobile-back" href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">Назад</a>
                     <div class="title1 product__title">
                         <h1>{{ $product->title }}</h1>
                     </div>
@@ -49,7 +49,7 @@
                                     @foreach($product->photos as $photo)
                                         <div class="swiper-slide product__nav-slide">
                                             <picture>
-                                                <source srcset="{{ url($photo->getThumbnailUrl()) }}"
+                                                <source title="{{ $photo->title }}" alt="{{ $photo->alt }}" srcset="{{ url($photo->getThumbnailUrl()) }}"
                                                         type="{{ StringHelper::get_mime_type($photo->thumbnail) }}">
                                                 <img src="{{ url($photo->getThumbnailUrl()) }}" title="{{ $photo->title }}" alt="{{ $photo->alt }}" width="48"
                                                      height="52">

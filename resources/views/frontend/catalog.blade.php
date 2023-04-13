@@ -36,9 +36,9 @@
                             @if($catalog->image)
                                 <div class="product-models__img">
                                     <picture>
-                                        <source srcset="{{ url($catalog->getImage()) }}"
-                                                type="{{ StringHelper::get_mime_type($catalog->image)  }}">
-                                        <img src="{{ url($catalog->getImage()) }}" width="234" height="218"
+                                        <source title="{{ $catalog->title }}" srcset="{{ url($catalog->getImage()) }}"
+                                                type="{{ StringHelper::get_mime_type($catalog->image) }}" alt="{{ $catalog->title }}">
+                                        <img src="{{ url($catalog->getImage()) }}" title="{{ $catalog->title }}" width="234" height="218"
                                              alt="{{ $catalog->title }}">
                                     </picture>
                                 </div>
