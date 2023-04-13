@@ -95,19 +95,14 @@
 
                                 @if(isset($row) && $row->type == 'FILE' || $type == 'FILE' )
 
-                                    {!! Form::label('image', 'Файл* (jpg,png,txt,doc,docx,pdf,xls,xlsx,odt,ods,pdf)', ['class' => 'label']) !!}
+                                    {!! Form::label('value', 'Файл* (jpg,png,txt,doc,docx,pdf,xls,xlsx,odt,ods,pdf)', ['class' => 'label']) !!}
 
                                     <div class="input input-file">
-                                    <span class="button">
+                                        <span class="button">
 
                                         {!! Form::file('value',  ['id' => 'value', 'onchange' => "this.parentNode.nextSibling.value = this.value"]) !!} Обзор...
 
-                                    </span><input type="text" placeholder="выберите файл" readonly="">
-
-                                        <br>
-                                        @if (isset($row) && !empty($row->value))
-                                            <img src='{{ url("uploads/products/$row->image") }}' width="150">
-                                        @endif
+                                        </span><input type="text" placeholder="выберите файл" readonly="">
 
                                     </div>
 

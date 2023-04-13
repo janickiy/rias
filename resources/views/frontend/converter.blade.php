@@ -36,6 +36,8 @@
                     </div>
                 </div>
 
+                @include('layouts.notifications')
+
                 {!! Form::open(['method' => 'post', 'url' => URL::route('frontend.gaz_convert'), 'class' => "convert-form converter__form", "id" => "convert-form", "autocomplete" => "off"]) !!}
 
                 <div class="convert-form__main">

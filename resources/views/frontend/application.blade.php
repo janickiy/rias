@@ -36,9 +36,12 @@
                         <a class="app__link" href="{{ SettingsHelper::getSetting('BLANK_3') }}">Для заказа системы газового анализа</a>
                     </div>
                 </div>
+                <br>
 
-                <form class="app-form app__form" action="{{ route('frontend.send.application') }}" enctype="multipart/form-data" autocomplete="off" method="POST">
-                    @csrf
+                @include('layouts.notifications')
+
+                {!! Form::open(['method' => 'post', 'url' => route('frontend.send.application'), 'files' => true, 'class' => "app-form app__form", "autocomplete" => "off"]) !!}
+
                     <div class="breadcrumbs app-form__breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
@@ -61,7 +64,8 @@
                     <div class="app-form__footer">
                         <button type="submit" class="btn app-form__submit">Отправить заявку</button>
                     </div>
-                </form>
+
+                {!! Form::close() !!}
 
             </div>
         </div>

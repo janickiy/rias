@@ -45,4 +45,9 @@ class Settings extends Model
         return $this->attributes['value'];
     }
 
+    public function filePath()
+    {
+        return $this->attributes['value'];
+    }
+
 }

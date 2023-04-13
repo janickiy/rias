@@ -41,7 +41,6 @@ class SettingsController extends Controller
 
         if ($validator->fails()) return back()->withErrors($validator)->withInput();
 
-
         if ($request->hasFile('value')) {
             $extension = $request->file('value')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
@@ -96,11 +95,17 @@ class SettingsController extends Controller
 
         if ($request->hasFile('value')) {
 
-            if (Storage::disk('public')->exists('settings/' . $settings->value) === true) Storage::disk('public')->delete('settings/' . $settings->value);
+            @unlink($settings->value);
+
+
+           if (Storage::disk('public')->exists('settings/' . $settings->filePath()) === true) Storage::disk('public')->delete('settings/' . $settings->filePath());
 
             $extension = $request->file('value')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $request->file('value')->storeAs('public/settings', $filename);
+
+            if ($request->file('value')->storeAs('public/settings', $filename)) {
+                $settings->value = $filename;
+            }
 
         } else {
             if (!empty($request->value)) $settings->value = $request->input('value');
@@ -120,7 +125,7 @@ class SettingsController extends Controller
         $row = Settings::find($request->id);
 
         if ($row && $row->type == 'FILE') {
-            if (Storage::disk('public')->exists('settings/' . $row->value) === true) Storage::disk('public')->delete('settings/' . $row->value);
+            if (Storage::disk('public')->exists('settings/' . $row->filePath()) === true) Storage::disk('public')->delete('settings/' . $row->filePath());
         }
 
         $row->delete();

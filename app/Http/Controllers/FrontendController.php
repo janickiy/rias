@@ -329,13 +329,13 @@ class FrontendController
 
         try {
 
-            Mail::to(SettingsHelper::getSetting('EMAIL_NOTIFY'))->send(new Notification($filename));
+            Mail::to(explode(",", SettingsHelper::getSetting('EMAIL_NOTIFY')))->send(new Notification($filename));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('success', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
-        return redirect()->back()->with('success', 'Mail sent successfully.');
+        return redirect()->back()->with('success', 'Спасибо, что обратились в компанию РИАС!<br>Ваш файл отправлен.<br>Менеджер свяжется с Вами в ближайшее время.');
     }
 
     /**

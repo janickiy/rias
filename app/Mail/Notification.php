@@ -47,7 +47,7 @@ class Notification extends Mailable implements ShouldQueue
      * @return $this
      */
     public function build() {
-        return $this->from(SettingsHelper::getSetting('FROM'), SettingsHelper::getSetting('SITE_NAME'))
+        return $this->from(env('MAIL_FROM_ADDRESS'), SettingsHelper::getSetting('SITE_NAME'))
             ->subject('Заявка на расчет проекта')
             ->attach($this->filename)
             ->view('notifications.send_application');
