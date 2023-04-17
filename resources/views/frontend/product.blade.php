@@ -36,7 +36,7 @@
                     </div>
                     <a class="btn-back product__mobile-back" href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">Назад</a>
                     <div class="title1 product__title">
-                        <h1>{{ $product->title }}</h1>
+                        <h1>{!! $h1 !!}</h1>
                     </div>
                 </div>
 

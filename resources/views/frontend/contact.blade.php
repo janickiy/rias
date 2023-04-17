@@ -17,7 +17,7 @@
         <div class="container container--xl">
             <div class="contacts__content">
                 <div class="title1 main__title">
-                    <h1>Контакты компании РИАС</h1>
+                    <h1>{!! $h1 !!}</h1>
                 </div>
                 <div class="contacts__main">
                     <div class="contacts__item">

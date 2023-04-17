@@ -58,19 +58,24 @@ class FrontendController
      */
     public function about()
     {
-        $title = 'О компании';
-        $meta_description = '';
-        $meta_keywords = '';
-        $meta_title = '';
-        $seo_url_canonical = '';
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
+
+        $seo = Seo::where('type', 'frontend.about')->first();
+
+        $title = $seo->h1 ?? 'О компании';
+        $meta_description = $seo->description ?? '';
+        $meta_keywords = $seo->keyword ?? '';
+        $meta_title = $seo->title ?? '';
+        $seo_url_canonical = $seo->url_canonical ?? '';
+        $h1 = $seo->h1 ?? $title;
 
         return view('frontend.about', compact(
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'h1',
                 'seo_url_canonical',
                 'top_menu')
         )->with('title', $title);
@@ -91,6 +96,7 @@ class FrontendController
         $meta_keywords = $page->meta_keywords ?? '';
         $meta_title = $page->meta_title ?? '';
         $seo_url_canonical = $page->seo_url_canonical ?? '';
+        $h1 = $seo->h1 ?? $title;
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -100,6 +106,7 @@ class FrontendController
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'h1',
                 'seo_url_canonical',
                 'top_menu')
         )->with('title', $title);
@@ -116,7 +123,6 @@ class FrontendController
 
         $news = News::paginate(5);
 
-
         $seo = Seo::where('type', 'frontend.news')->first();
 
         $title = $seo->h1 ?? 'Новости компании РИАС';
@@ -124,13 +130,14 @@ class FrontendController
         $meta_keywords = $seo->keyword ?? '';
         $meta_title = $seo->title ?? '';
         $seo_url_canonical = $seo->url_canonical ?? '';
-
+        $h1 = $seo->h1 ?? $title;
 
         return view('frontend.news', compact(
             'news',
             'meta_description',
             'meta_keywords',
             'meta_title',
+            'h1',
             'seo_url_canonical',
             'top_menu'))->with('title', $title);
     }
@@ -232,6 +239,7 @@ class FrontendController
         $meta_keywords = $product->meta_keywords ?? '';
         $meta_title = $product->meta_title ?? '';
         $seo_url_canonical = $product->seo_url_canonical ?? '';
+        $h1 = $product->h1 ?? $title;
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -242,6 +250,7 @@ class FrontendController
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'h1',
                 'seo_url_canonical',
                 'top_menu')
         )->with('title', $title);
@@ -259,6 +268,7 @@ class FrontendController
         $meta_keywords = $seo->keyword ?? '';
         $meta_title = $seo->title ?? '';
         $seo_url_canonical = $seo->url_canonical ?? '';
+        $h1 = $seo->h1 ?? $title;
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -268,6 +278,7 @@ class FrontendController
                 'meta_keywords',
                 'meta_title',
                 'top_menu',
+                'h1',
                 'seo_url_canonical',
                 'title',
             )
@@ -288,6 +299,7 @@ class FrontendController
         $meta_keywords = $seo->keyword ?? '';
         $meta_title = $seo->title ?? '';
         $seo_url_canonical = $seo->url_canonical ?? '';
+        $h1 = $seo->h1 ?? $title;
 
         $options = Gaz::getOption();
 
@@ -298,6 +310,7 @@ class FrontendController
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'h1',
                 'seo_url_canonical',
                 'top_menu',
                 'options'
@@ -313,11 +326,12 @@ class FrontendController
 
         $seo = Seo::where('type', 'frontend.application')->first();
 
-        $title = $seo->h1 ?? 'Заявка на расчет проекта';
+        $title = $seo->title ?? 'Заявка на расчет проекта';
         $meta_description = $seo->description ?? '';
         $meta_keywords = $seo->keyword ?? '';
         $meta_title = $seo->title ?? '';
         $seo_url_canonical = $seo->url_canonical ?? '';
+        $h1 = $seo->h1 ?? $title;
 
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -326,6 +340,7 @@ class FrontendController
                 'meta_description',
                 'meta_keywords',
                 'meta_title',
+                'h1',
                 'seo_url_canonical',
                 'top_menu'
             )

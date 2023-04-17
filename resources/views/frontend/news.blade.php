@@ -18,7 +18,7 @@
     <section class="news">
         <div class="container container--xl">
             <div class="title1 main__title">
-                <h1>{{ $title }}</h1>
+                <h1>{!! $h1 !!}</h1>
             </div>
 
             <div class="news__list">

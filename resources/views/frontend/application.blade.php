@@ -22,13 +22,12 @@
                     <div class="breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
-                                <span class="breadcrumbs__current">Заявка на расчет проекта</span>
+                                <span class="breadcrumbs__current">{{ $title }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="title1 app__title">
-                        <h1>Скачайте и заполните нужный вам опросный лист, чтобы помочь нам <b>подобрать оборудование</b> для
-                            вашего производства</h1>
+                        <h1>{!! $h1 !!}</h1>
                     </div>
                     <div class="app__links">
                         <a class="app__link" href="{{ SettingsHelper::getSetting('BLANK_1') }}">Для заказа газоанализатора</a>

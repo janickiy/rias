@@ -19,7 +19,7 @@
         <div class="container container--xl">
             <div class="products__content">
                 <div class="title1 main__title">
-                    <h1>{{ $title }}</h1>
+                    <h1>{!! $h1 !!}</h1>
                 </div>
                 <div class="products__models-list">
 
