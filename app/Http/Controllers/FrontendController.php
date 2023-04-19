@@ -175,7 +175,7 @@ class FrontendController
      * @param string|null $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function catalog(string $slug = null)
+    public function catalog(?string $slug = null)
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -205,11 +205,12 @@ class FrontendController
         } else {
             $seo = Seo::where('type', 'frontend.catalog')->first();
 
-            $title = $seo->h1 ?? '	Наше оборудование';
+            $title = 'Наше оборудование';
             $meta_description = $seo->description ?? '';
             $meta_keywords = $seo->keyword ?? '';
             $meta_title = $seo->title ?? '';
             $seo_url_canonical = $seo->url_canonical ?? '';
+            $h1 = $seo->h1 ?? $title;
 
             $catalogs = Catalog::orderBy('name')->get();
 
@@ -218,6 +219,7 @@ class FrontendController
                     'meta_description',
                     'meta_keywords',
                     'meta_title',
+                    'h1',
                     'seo_url_canonical',
                     'top_menu')
             )->with('title', $title);
