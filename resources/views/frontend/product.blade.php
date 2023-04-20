@@ -61,7 +61,7 @@
                                         <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                             <picture>
                                                 <source srcset="{{ $video->getThumb() }}" type="image/jpeg">
-                                                <img src="{{ $video->getThumb() }}" alt="" width="62" height="62">
+                                                <img src="{{ $video->getThumb() }}" alt="{{ $product->title }}" width="62" height="62">
                                             </picture>
                                         </div>
                                     @endforeach
@@ -76,7 +76,7 @@
                                     <div class="swiper-slide product__big-slide">
                                         <picture>
                                             <source srcset="{{ $photo->getOriginUrl() }}" type="image/png">
-                                            <img src="{{ $photo->getOriginUrl() }}" alt="" width="186" height="218">
+                                            <img src="{{ $photo->getOriginUrl() }}" alt="{{ $photo->alt }}" title="{{ $photo->title }}" height="100%">
                                         </picture>
                                     </div>
                                 @endforeach

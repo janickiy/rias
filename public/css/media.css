@@ -64,6 +64,10 @@
     min-width: 130.5px;
   }
 
+  .header__top-links {
+    min-width: 263px;
+  }
+
   .header__top-link {
     padding-right: 17px;
     padding-left: 21px;
@@ -79,6 +83,7 @@
 
   .header__btn {
     padding: 16px 34px;
+    min-width: 263px;
   }
 
   .main__title {
@@ -233,12 +238,17 @@
     min-width: 114.5px;
   }
 
+  .header__top-links {
+    min-width: 231px;
+  }
+
   .header__top-link {
     padding: 11px 7px 11px 15px;
   }
 
   .header__btn {
     padding: 14px 24px;
+    min-width: 231px;
     font-size: 14px;
   }
 
