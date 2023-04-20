@@ -57,7 +57,7 @@ class ProductPhotosController extends Controller
 
         if ($request->file('image')->storeAs('public/images', $fileNameToStore)) {
             $thumbnail = Image::make(Storage::path('/public/images/') . $fileNameToStore);
-            $thumbnail->resize(null, 300, function ($constraint) {
+            $thumbnail->resize(300, 300, function ($constraint) {
                 $constraint->aspectRatio();
             });
 
@@ -88,7 +88,7 @@ class ProductPhotosController extends Controller
 
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
-        return view('cp.product_photos.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование фото');
+        return view('cp.product_photos.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование фото: ' . $row->product->title );
 
     }
 
@@ -127,7 +127,7 @@ class ProductPhotosController extends Controller
 
             if ($request->file('image')->storeAs('public/images', $fileNameToStore)) {
                 $img = Image::make(Storage::path('/public/images/') . $fileNameToStore);
-                $img->resize(null, 300, function ($constraint) {
+                $img->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                 });
 

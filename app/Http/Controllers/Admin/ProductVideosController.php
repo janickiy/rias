@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Products;
 use App\Models\ProductVideos;
 use Illuminate\Http\Request;
 use App\Helpers\VideoHelper;
@@ -21,7 +22,11 @@ class ProductVideosController extends Controller
 
         if (!$videos) abort(404);
 
-        return view('cp.product_videos.index', compact('videos', 'product_id'))->with('title', 'Список видео');
+        $product = Products::find($product_id);
+
+        if (!$product) abort(404);
+
+        return view('cp.product_videos.index', compact('videos', 'product_id'))->with('title', 'Список видео: ' . $product->title);
     }
 
     /**
@@ -30,7 +35,11 @@ class ProductVideosController extends Controller
      */
     public function create(int $product_id)
     {
-        return view('cp.product_videos.create_edit', compact('product_id'))->with('title', 'Добавление видео');
+        $product = Products::find($product_id);
+
+        if (!$product) abort(404);
+
+        return view('cp.product_videos.create_edit', compact('product_id'))->with('title', 'Добавление видео: ' . $product->title);
     }
 
     /**
@@ -69,7 +78,7 @@ class ProductVideosController extends Controller
 
         $product_id = $row->product_id;
 
-        return view('cp.product_videos.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка видео');
+        return view('cp.product_videos.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка видео: ' . $row->product->title);
     }
 
     /**
@@ -90,7 +99,10 @@ class ProductVideosController extends Controller
 
         if (!$row) abort(404);
 
-        $row->video = $request->input('video');
+        $video = VideoHelper::detectVideoId($request->input('video'));
+
+        $row->video = $video['video'];
+        $row->provider = $video['provider'];
         $row->save();
 
         return redirect(URL::route('cp.product_videos.index', ['product_id' =>  $row->product_id]))->with('success', 'Данные обновлены');

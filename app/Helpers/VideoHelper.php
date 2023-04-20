@@ -32,6 +32,9 @@ class VideoHelper
         } else if (preg_match('/^.*((v\/)|(embed\/)|(watch\?))\??v?=?([^\&\?]*).*/', $link, $out)) {
             $video['provider'] = 'youtube';
             $video['video'] = $out[5];
+        } else if (preg_match('/(vk\.com|m\.vk\.com)\/?([^\&\?]*).*/i', $link, $out)) {
+            $video['provider'] = 'vk';
+            $video['video'] = $out[2];
         }
 
         return $video;
@@ -48,6 +51,10 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $videoplayer = '<iframe width="100%" height="100%" src="//www.youtube.com/embed/' . $video . '?frameborder="0" allowfullscreen></iframe>';
+        } else if ($provider == 'vk') {
+            preg_match('/video([\d]+)_(\d+)/i', $video, $out);
+
+            $videoplayer = '<iframe src="//vk.com/video_ext.php?oid=' . $out[1] . '&id=' . $out[2] . '&hash=2f5649813d7d7d5f" width="100%" height="100%" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>';
         }
 
         return $videoplayer;
@@ -64,9 +71,13 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $url = 'https://www.youtube.com/embed/' . $video;
+        } else if ($provider == 'vk') {
+            preg_match('/video([\d]+)_(\d+)/i', $video, $out);
+
+            $url = 'https://vk.com/video_ext.php?oid=' . $out[1] . '&id=' . $out[2] . '&hash=2f5649813d7d7d5f';
         }
 
-        return  $url;
+        return $url;
     }
 
     /**
@@ -80,6 +91,8 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $link = 'https://www.youtube.com/watch?v=' . $video;
+        } else if ($provider == 'vk') {
+             $link = 'https://vk.com/' . $video;
         }
 
         return $link;
