@@ -187,28 +187,42 @@ $products.forEach($product => {
     }
   });
 
-  /* Video */
-  bigSlider.on('slideChange', () => {
-    const $activeIframe = $product.querySelector('.product__big-slide--video iframe');
-    if ($activeIframe) {
-      stopYTVideo($activeIframe, 'hide')
+  navSlider.on('click', () => {
+    const $clickedSlide = bigSlider.el.querySelectorAll('.swiper-slide')[navSlider.clickedIndex];
+    if (!$clickedSlide.classList.contains('product__big-slide--video')) {
       return;
     }
 
-    const $activeSlide = bigSlider.el.querySelectorAll('.swiper-slide')[bigSlider.activeIndex];
-    if (!$activeSlide.classList.contains('product__big-slide--video')) {
-      return;
-    }
-
-    const $video = $activeSlide.querySelector('.product__big-slide-video');
+    const $video = $clickedSlide.querySelector('.product__big-slide-video');
     const url = $video.dataset.src;
     if (!url) {
       return;
     }
 
-    const $iframe = createYTFrame(url);
-    $video.append($iframe);
-    $video.addEventListener('click', () => toggleYTVideo($iframe));
+    let $iframe;
+    if (url.includes('rutube.ru')) {
+      $iframe = createRutubeFrame(url);
+    } else if (url.includes('mail.ru')) {
+      $iframe = createMailFrame(url);
+    } else {
+      $iframe = createYTFrame(url);
+    }
+
+    const popup = createPopup(`
+      <div class="popup__video">${$iframe.outerHTML}</div>
+    `);
+    popup.show();
+  });
+
+
+  /* Video */
+  bigSlider.on('slideChange', () => {
+    const $activeSlide = bigSlider.el.querySelectorAll('.swiper-slide')[bigSlider.activeIndex];
+    if (!$activeSlide.classList.contains('product__big-slide--video')) {
+      return;
+    }
+
+    bigSlider.slideTo(bigSlider.previousIndex);
   });
 });
 
@@ -259,7 +273,6 @@ $anchors.forEach($anchor => {
 
 function createYTFrame(url) {
   const $iframe = document.createElement('iframe');
-  $iframe.dataset.play = '1';
   $iframe.setAttribute('src', `${url}?autoplay=1&enablejsapi=1&rel=0`);
   $iframe.setAttribute('autoplay', '');
   $iframe.setAttribute('frameborder', '0');
@@ -269,18 +282,67 @@ function createYTFrame(url) {
   return $iframe;
 }
 
-function stopYTVideo($iframe) {
-  $iframe.dataset.play = '0';
-  const iframeWindow = $iframe.contentWindow;
-  iframeWindow.postMessage(`{"event": "command", "func": "pauseVideo", "args": ""}`, '*');
+function createRutubeFrame(url) {
+  const $iframe = document.createElement('iframe');
+  $iframe.setAttribute('src', `${url}`);
+  $iframe.setAttribute('allow', 'clipboard-write; autoplay');
+  $iframe.setAttribute('frameborder', '0');
+  $iframe.setAttribute('webkitAllowFullScreen', '');
+  $iframe.setAttribute('mozallowfullscreen', '');
+  $iframe.setAttribute('allowFullScreen', '');
+
+  return $iframe;
 }
 
-function toggleYTVideo($iframe) {
-  const iframeWindow = $iframe.contentWindow;
-  const toggle = $iframe.dataset.play == '1' ? 'pauseVideo' : 'playVideo';
-  iframeWindow.postMessage(`{"event": "command", "func": "${toggle}", "args": ""}`, '*');
-  $iframe.dataset.play = $iframe.dataset.play === '1' ? '0' : '1';
+function createMailFrame(url) {
+  const $iframe = document.createElement('iframe');
+  $iframe.setAttribute('src', `${url}`);
+  $iframe.setAttribute('frameborder', '0');
+  $iframe.setAttribute('scrolling', 'no');
+  $iframe.setAttribute('webkitallowfullscreen', '');
+  $iframe.setAttribute('mozallowfullscreen', '');
+  $iframe.setAttribute('allowfullscreen', '');
+
+  return $iframe;
 }
+
+/* Popup */
+function createPopup($content, className = '') {
+  const $closeBtn = createElem('button', 'popup__close');
+
+  const $popupContent = createElem('div', 'popup__content', {
+    innerHTML: $content,
+  });
+  $popupContent.appendChild($closeBtn);
+
+  const $popup = createElem('div', `popup ${className}`);
+  $popup.appendChild($popupContent);
+
+  $popup.addEventListener('click', (e) => {
+    if ($popup === e.target) {
+      closePopup($popup);
+    }
+  });
+  $closeBtn.addEventListener('click', () => closePopup($popup), { once: true });
+
+  return {
+    el: $popup,
+    close: () => closePopup($popup),
+    show: () => showPopup($popup)
+  };
+}
+
+function closePopup($popup) {
+  $popup.classList.remove('popup--active');
+  setTimeout(() => $popup.remove(), 1000);
+}
+
+function showPopup($popup) {
+  document.body.append($popup);
+  $popup.classList.add('popup--show');
+  setTimeout(() => $popup.classList.add('popup--active'), 50);
+}
+
 
 function setInputFilter(textbox, inputFilter) {
   ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop", "focusout"].forEach(function (event) {

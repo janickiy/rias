@@ -4,15 +4,20 @@ namespace App\Helpers;
 
 class VideoHelper
 {
+
     /**
-     * @param $provider
-     * @param $video
+     * @param string $provider
+     * @param string $video
      * @return string
      */
     public static function getThumb(string $provider, string $video): string
     {
         if ($provider == 'youtube') {
             return 'https://img.youtube.com/vi/' . $video . '/hqdefault.jpg';
+        } else if ($provider == 'rutube') {
+            if (@$xml = simplexml_load_file("http://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id=" . $video . "&utf=1")) {
+                return (string)$xml->thumbnail_url;
+            }
         } else {
             return url('img/video.jpg');
         }
@@ -26,15 +31,18 @@ class VideoHelper
     {
         $video = [];
 
-        if (preg_match('/youtu\.be\/([^\?]*)/', $link, $out)) {
+        if (preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $link, $out)) {
             $video['provider'] = 'youtube';
             $video['video'] = $out[1];
-        } else if (preg_match('/^.*((v\/)|(embed\/)|(watch\?))\??v?=?([^\&\?]*).*/', $link, $out)) {
+        } else if (preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $link, $out)) {
             $video['provider'] = 'youtube';
             $video['video'] = $out[5];
-        } else if (preg_match('/(vk\.com|m\.vk\.com)\/?([^\&\?]*).*/i', $link, $out)) {
-            $video['provider'] = 'vk';
-            $video['video'] = $out[2];
+        } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/embed\/([a-zA-Z0-9_\-]+)/i', $link, $out)) {
+            $video['provider'] = 'rutube';
+            $video['video'] = $out[1];
+        } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/tracks\/([a-zA-Z0-9_\-]+)(&.+)?/i', $link, $out)) {
+            $video['provider'] = 'rutube';
+            $video['video'] = $out[1];
         }
 
         return $video;
@@ -51,10 +59,10 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $videoplayer = '<iframe width="100%" height="100%" src="//www.youtube.com/embed/' . $video . '?frameborder="0" allowfullscreen></iframe>';
-        } else if ($provider == 'vk') {
-            preg_match('/video([\d]+)_(\d+)/i', $video, $out);
-
-            $videoplayer = '<iframe src="//vk.com/video_ext.php?oid=' . $out[1] . '&id=' . $out[2] . '&hash=2f5649813d7d7d5f" width="100%" height="100%" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>';
+        } else if ($provider == 'rutube') {
+            $videoplayer = '<iframe width="100%" height="100%" src="//rutube.ru/play/embed/' . $video . '" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>  ';
+        } else if ($provider == 'mailru') {
+            $videoplayer = '<iframe src="//my.mail.ru/video/embed/' . $video . '"  width="100%" height="100%" frameborder="0" scrolling="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         }
 
         return $videoplayer;
@@ -71,10 +79,10 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $url = 'https://www.youtube.com/embed/' . $video;
-        } else if ($provider == 'vk') {
-            preg_match('/video([\d]+)_(\d+)/i', $video, $out);
-
-            $url = 'https://vk.com/video_ext.php?oid=' . $out[1] . '&id=' . $out[2] . '&hash=2f5649813d7d7d5f';
+        } else if ($provider == 'rutube') {
+            $url = 'https://rutube.ru/play/embed/' . $video;
+        } else if ($provider == 'mailru') {
+            $url = 'https://my.mail.ru/video/embed/' . $video;
         }
 
         return $url;
@@ -91,8 +99,8 @@ class VideoHelper
 
         if ($provider == 'youtube') {
             $link = 'https://www.youtube.com/watch?v=' . $video;
-        } else if ($provider == 'vk') {
-             $link = 'https://vk.com/' . $video;
+        } else if ($provider == 'rutube') {
+            $link = 'https://rutube.ru/video/' . $video . '/';
         }
 
         return $link;
