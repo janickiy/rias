@@ -18,6 +18,10 @@ class VideoHelper
             if (@$xml = simplexml_load_file("http://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id=" . $video . "&utf=1")) {
                 return (string)$xml->thumbnail_url;
             }
+        } else if ($provider == 'mailru') {
+            $result = file_get_contents("http://videoapi.my.mail.ru/videos/" . $video . ".json");
+            $arr = json_decode($result, true);
+            return $arr['meta']['poster'];
         } else {
             return url('img/video.jpg');
         }
@@ -43,6 +47,9 @@ class VideoHelper
         } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/tracks\/([a-zA-Z0-9_\-]+)(&.+)?/i', $link, $out)) {
             $video['provider'] = 'rutube';
             $video['video'] = $out[1];
+        } else if (preg_match('/[http|https]+:\/\/(?:www\.|)my\.mail\.ru\/([^\.]+)\.html/i', $link)) {
+            $video['provider'] = 'mailru';
+            $video['video'] = self::getMailRuVideoId($link);
         }
 
         return $video;
@@ -62,7 +69,10 @@ class VideoHelper
         } else if ($provider == 'rutube') {
             $videoplayer = '<iframe width="100%" height="100%" src="//rutube.ru/play/embed/' . $video . '" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>  ';
         } else if ($provider == 'mailru') {
-            $videoplayer = '<iframe src="//my.mail.ru/video/embed/' . $video . '"  width="100%" height="100%" frameborder="0" scrolling="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+            $result = file_get_contents("http://videoapi.my.mail.ru/videos/" . $video . ".json");
+            $arr = json_decode($result, true);
+
+            $videoplayer = '<iframe src="//my.mail.ru/video/embed/' . $arr['meta']['id'] . '"  width="100%" height="100%" frameborder="0" scrolling="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         }
 
         return $videoplayer;
@@ -82,7 +92,9 @@ class VideoHelper
         } else if ($provider == 'rutube') {
             $url = 'https://rutube.ru/play/embed/' . $video;
         } else if ($provider == 'mailru') {
-            $url = 'https://my.mail.ru/video/embed/' . $video;
+            $result = file_get_contents("http://videoapi.my.mail.ru/videos/" . $video . ".json");
+            $arr = json_decode($result, true);
+            $url = 'https://my.mail.ru/video/embed/' . $arr['meta']['id'];
         }
 
         return $url;
@@ -101,8 +113,25 @@ class VideoHelper
             $link = 'https://www.youtube.com/watch?v=' . $video;
         } else if ($provider == 'rutube') {
             $link = 'https://rutube.ru/video/' . $video . '/';
+        } else if ($provider == 'mailru') {
+            $result = file_get_contents("http://videoapi.my.mail.ru/videos/" . $video . ".json");
+            $arr = json_decode($result, true);
+            $link = $arr['meta']['url'];
         }
 
         return $link;
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private static function getMailRuVideoId(string $url): string
+    {
+        $result = str_replace("https://my.mail.ru/", "", $url);
+        $result = str_replace("/video/", "/", $result);
+        $result = str_replace(".html", "", $result);
+
+        return $result;
     }
 }
