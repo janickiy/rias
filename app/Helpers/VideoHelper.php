@@ -44,6 +44,9 @@ class VideoHelper
         } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/embed\/([a-zA-Z0-9_\-]+)/i', $link, $out)) {
             $video['provider'] = 'rutube';
             $video['video'] = $out[1];
+        } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)/i', $link, $out)) {
+            $video['provider'] = 'rutube';
+            $video['video'] = $out[1];
         } else if (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/tracks\/([a-zA-Z0-9_\-]+)(&.+)?/i', $link, $out)) {
             $video['provider'] = 'rutube';
             $video['video'] = $out[1];
