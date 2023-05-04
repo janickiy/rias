@@ -15,11 +15,11 @@ class VideoHelper
         if ($provider == 'youtube') {
             return 'https://img.youtube.com/vi/' . $video . '/hqdefault.jpg';
         } else if ($provider == 'rutube') {
-            if (@$xml = simplexml_load_file("http://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id=" . $video . "&utf=1")) {
-                return (string)$xml->thumbnail_url;
+            if (@$xml = simplexml_load_file("https://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id=" . $video . "&utf=1")) {
+                return str_replace('http','https',(string)$xml->thumbnail_url);
             }
         } else if ($provider == 'mailru') {
-            $result = file_get_contents("http://videoapi.my.mail.ru/videos/" . $video . ".json");
+            $result = file_get_contents("https://videoapi.my.mail.ru/videos/" . $video . ".json");
             $arr = json_decode($result, true);
             return $arr['meta']['poster'];
         } else {
