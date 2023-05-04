@@ -253,7 +253,7 @@ class StringHelper
      * @param string $path
      * @return mixed
      */
-    function getMime(string $path)
+    public static function getMime(string $path)
     {
         $path_info = getimagesize($path);
 
