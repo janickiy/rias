@@ -60,7 +60,7 @@
                                     @foreach($product->videos as $video)
                                         <div class="swiper-slide product__nav-slide product__nav-slide--video">
                                             <picture>
-                                                <source srcset="{{ $video->getThumb() }}" type="image/jpeg">
+                                                <source srcset="{{ $video->getThumb() }}" type="{{ StringHelper::getMime($video->getThumb()) }}">
                                                 <img src="{{ $video->getThumb() }}" alt="{{ $product->title }}" width="62" height="62">
                                             </picture>
                                         </div>

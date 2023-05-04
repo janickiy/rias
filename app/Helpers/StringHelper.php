@@ -47,7 +47,6 @@ class StringHelper
 
                     if (is_array($v)) {
                         $out .= self::tree($v, false);
-
                     } else {
                         $out .= $v;
                     }
@@ -63,11 +62,11 @@ class StringHelper
     }
 
     /**
-     * @param $text
+     * @param string $text
      * @param bool $toLower
      * @return string
      */
-    public static function slug($text, $toLower = true): string
+    public static function slug(string $text, bool $toLower = true): string
     {
         $text = trim($text);
 
@@ -173,11 +172,11 @@ class StringHelper
     }
 
     /**
-     * @param $str
+     * @param string $str
      * @param int $chars
      * @return string
      */
-    public static function shortText($str, $chars = 500): string
+    public static function shortText(string $str, int $chars = 500): string
     {
         $pos = strpos(substr($str, $chars), " ");
         $srttmpend = strlen($str) > $chars ? '...' : '';
@@ -186,12 +185,12 @@ class StringHelper
     }
 
     /**
-     * @param $size
+     * @param int $size
      * @param int $maxDecimals
      * @param string $mbSuffix
      * @return string
      */
-    public static function formatSizeInMb($size, $maxDecimals = 3, $mbSuffix = "MB")
+    public static function formatSizeInMb(int $size, int $maxDecimals = 3, string $mbSuffix = "MB")
     {
         $mbSize = round($size / 1024 / 1024, $maxDecimals);
 
@@ -219,14 +218,18 @@ class StringHelper
             }
             return $size;
         };
+
         $limits = [];
         $limits[] = $normalize(ini_get('upload_max_filesize'));
+
         if (($max_post = $normalize(ini_get('post_max_size'))) != 0) {
             $limits[] = $max_post;
         }
+
         if (($memory_limit = $normalize(ini_get('memory_limit'))) != -1) {
             $limits[] = $memory_limit;
         }
+
         $maxFileSize = min($limits);
 
         return $maxFileSize;
@@ -247,19 +250,30 @@ class StringHelper
     }
 
     /**
-     * @param $string
+     * @param string $path
+     * @return mixed
+     */
+    function getMime(string $path)
+    {
+        $path_info = getimagesize($path);
+
+        return $path_info['mime'];
+    }
+
+    /**
+     * @param string $string
      * @return array|string|string[]
      */
-    public static function phone($string)
+    public static function phone(string $string)
     {
         return str_replace([' ', '(', ')', '-'], '', $string);
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @return string
      */
-    public static function get_mime_type($filename)
+    public static function get_mime_type(string $filename)
     {
         $idx = explode('.', $filename);
         $count_explode = count($idx);
