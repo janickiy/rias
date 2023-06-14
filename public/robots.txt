@@ -1,2 +1,10 @@
+User-agent: Yandex
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /
+
 User-agent: *
-Disallow: /news/
+Disallow: /
+
+Sitemap: https://riastech.ru/sitemap.xml
