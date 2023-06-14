@@ -50,8 +50,8 @@ function yaTranslateInit() {
 }
 
 function yaTranslateSetLang(lang) {
-    // Записываем выбранный язык в localStorage объект yt-widget
-    // Writing the selected language to localStorage
+    // Записываем выбранный язык в localStorage объект yt-widget 
+    // Writing the selected language to localStorage 
     localStorage.setItem('yt-widget', JSON.stringify({
         "lang": lang,
         "active": true
@@ -66,8 +66,8 @@ function yaTranslateGetCode() {
 
 function yaTranslateHtmlHandler(code) {
     // Получаем язык на который переводим и производим необходимые манипуляции с DOM
-    // We get the language to which we translate and produce the necessary manipulations with DOM
-    document.querySelector('[data-lang-active]').innerHTML = ``;
+    // We get the language to which we translate and produce the necessary manipulations with DOM 
+    document.querySelector('[data-lang-active]').innerHTML = `<img class="lang__img lang__img_select" src="./images/lang/lang__${code}.png" alt="${code}">`;
     document.querySelector(`[data-ya-lang="${code}"]`).remove();
 }
 
