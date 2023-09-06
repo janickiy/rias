@@ -129,8 +129,7 @@
 
                                     <br>
                                     @if (isset($row) && !empty($row->image))
-                                        <img src='{{ url($row->getImage()) }}' width="150"
-                                        >
+                                        <img src='{{ url($row->getImage()) }}' width="150">
                                     @endif
 
                                 </div>
@@ -142,6 +141,38 @@
                                 <div class="note">
                                     Максимальный размер: <strong>{{ $maxUploadFileSize }}</strong>
                                 </div>
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('image_title', 'Image Title', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('image_title', old('image_title', isset($row) ? $row->image_title : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('image_title'))
+                                    <p class="text-danger">{{ $errors->first('image_title') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('image_alt', 'Image Alt', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('image_alt', old('image_alt', isset($row) ? $row->image_alt : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('image_alt'))
+                                    <p class="text-danger">{{ $errors->first('image_alt') }}</p>
+                                @endif
 
                             </section>
 
@@ -199,7 +230,7 @@
 
                                 {!! Form::label('seo_h1', 'Seo h1', ['class' => 'label']) !!}
 
-                                <label class="textarea textarea-resizable">
+                                <label class="input">
 
                                     {!! Form::text('seo_h1', old('seo_h1', isset($row) ? $row->seo_h1 : null), ['class' => 'form-control']) !!}
 
@@ -225,7 +256,6 @@
                                     <p class="text-danger">{{ $errors->first('seo_url_canonical') }}</p>
                                 @endif
 
-                            </section>
                             </section>
 
                         </fieldset>

@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="news-about__img">
-                    <img src="{{ url($news->getImage()) }}" width="706" height="354" title="{{ $news->title }}" alt="{{ $news->title }}">
+                    <img src="{{ url($news->getImage()) }}" width="706" height="354" title="{{ $news->image_title ? $news->image_title : $news->title }}" alt="{{ $news->image_alt }}">
                 </div>
             </div>
             <div class="news-about__main">

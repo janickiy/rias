@@ -116,10 +116,8 @@
                                 @if($product->thumbnail)
                                     <div class="product__column-img">
                                         <picture>
-                                            <source srcset="{{ $product->getThumbnailUrl() }}"
-                                                    type="{{ StringHelper::get_mime_type($product->origin) }}">
-                                            <img src="{{ $product->getThumbnailUrl() }}" alt="" width="705"
-                                                 height="348">
+                                            <source srcset="{{ $product->getThumbnailUrl() }}" type="{{ StringHelper::get_mime_type($product->origin) }}">
+                                            <img src="{{ $product->getThumbnailUrl() }}" alt="{{ $product->image_alt }}" width="705" title="{{ $product->image_title }}" height="348">
                                         </picture>
                                     </div>
                                 @endif

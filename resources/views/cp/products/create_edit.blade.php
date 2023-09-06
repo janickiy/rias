@@ -243,6 +243,38 @@
 
                             </section>
 
+                            <section>
+
+                                {!! Form::label('image_title', 'Image Title', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('image_title', old('image_title', isset($row) ? $row->image_title : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('image_title'))
+                                    <p class="text-danger">{{ $errors->first('image_title') }}</p>
+                                @endif
+
+                            </section>
+
+                            <section>
+
+                                {!! Form::label('image_alt', 'Image Alt', ['class' => 'label']) !!}
+
+                                <label class="input">
+
+                                    {!! Form::text('image_alt', old('image_alt', isset($row) ? $row->image_alt : null), ['class' => 'form-control']) !!}
+
+                                </label>
+
+                                @if ($errors->has('image_alt'))
+                                    <p class="text-danger">{{ $errors->first('image_alt') }}</p>
+                                @endif
+
+                            </section>
+
                         </fieldset>
 
                         <footer>

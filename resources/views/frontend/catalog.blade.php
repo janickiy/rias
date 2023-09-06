@@ -36,10 +36,10 @@
                             @if($catalog->image)
                                 <div class="product-models__img">
                                     <picture>
-                                        <source title="{{ $catalog->title }}" srcset="{{ url($catalog->getImage()) }}"
-                                                type="{{ StringHelper::get_mime_type($catalog->image) }}" alt="{{ $catalog->title }}">
-                                        <img src="{{ url($catalog->getImage()) }}" title="{{ $catalog->title }}" width="234" height="218"
-                                             alt="{{ $catalog->title }}">
+                                        <source title="{{ $catalog->image_title ? $catalog->image_title : $catalog->title }}" srcset="{{ url($catalog->getImage()) }}"
+                                                type="{{ StringHelper::get_mime_type($catalog->image) }}" alt="{{ $catalog->image_alt }}">
+                                        <img src="{{ url($catalog->getImage()) }}" title="{{ $catalog->image_title ? $catalog->image_title : $catalog->title }}" width="234" height="218"
+                                             alt="{{ $catalog->image_al }}">
                                     </picture>
                                 </div>
                             @endif

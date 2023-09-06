@@ -30,7 +30,7 @@
 
                         <a class="news-item__img" href="{{ URL::route('frontend.open_news', ['slug' => $row->slug]) }}">
                             @if($row->image)
-                                <img src="{{ url($row->getImage()) }}" width="351" height="275" title="{{ $row->title }}" alt="{{ $row->title }}">
+                                <img src="{{ url($row->getImage()) }}" width="351" height="275" title="{{ $row->image_title ? $row->image_title : $row->title }}" alt="{{ $row->image_alt }}">
                             @endif
                         </a>
 
