@@ -18,6 +18,8 @@ class News extends Model
         'text',
         'preview',
         'image',
+        'image_title',
+        'image_alt',
         'meta_title',
         'meta_description',
         'meta_keywords',

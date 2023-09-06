@@ -23,6 +23,8 @@ class Catalog extends Model
         'slug',
         'seo_h1',
         'seo_url_canonical',
+        'image_title',
+        'image_alt'
     ];
 
     /**

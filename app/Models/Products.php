@@ -24,6 +24,8 @@ class Products extends Model
         'seo_url_canonical',
         'thumbnail',
         'origin',
+        'image_title',
+        'image_alt'
     ];
 
     /**
