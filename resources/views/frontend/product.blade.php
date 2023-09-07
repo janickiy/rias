@@ -76,7 +76,7 @@
                                     <div class="swiper-slide product__big-slide">
                                         <picture>
                                             <source srcset="{{ $photo->getOriginUrl() }}" type="image/png">
-                                            <img src="{{ $photo->getOriginUrl() }}" alt="{{ $photo->alt }}" title="{{ $photo->title }}" height="100%">
+                                            <img src="{{ $photo->getOriginUrl() }}" alt="{{ $photo->alt }}" title="{{ $photo->title ? $photo->title : $product->title }}" height="100%">
                                         </picture>
                                     </div>
                                 @endforeach
