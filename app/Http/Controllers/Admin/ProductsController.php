@@ -153,11 +153,11 @@ class ProductsController extends Controller
                     $row->thumbnail = $thumbnailFileNameToStore;
                     $row->origin = $fileNameToStore;
                 }
-
-                $row->image_title = $request->input('image_title');
-                $row->image_alt = $request->input('image_alt');
             }
         }
+
+        $row->image_title = $request->input('image_title');
+        $row->image_alt = $request->input('image_alt');
 
         $row->save();
 

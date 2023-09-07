@@ -135,11 +135,12 @@ class CatalogController extends Controller
 
                     if ($img->save(Storage::path('/public/catalog/') . $filename)) $row->image = $filename;
 
-                    $row->image_title = $request->input('image_title');
-                    $row->image_alt = $request->input('image_alt');
                 }
             }
         }
+
+        $row->image_title = $request->input('image_title');
+        $row->image_alt = $request->input('image_alt');
 
         $row->save();
 
@@ -153,7 +154,6 @@ class CatalogController extends Controller
     public function destroy(Request $request)
     {
         Catalog::find($request->id)->remove();
-
     }
 
 }

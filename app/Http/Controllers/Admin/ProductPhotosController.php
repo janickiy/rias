@@ -100,7 +100,7 @@ class ProductPhotosController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'image' => 'image|mimes:jpeg,jpg,png,gif|max:2048|nullable',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -112,9 +112,6 @@ class ProductPhotosController extends Controller
         $row = ProductPhotos::find($request->id);
 
         if (!$row) abort(404);
-
-        $row->title = $request->input('title');
-        $row->alt = $request->input('alt');
 
         if ($request->hasFile('image')) {
             if (Storage::disk('public')->exists('images/' . $row->thumbnail) === true) Storage::disk('public')->delete('images/' . $row->thumbnail);
@@ -137,6 +134,9 @@ class ProductPhotosController extends Controller
                 }
             }
         }
+
+        $row->title = $request->input('title');
+        $row->alt = $request->input('alt');
 
         $row->save();
 
