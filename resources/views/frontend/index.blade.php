@@ -168,7 +168,7 @@
                         <div class="product-card__img">
                             <picture>
                                 <source srcset="{{ url($product->getThumbnailUrl()) }}" type="{{ StringHelper::get_mime_type($product->thumbnail) }}">
-                                <img src="{{ url($product->getThumbnailUrl()) }}" width="234" height="218" alt="">
+                                <img src="{{ url($product->getThumbnailUrl()) }}" width="234" height="218" alt="{{ $product->image_alt }}" title="{{ $product->image_title }}">
                             </picture>
                         </div>
                         <div class="product-card__info">

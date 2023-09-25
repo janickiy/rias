@@ -51,7 +51,7 @@
                     <picture>
                         <source srcset="{{ url('img/company-img.webp') }}" type="image/webp">
                         <source srcset="{{ url('img/company-img.png') }}" type="image/png">
-                        <img src="{{ url('img/company-img.png') }}" width="1408" height="482" alt="">
+                        <img src="{{ url('img/company-img.png') }}" width="1408" height="482" alt="{{ $title }}" title="{{ $title }}">
                     </picture>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                         <h2>комплексный и системный подход к поставке оборудования для
                             реализации проектов и задач, стоящих <b>перед нашими заказчиками</b></h2>
                     </div>
-                    <a class="btn services__btn" href="services.html">Подробнее о производстве</a>
+
                     <div class="services__list-box">
                         <div class="services__list">
                             <div class="services__item">
