@@ -22,7 +22,7 @@ class AjaxController extends Controller
 
                     $slug = StringHelper::slug(trim($request->title));
                     $count = Pages::where('slug', 'LIKE%', $slug)->count();
-                    $slug = $count > 0 ? $slug . ($count + 1) : $slug;
+                    $slug = $count > 0 ? substr($slug, 0, -1) . ($count + 1) : $slug;
 
                     return response()->json(['slug' => $slug]);
 
@@ -30,7 +30,7 @@ class AjaxController extends Controller
 
                     $slug = StringHelper::slug(trim($request->title));
                     $count = News::where('slug', 'LIKE%', $slug)->count();
-                    $slug = $count > 0 ? $slug . ($count + 1) : $slug;
+                    $slug = $count > 0 ? substr($slug, 0, -1) . ($count + 1) : $slug;
 
                     return response()->json(['slug' => $slug]);
 
@@ -38,7 +38,7 @@ class AjaxController extends Controller
 
                     $slug = StringHelper::slug(trim($request->title));
                     $count = Products::where('slug', 'LIKE%', $slug)->count();
-                    $slug = $count > 0 ? $slug . ($count + 1) : $slug;
+                    $slug = $count > 0 ? substr($slug, 0, -1) . ($count + 1) : $slug;
 
                     return response()->json(['slug' => $slug]);
 
@@ -46,7 +46,7 @@ class AjaxController extends Controller
 
                     $slug = StringHelper::slug(trim($request->name));
                     $count = Catalog::where('slug', 'LIKE%', $slug)->count();
-                    $slug = $count > 0 ? $slug . ($count + 1) : $slug;
+                    $slug = $count > 0 ? substr($slug, 0, -1) . ($count + 1) : $slug;
 
                     return response()->json(['slug' => $slug]);
 

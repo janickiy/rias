@@ -93,7 +93,7 @@
                                     <label class="select">
 
                                         {!! Form::select('role', $options, isset($row) ? $row->role : 'admin', ['class' => 'form-control', 'autocomplete' => 'off']) !!}
-
+                                        <i></i>
                                     </label>
 
                                     @if ($errors->has('role'))

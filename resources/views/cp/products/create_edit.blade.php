@@ -76,6 +76,7 @@
 
                                     {!! Form::select('catalog_id', $options, old('catalog_id', isset($row) ? $row->catalog_id : null), ['placeholder' => 'Выберите', 'class' => 'input-sm']) !!}
 
+                                    <i></i>
                                 </label>
 
                                 @if ($errors->has('catalog_id'))
@@ -306,9 +307,27 @@
     <script>
         $(document).ready(function () {
 
-            CKEDITOR.replace('full_description', {height: '380px', startupFocus: true});
+            CKEDITOR.replace( 'full_description', {
+                extraAllowedContent: 'img[title]',
+                height: 380,
+                startupFocus: true,
+                filebrowserUploadUrl: '/upload.php',
+                on: {
+                    instanceReady: function() {
+                        this.dataProcessor.htmlFilter.addRules( {
+                            elements: {
+                                img: function( el ) {
+                                    el.attributes.title = el.attributes.alt;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
             CKEDITOR.config.allowedContent = true;
             CKEDITOR.config.removePlugins = 'spellchecker, about, save, newpage, print, templates, scayt, flash, pagebreak, smiley,preview,find';
+            CKEDITOR.config.extraAllowedContent = 'img[title]';
 
             $("#title").on("change keyup input click", function () {
                 if (this.value.length >= 2) {
