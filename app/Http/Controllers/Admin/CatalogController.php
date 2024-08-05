@@ -5,25 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
 use App\Models\{Catalog};
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use Storage;
 use Image;
-use URL;
 
 class CatalogController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.catalog.index')->with('title', 'Категории');
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -32,9 +33,9 @@ class CatalogController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -64,14 +65,14 @@ class CatalogController extends Controller
             'image' => $fileNameToStore ?? null,
         ]));
 
-        return redirect(URL::route('cp.catalog.index'))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.catalog.index')->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = Catalog::find($id);
 
@@ -84,9 +85,9 @@ class CatalogController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -141,19 +142,17 @@ class CatalogController extends Controller
 
         $row->image_title = $request->input('image_title');
         $row->image_alt = $request->input('image_alt');
-
         $row->save();
 
-        return redirect(URL::route('cp.catalog.index'))->with('success', 'Данные обновлены');
+        return redirect()->route('cp.catalog.index')->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         Catalog::find($request->id)->remove();
     }
-
 }

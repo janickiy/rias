@@ -6,14 +6,15 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class RobotsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function edit()
+    public function edit(): View
     {
         $file = File::get(public_path('robots.txt'));
 
@@ -22,9 +23,9 @@ class RobotsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'content' => 'required',
@@ -38,8 +39,6 @@ class RobotsController extends Controller
 
         File::put(public_path('robots.txt'), $request->input('content'));
 
-        return redirect(URL::route('cp.robots.edit'))->with('success', 'Данные успешно обновлены');
-
+        return redirect()->route('cp.robots.edit')->with('success', 'Данные успешно обновлены');
     }
-
 }

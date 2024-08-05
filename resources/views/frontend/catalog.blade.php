@@ -31,7 +31,7 @@
                                     <h2>{{ $catalog->name }}</h2>
                                 </div>
                             </div>
-                            <a class="link-more product-models__more" href="{{ URL::route('frontend.catalog', ['slug' => $catalog->slug]) }}">Все модели</a>
+                            <a class="link-more product-models__more" href="{{ route('frontend.catalog', ['slug' => $catalog->slug]) }}">Все модели</a>
 
                             @if($catalog->image)
                                 <div class="product-models__img">
@@ -47,7 +47,7 @@
                             <div class="product-models__items">
 
                                 @foreach($catalog->getProductsList as $product)
-                                    <a class="text product-models__item" href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">{{ $product->title }}</a>
+                                    <a class="text product-models__item" href="{{ route('frontend.product', ['slug' => $product->slug]) }}">{{ $product->title }}</a>
                                 @endforeach
 
                             </div>
@@ -76,7 +76,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить
                             заявку на расчет проекта</a>
                     </div>
                 </div>

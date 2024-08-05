@@ -5,22 +5,23 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\{Pages};
 use Illuminate\Support\Facades\Validator;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PagesController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.pages.index')->with('title', 'Страницы и разделы');
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $options = [];
 
@@ -33,9 +34,9 @@ class PagesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required',
@@ -52,15 +53,14 @@ class PagesController extends Controller
 
         Pages::create($request->all());
 
-        return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно добавлены');
-
+        return redirect()->route('cp.pages.index')->with('success', 'Данные успешно добавлены');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = Pages::find($id);
 
@@ -73,14 +73,13 @@ class PagesController extends Controller
         }
 
         return view('cp.pages.create_edit', compact('row', 'options'))->with('title', 'Редактирование раздела');
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required',
@@ -116,7 +115,6 @@ class PagesController extends Controller
 
         $row->published = $published;
 
-
         $main = 0;
 
         if ($request->input('main')) {
@@ -127,14 +125,14 @@ class PagesController extends Controller
         $row->main = $main;
         $row->save();
 
-        return redirect(URL::route('cp.pages.index'))->with('success', 'Данные успешно обновлены');
-
+        return redirect()->route('cp.pages.index')->with('success', 'Данные успешно обновлены');
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         Pages::where('id', $request->id)->delete();
     }

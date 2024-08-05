@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\{Catalog, Products};
 use App\Helpers\StringHelper;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use Image;
 use Storage;
@@ -13,20 +14,19 @@ use Storage;
 class ProductsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.products.index')->with('title', 'Продукция');
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $options = Catalog::getOption();
-
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
         return view('cp.products.create_edit', compact('options', 'maxUploadFileSize'))->with('title', 'Добавление продукции');
@@ -34,9 +34,9 @@ class ProductsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required',
@@ -71,32 +71,30 @@ class ProductsController extends Controller
             'origin' => $fileNameToStore ?? null,
         ]));
 
-        return redirect(URL::route('cp.products.index'))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.products.index')->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = Products::find($id);
 
         if (!$row) abort(404);
 
         $options = Catalog::getOption();
-
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
         return view('cp.products.create_edit', compact('row', 'options', 'maxUploadFileSize'))->with('title', 'Редактирование продукции');
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required',
@@ -158,17 +156,16 @@ class ProductsController extends Controller
 
         $row->image_title = $request->input('image_title');
         $row->image_alt = $request->input('image_alt');
-
         $row->save();
 
-        return redirect(URL::route('cp.products.index'))->with('success', 'Данные обновлены');
-
+        return redirect()->route('cp.products.index')->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         Products::find($request->id)->remove();
     }

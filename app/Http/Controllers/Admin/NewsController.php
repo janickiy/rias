@@ -6,24 +6,25 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use App\Helpers\StringHelper;
 use Illuminate\Support\Facades\Validator;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Storage;
 use Image;
 
 class NewsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.news.index')->with('title', 'Новости');
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -32,9 +33,9 @@ class NewsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required|min:6|max:200',
@@ -67,15 +68,15 @@ class NewsController extends Controller
             'image' => $filename ?? null,
         ]));
 
-        return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно добавлены');
+        return redirect()->route('cp.news.index')->with('success', 'Данные успешно добавлены');
 
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = News::find($id);
 
@@ -84,14 +85,13 @@ class NewsController extends Controller
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
         return view('cp.news.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование новости');
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'title' => 'required|min:6|max:200',
@@ -150,14 +150,15 @@ class NewsController extends Controller
 
         $row->save();
 
-        return redirect(URL::route('cp.news.index'))->with('success', 'Данные успешно обновлены');
+        return redirect()->route('cp.news.index')->with('success', 'Данные успешно обновлены');
 
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         $news = News::find($request->id);
 

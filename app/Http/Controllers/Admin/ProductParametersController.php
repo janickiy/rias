@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\ProductParameters;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use URL;
 
@@ -12,9 +14,9 @@ class ProductParametersController extends Controller
 
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index(int $product_id)
+    public function index(int $product_id): View
     {
         $parameters = ProductParameters::where('product_id', $product_id)->get();
 
@@ -25,18 +27,18 @@ class ProductParametersController extends Controller
 
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create(int $product_id)
+    public function create(int $product_id): View
     {
         return view('cp.product_parameters.create_edit', compact('product_id'))->with('title', 'Добавление параметра');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -50,14 +52,14 @@ class ProductParametersController extends Controller
 
         ProductParameters::create($request->all());
 
-        return redirect(URL::route('cp.product_parameters.index', ['product_id' => $request->product_id]))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.product_parameters.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = ProductParameters::find($id);
 
@@ -70,9 +72,9 @@ class ProductParametersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -91,14 +93,14 @@ class ProductParametersController extends Controller
         $row->value = $request->input('value');
         $row->save();
 
-        return redirect(URL::route('cp.product_parameters.index', ['product_id' =>  $row->product_id]))->with('success', 'Данные обновлены');
+        return redirect()->route('cp.product_parameters.index', ['product_id' =>  $row->product_id])->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         ProductParameters::where('id', $request->id)->delete();
     }

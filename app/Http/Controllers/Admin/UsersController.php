@@ -5,22 +5,23 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class UsersController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.users.index')->with('title', 'Пользователи');
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $options = [
             'admin' => 'Админ',
@@ -33,9 +34,9 @@ class UsersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'login' => 'required|unique:users|max:255',
@@ -52,14 +53,14 @@ class UsersController extends Controller
 
         User::create($request->all());
 
-        return redirect(URL::route('cp.users.index'))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.users.index')->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = User::find($id);
 
@@ -76,9 +77,9 @@ class UsersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'login' => 'required|max:255|unique:users,login,' . $request->id,
@@ -106,13 +107,13 @@ class UsersController extends Controller
 
         $row->save();
 
-        return redirect(URL::route('cp.users.index'))->with('success', 'Информация успешно обновлена');
+        return redirect()->route('cp.users.index')->with('success', 'Информация успешно обновлена');
     }
 
     /**
      * @param Request $request
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         if ($request->id != \Auth::id()) User::where('id', $request->id)->delete();
     }

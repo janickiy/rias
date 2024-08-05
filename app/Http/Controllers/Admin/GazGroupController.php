@@ -6,10 +6,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\{
     GazGroup,
-    GazToGroup
 };
-
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use Image;
 use Storage;
@@ -17,26 +16,26 @@ use Storage;
 class GazGroupController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.gaz_group.index')->with('title', 'Группы газов');
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         return view('cp.gaz_group.create_edit')->with('title', 'Добавление группы газов');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -49,29 +48,27 @@ class GazGroupController extends Controller
 
         GazGroup::create($request->all());
 
-        return redirect(URL::route('cp.gaz_group.index'))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.gaz_group.index')->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = GazGroup::find($id);
 
         if (!$row) abort(404);
 
-
         return view('cp.gaz_group.create_edit', compact('row'))->with('title', 'Редактирование продукции');
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required',
@@ -90,14 +87,15 @@ class GazGroupController extends Controller
         $row->name_ru = $request->input('name_ru');
         $row->save();
 
-        return redirect(URL::route('cp.gaz_group.index'))->with('success', 'Данные обновлены');
+        return redirect()->route('cp.gaz_group.index')->with('success', 'Данные обновлены');
 
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         GazGroup::find($request->id)->remove();
     }

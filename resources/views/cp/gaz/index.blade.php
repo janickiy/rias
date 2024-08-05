@@ -22,7 +22,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.gaz.create') }}"
+                                <a href="{{ route('cp.gaz.create') }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить
                                 </a>
@@ -121,7 +121,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.gaz') }}'
+                    url: '{{ route('cp.datatable.gaz') }}'
                 },
                 columns: [
                     {data: 'title', name: 'title'},
@@ -147,7 +147,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.gaz.destroy') }}',
+                            url: '{{ route('cp.gaz.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

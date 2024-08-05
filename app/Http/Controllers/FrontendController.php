@@ -14,18 +14,17 @@ use App\Http\Requests\Frontend\{
 use App\Models\{Catalog, Gaz, News, Pages, Products, Seo};
 use Harimayco\Menu\Models\Menus;
 use App\Mail\Notification;
-use URL;
+use Illuminate\View\View;
 use Validator;
 use File;
 use Mail;
 
-
 class FrontendController
 {
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $page = Pages::where('main', 1)->first();
 
@@ -54,11 +53,10 @@ class FrontendController
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function about()
+    public function about(): View
     {
-
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
 
@@ -83,9 +81,9 @@ class FrontendController
 
     /**
      * @param string $slug
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return  View
      */
-    public function page(string $slug)
+    public function page(string $slug): View
     {
         $page = Pages::where('slug', $slug)->first();
 
@@ -114,9 +112,9 @@ class FrontendController
 
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function news()
+    public function news(): View
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -144,9 +142,9 @@ class FrontendController
 
     /**
      * @param string $slug
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function openNews(string $slug)
+    public function openNews(string $slug): View
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -168,14 +166,13 @@ class FrontendController
             'meta_title',
             'seo_url_canonical',
             'top_menu'))->with('title', $title);
-
     }
 
     /**
      * @param string|null $slug
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function catalog(?string $slug = null)
+    public function catalog(?string $slug = null): View
     {
         $menu = Menus::where('name', 'top')->with('items')->first();
         $top_menu = $menu->items->toArray();
@@ -259,9 +256,9 @@ class FrontendController
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function contact()
+    public function contact(): View
     {
         $seo = Seo::where('type', 'frontend.contact')->first();
 
@@ -287,13 +284,11 @@ class FrontendController
         )->with('title', 'Обратная связь');
     }
 
-
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function converter()
+    public function converter(): View
     {
-
         $seo = Seo::where('type', 'frontend.converter')->first();
 
         $title = $seo->h1 ?? 'Конвертер единиц измерения концентрации';
@@ -321,11 +316,10 @@ class FrontendController
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function application()
+    public function application(): View
     {
-
         $seo = Seo::where('type', 'frontend.application')->first();
 
         $title = $seo->title ?? 'Заявка на расчет проекта';
@@ -353,9 +347,8 @@ class FrontendController
      * @param SendApplicationRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendApplication(SendApplicationRequest $request)
+    public function sendApplication(SendApplicationRequest $request): JsonResponse
     {
-
         $path = public_path('uploads');
         $attachment = $request->file('attachment');
 
@@ -370,7 +363,6 @@ class FrontendController
         $filename = $path . '/' . $name;
 
         try {
-
             Mail::to(explode(",", SettingsHelper::getSetting('EMAIL_NOTIFY')))->send(new Notification($filename));
 
         } catch (\Exception $e) {

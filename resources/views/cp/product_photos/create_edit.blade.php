@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => URL::route('cp.product_photos.update'), 'method' => 'put', 'files' => true, 'class' => "smart-form"]) !!}
+                        {!! Form::open(['url' => route('cp.product_photos.update'), 'method' => 'put', 'files' => true, 'class' => "smart-form"]) !!}
 
                         {!! Form::hidden('id', $row->id) !!}
 

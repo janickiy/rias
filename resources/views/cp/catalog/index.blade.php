@@ -22,7 +22,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.catalog.create') }}"
+                                <a href="{{ route('cp.catalog.create') }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить
                                 </a>
@@ -121,7 +121,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.catalog') }}'
+                    url: '{{ route('cp.datatable.catalog') }}'
                 },
                 columns: [
                     {data: 'name', name: 'name'},
@@ -147,7 +147,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.catalog.destroy') }}',
+                            url: '{{ route('cp.catalog.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

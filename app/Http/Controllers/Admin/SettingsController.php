@@ -5,33 +5,34 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\Settings;
 use Illuminate\Support\Facades\Validator;
-use URL;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Storage;
 
 class SettingsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('cp.settings.index')->with('title', 'Настройки');
     }
 
     /**
      * @param string $type
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create(string $type)
+    public function create(string $type): View
     {
         return view('cp.settings.create_edit', compact('type'))->with('title', 'Добавление настроек');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'value' => 'required',
@@ -52,15 +53,14 @@ class SettingsController extends Controller
             'value' => $filename ?? $request->input('value')
         ]));
 
-        return redirect(URL::route('cp.settings.index'))->with('success', 'Информация успешно добавлена');
-
+        return redirect()->route('cp.settings.index')->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = Settings::find($id);
 
@@ -73,9 +73,9 @@ class SettingsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $settings = Settings::find($request->id);
 
@@ -97,8 +97,7 @@ class SettingsController extends Controller
 
             @unlink($settings->value);
 
-
-           if (Storage::disk('public')->exists('settings/' . $settings->filePath()) === true) Storage::disk('public')->delete('settings/' . $settings->filePath());
+            if (Storage::disk('public')->exists('settings/' . $settings->filePath()) === true) Storage::disk('public')->delete('settings/' . $settings->filePath());
 
             $extension = $request->file('value')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
@@ -113,14 +112,14 @@ class SettingsController extends Controller
 
         $settings->save();
 
-        return redirect(URL::route('cp.settings.index'))->with('success', 'Данные обновлены');
-
+        return redirect()->route('cp.settings.index')->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         $row = Settings::find($request->id);
 
@@ -129,6 +128,5 @@ class SettingsController extends Controller
         }
 
         $row->delete();
-
     }
 }

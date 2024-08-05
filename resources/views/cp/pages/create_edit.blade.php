@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.pages.update') : URL::route('cp.pages.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
+                        {!! Form::open(['url' => isset($row) ? route('cp.pages.update') : route('cp.pages.store'), 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -221,7 +221,7 @@
                                 <button type="submit" class="btn btn-primary button-apply">
                                     {{ isset($row) ? 'Изменить' : 'Добавить' }}
                                 </button>
-                                <a class="btn btn-default" href="{{ URL::route('cp.pages.index') }}">
+                                <a class="btn btn-default" href="{{ route('cp.pages.index') }}">
                                     Назад
                                 </a>
                             </footer>
@@ -281,7 +281,7 @@
                 if (this.value.length >= 2) {
                     let title = this.value;
                     let request = $.ajax({
-                        url: '{!! URL::route('cp.ajax.action') !!}',
+                        url: '{!! route('cp.ajax.action') !!}',
                         method: "POST",
                         data: {
                             action: "get_content_slug",

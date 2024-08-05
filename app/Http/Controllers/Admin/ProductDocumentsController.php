@@ -8,18 +8,18 @@ use App\Models\{
 };
 use Illuminate\Http\Request;
 use App\Helpers\StringHelper;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use Storage;
-use URL;
 
 class ProductDocumentsController extends Controller
 {
-
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index(int $product_id)
+    public function index(int $product_id): View
     {
         $row = Products::find($product_id);
 
@@ -30,9 +30,9 @@ class ProductDocumentsController extends Controller
 
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create(int $product_id)
+    public function create(int $product_id): View
     {
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
@@ -41,9 +41,9 @@ class ProductDocumentsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'file' => 'required|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
@@ -57,19 +57,18 @@ class ProductDocumentsController extends Controller
 
         $extension = $request->file('file')->getClientOriginalExtension();
         $filename = time() . '.' . $extension;
-
         $request->file('file')->storeAs('public/documents', $filename);
 
         ProductDocuments::create(array_merge($request->all(), ['path' => $filename]));
 
-        return redirect(URL::route('cp.product_documents.index', ['product_id' => $request->product_id]))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.product_documents.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = ProductDocuments::find($id);
 
@@ -82,9 +81,9 @@ class ProductDocumentsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'file' => 'nullable|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
@@ -104,21 +103,20 @@ class ProductDocumentsController extends Controller
 
             $extension = $request->file('file')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-
             $request->file('file')->storeAs('public/documents', $filename);
         }
 
         $row->description = $request->input('description');
         $row->save();
 
-        return redirect(URL::route('cp.product_documents.index', ['product_id' => $row->product_id]))->with('success', 'Данные обновлены');
+        return redirect()->route('cp.product_documents.index', ['product_id' => $row->product_id])->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         $row = ProductDocuments::find($request->id);
 

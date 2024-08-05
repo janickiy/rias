@@ -34,7 +34,7 @@
 
                 @include('layouts.notifications')
 
-                {!! Form::open(['method' => 'post', 'url' => URL::route('frontend.gaz_convert'), 'class' => "convert-form converter__form", "id" => "convert-form", "autocomplete" => "off"]) !!}
+                {!! Form::open(['method' => 'post', 'url' => route('frontend.gaz_convert'), 'class' => "convert-form converter__form", "id" => "convert-form", "autocomplete" => "off"]) !!}
 
                 <div class="convert-form__main">
                     <div class="convert-form__item">
@@ -134,7 +134,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить
                             заявку на расчет
                             проекта</a>
                     </div>
@@ -169,7 +169,7 @@
                 $('.submit-btn').prop("disabled",true);
 
                 $.ajax({
-                    url: '{{ URL::route('frontend.gaz_convert') }}',
+                    url: '{{ route('frontend.gaz_convert') }}',
                     method: 'post',
                     dataType: 'json',
                     data: $(this).serialize(),

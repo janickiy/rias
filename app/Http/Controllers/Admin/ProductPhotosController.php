@@ -8,21 +8,19 @@ use App\Models\{
 };
 use App\Helpers\StringHelper;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
 use Storage;
 use Image;
-use URL;
 
 class ProductPhotosController extends Controller
 {
-
     /**
-     * Display the specified resource.
-     *
      * @param int $product_id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index(int $product_id)
+    public function index(int $product_id): View
     {
         $row = Products::find($product_id);
 
@@ -35,9 +33,9 @@ class ProductPhotosController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
-    public function upload(Request $request)
+    public function upload(Request $request): RedirectResponse
     {
         $rules = [
             'product_id' => 'required|integer|exists:products,id',
@@ -68,19 +66,18 @@ class ProductPhotosController extends Controller
                     ]
                 ));
 
-                return redirect(URL::route('cp.product_photos.index', ['product_id' => $request->product_id]))->with('success', 'Данные успешно добавлены');
+                return redirect()->route('cp.product_photos.index', ['product_id' => $request->product_id])->with('success', 'Данные успешно добавлены');
             }
         }
 
-        return redirect(URL::route('cp.product_photos.index', ['product_id' => $request->product_id]))->with('error', 'Ошибка добавления фото');
-
+        return redirect()->route('cp.product_photos.index', ['product_id' => $request->product_id])->with('error', 'Ошибка добавления фото');
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $row = ProductPhotos::find($id);
 
@@ -89,15 +86,14 @@ class ProductPhotosController extends Controller
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
         return view('cp.product_photos.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование фото: ' . $row->product->title );
-
     }
 
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'image' => 'image|mimes:jpeg,jpg,png,gif|max:2048|nullable',
@@ -137,17 +133,17 @@ class ProductPhotosController extends Controller
 
         $row->title = $request->input('title');
         $row->alt = $request->input('alt');
-
         $row->save();
 
-        return redirect(URL::route('cp.product_photos.index', ['product_id' => $row->product_id]))->with('success', 'Данные успешно обновлены');
+        return redirect()->route('cp.product_photos.index', ['product_id' => $row->product_id])->with('success', 'Данные успешно обновлены');
 
     }
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         $row = ProductPhotos::find($request->id);
 
@@ -157,6 +153,5 @@ class ProductPhotosController extends Controller
 
             $row->delete();
         }
-
     }
 }

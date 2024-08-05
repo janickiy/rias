@@ -6,17 +6,17 @@ use App\Models\Products;
 use App\Models\ProductVideos;
 use Illuminate\Http\Request;
 use App\Helpers\VideoHelper;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Validator;
-use URL;
 
 class ProductVideosController extends Controller
 {
-
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index(int $product_id)
+    public function index(int $product_id): View
     {
         $videos = ProductVideos::where('product_id', $product_id)->get();
 
@@ -31,9 +31,9 @@ class ProductVideosController extends Controller
 
     /**
      * @param int $product_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
-    public function create(int $product_id)
+    public function create(int $product_id): View
     {
         $product = Products::find($product_id);
 
@@ -44,9 +44,9 @@ class ProductVideosController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'video' => 'required',
@@ -61,7 +61,7 @@ class ProductVideosController extends Controller
 
         ProductVideos::create(array_merge($request->all(),['provider' => $video['provider'], 'video' => $video['video']]));
 
-        return redirect(URL::route('cp.product_videos.index', ['product_id' => $request->product_id]))->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.product_videos.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -83,9 +83,9 @@ class ProductVideosController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $rules = [
             'video' => 'required',
@@ -105,14 +105,14 @@ class ProductVideosController extends Controller
         $row->provider = $video['provider'];
         $row->save();
 
-        return redirect(URL::route('cp.product_videos.index', ['product_id' =>  $row->product_id]))->with('success', 'Данные обновлены');
+        return redirect()->route('cp.product_videos.index', ['product_id' =>  $row->product_id])->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return void
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
         ProductVideos::where('id', $request->id)->delete();
     }

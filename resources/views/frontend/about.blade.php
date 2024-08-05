@@ -233,7 +233,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить заявку на расчет
                             проекта</a>
                     </div>
                 </div>

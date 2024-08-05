@@ -43,7 +43,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        {!! Form::open(['url' => isset($row) ? URL::route('cp.news.update') : URL::route('cp.news.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
+                        {!! Form::open(['url' => isset($row) ? route('cp.news.update') : route('cp.news.store'), 'files' => true, 'method' => isset($row) ? 'put' : 'post', 'id' => 'smart-form']) !!}
 
                         {!! isset($row) ? Form::hidden('id', $row->id) : '' !!}
 
@@ -266,7 +266,7 @@
                                 <button type="submit" class="btn btn-primary button-apply">
                                     {{ isset($row) ? 'Изменить' : 'Добавить' }}
                                 </button>
-                                <a class="btn btn-default" href="{{ URL::route('cp.news.index') }}">
+                                <a class="btn btn-default" href="{{ route('cp.news.index') }}">
                                     Назад
                                 </a>
                             </footer>
@@ -326,7 +326,7 @@
                 if (this.value.length >= 2) {
                     let title = this.value;
                     let request = $.ajax({
-                        url: '{!! URL::route('cp.ajax.action') !!}',
+                        url: '{!! route('cp.ajax.action') !!}',
                         method: "POST",
                         data: {
                             action: "get_news_slug",

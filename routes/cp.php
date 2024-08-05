@@ -170,6 +170,8 @@ Route::group(['prefix' => 'cp'], function () {
     Route::group(['prefix' => 'sitemap'], function () {
         Route::get('', [SitemapController::class, 'index'])->name('cp.sitemap.index')->middleware(['permission:admin|moderator']);
         Route::get('export', [SitemapController::class, 'export'])->name('cp.sitemap.export')->middleware(['permission:admin|moderator']);
+        Route::get('import', [SitemapController::class, 'importForm'])->name('cp.sitemap.import_form')->middleware(['permission:admin|moderator']);
+        Route::post('import', [SitemapController::class, 'import'])->name('cp.sitemap.import')->middleware(['permission:admin|moderator']);
     });
 
     Route::any('ajax', AjaxController::class)->name('cp.ajax.action');

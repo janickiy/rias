@@ -23,18 +23,18 @@
 
                             <div class="breadcrumbs__item">
                                 <a class="breadcrumbs__link"
-                                   href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
+                                   href="{{ route('frontend.catalog') }}">Оборудование</a>
                             </div>
                             <div class="breadcrumbs__item">
                                 <a class="breadcrumbs__link"
-                                   href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">{{ $product->catalog->name }}</a>
+                                   href="{{ route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">{{ $product->catalog->name }}</a>
                             </div>
                             <div class="breadcrumbs__item">
                                 <span class="breadcrumbs__current">{{ $product->title }}</span>
                             </div>
                         </div>
                     </div>
-                    <a class="btn-back product__mobile-back" href="{{ URL::route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">Назад</a>
+                    <a class="btn-back product__mobile-back" href="{{ route('frontend.catalog', ['slug' => $product->catalog->slug ]) }}">Назад</a>
                     <div class="title1 product__title">
                         <h1>{!! $h1 !!}</h1>
                     </div>
@@ -183,7 +183,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить
                             заявку на расчет проекта</a>
                     </div>
                 </div>

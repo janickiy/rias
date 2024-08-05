@@ -21,11 +21,11 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{ URL::route('cp.settings.create', ['type' => 'TEXT']) }}"
+                                <a href="{{ route('cp.settings.create', ['type' => 'TEXT']) }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить Text параметр
                                 </a><br><br>
-                                <a href="{{ URL::route('cp.settings.create', ['type' => 'FILE']) }}"
+                                <a href="{{ route('cp.settings.create', ['type' => 'FILE']) }}"
                                    class="btn btn-info btn-sm pull-left">
                                     <span class="fa fa-plus"> &nbsp;</span> Добавить File параметр
                                 </a>
@@ -122,7 +122,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ URL::route('cp.datatable.settings') }}'
+                    url: '{{ route('cp.datatable.settings') }}'
                 },
                 columns: [
                     {data: 'key_cd', name: 'key_cd'},
@@ -147,7 +147,7 @@
                     function (isConfirm) {
                         if (!isConfirm) return;
                         $.ajax({
-                            url: '{{ URL::route('cp.settings.destroy') }}',
+                            url: '{{ route('cp.settings.destroy') }}',
                             type: "POST",
                             dataType: "html",
                             data: {id: rowid},

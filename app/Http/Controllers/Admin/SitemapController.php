@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use URL;
+use Illuminate\View\View;
 
 class SitemapController extends Controller
 {
 
-    public function index()
+    /**
+     * @return View
+     */
+    public function index(): View
     {
         return view('cp.sitemap.index')->with('title', 'Загрузка и выгрузка файла карты сайта sitemap.xml');
     }
@@ -20,7 +23,6 @@ class SitemapController extends Controller
     public function export(Request $request)
     {
         $file = public_path(). "/sitemap.xml";
-
         $headers = ['Content-Type: text/xml'];
 
         return \Response::download($file, 'sitemap.xml', $headers);

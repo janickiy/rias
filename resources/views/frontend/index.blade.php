@@ -173,7 +173,7 @@
                         </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">
-                                <a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+                                <a href="{{ route('frontend.product', ['slug' => $product->slug]) }}">
                                     <span>{{ $product->title }}</span>
                                 </a>
                             </h3>
@@ -183,7 +183,7 @@
                     @endforeach
 
                     <div class="product-card products__item">
-                        <a class="product-card__more" href="{{ URL::route('frontend.catalog') }}">
+                        <a class="product-card__more" href="{{ route('frontend.catalog') }}">
                             <div class="product-card__more-img">
                                 <img src="{{ url('img/arrows-right.svg') }}" width="152" height="76" alt="">
                             </div>
@@ -210,7 +210,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить заявку на расчет проекта</a>
                     </div>
                 </div>
             </div>

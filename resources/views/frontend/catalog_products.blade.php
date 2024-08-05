@@ -22,14 +22,14 @@
                     <div class="breadcrumbs model__breadcrumbs">
                         <div class="breadcrumbs__list">
                             <div class="breadcrumbs__item">
-                                <a class="breadcrumbs__link" href="{{ URL::route('frontend.catalog') }}">Оборудование</a>
+                                <a class="breadcrumbs__link" href="{{ route('frontend.catalog') }}">Оборудование</a>
                             </div>
                             <div class="breadcrumbs__item">
                                 <span class="breadcrumbs__current">{{ $catalog->name }}</span>
                             </div>
                         </div>
                     </div>
-                    <a class="btn-back model__mobile-back" href="{{ URL::route('frontend.catalog') }}">Назад</a>
+                    <a class="btn-back model__mobile-back" href="{{ route('frontend.catalog') }}">Назад</a>
                     <div class="title1 model__title">
                         {!! $catalog->description !!}
                     </div>
@@ -56,7 +56,7 @@
                             @foreach($products as $product)
 
                             <div class="product-card product-card--sm-column products__item products__item--col-4">
-                                <a class="product-card__img" href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+                                <a class="product-card__img" href="{{ route('frontend.product', ['slug' => $product->slug]) }}">
 
                                     @if($product->thumbnail)
 
@@ -70,7 +70,7 @@
                                 </a>
                                 <div class="product-card__info">
                                     <h3 class="product-card__name">
-                                        <a href="{{ URL::route('frontend.product', ['slug' => $product->slug]) }}">
+                                        <a href="{{ route('frontend.product', ['slug' => $product->slug]) }}">
                                             <span>{{ $product->title }}</span>
                                         </a>
                                     </h3>
@@ -104,7 +104,7 @@
                         <div class="title1 callback__title">
                             <h2>Нужна помощь с подбором? Оформите заявку</h2>
                         </div>
-                        <a class="btn btn--black callback__btn" href="{{ URL::route('frontend.application') }}">Оформить заявку на расчет проекта</a>
+                        <a class="btn btn--black callback__btn" href="{{ route('frontend.application') }}">Оформить заявку на расчет проекта</a>
                     </div>
                 </div>
             </div>
