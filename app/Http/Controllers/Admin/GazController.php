@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\{Gaz,GazGroup,GazToGroup};
+use App\Http\Requests\Admin\Gaz\StoreRequest;
+use App\Http\Requests\Admin\Gaz\EditRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Validator;
 use Image;
 use Storage;
 
@@ -34,20 +35,8 @@ class GazController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required|max:40',
-            'weight' => 'nullable|numeric',
-            'chemical_formula' => 'required|max:20',
-            'chemical_formula_html' => 'required|max:60',
-            'gaz_group_id' => 'required|array',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $id = Gaz::create($request->all())->id;
 
         if ($request->gaz_group_id && $id) {
@@ -82,23 +71,11 @@ class GazController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required|max:40',
-            'weight' => 'nullable|numeric',
-            'chemical_formula' => 'required|max:20',
-            'chemical_formula_html' => 'required|max:60',
-            'gaz_group_id' => 'required|array',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $row = Gaz::find($request->id);
 
         if (!$row) abort(404);
@@ -107,7 +84,6 @@ class GazController extends Controller
         $row->weight = $request->input('weight');
         $row->chemical_formula = $request->input('chemical_formula');
         $row->chemical_formula_html = $request->input('chemical_formula_html');
-
         $row->save();
 
         GazToGroup::where('faz_id', $request->id)->delete();

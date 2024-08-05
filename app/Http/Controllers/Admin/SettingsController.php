@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Settings;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\Settings\StoreRequest;
+use App\Http\Requests\Admin\Settings\EditRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Storage;
@@ -29,23 +30,14 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'value' => 'required',
-            'key_cd' => 'required|unique:settings|max:255',
-            'type' => 'required',
-        ]);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         if ($request->hasFile('value')) {
             $extension = $request->file('value')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-
             $request->file('value')->storeAs('public/settings', $filename);
         }
 
@@ -72,29 +64,19 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
         $settings = Settings::find($request->id);
 
         if (!$settings) abort(404);
 
-        $rules = [
-            'value' => $settings->type == 'FILE' ? 'nullable' : 'required',
-            'key_cd' => 'required|max:255|unique:settings,key_cd,' . $request->id,
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $settings->key_cd = $request->input('key_cd');
         $settings->display_value = $request->input('display_value');
 
         if ($request->hasFile('value')) {
-
             @unlink($settings->value);
 
             if (Storage::disk('public')->exists('settings/' . $settings->filePath()) === true) Storage::disk('public')->delete('settings/' . $settings->filePath());

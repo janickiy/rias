@@ -7,6 +7,8 @@ use App\Models\{
     Products
 };
 use App\Helpers\StringHelper;
+use App\Http\Requests\Admin\ProductPhotos\StoreRequest;
+use App\Http\Requests\Admin\ProductPhotos\EditRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -32,22 +34,11 @@ class ProductPhotosController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function upload(Request $request): RedirectResponse
+    public function upload(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'product_id' => 'required|integer|exists:products,id',
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $extension = $request->file('image')->getClientOriginalExtension();
         $filename = time() . '.' . $extension;
         $fileNameToStore = 'origin_' . $filename;
@@ -88,23 +79,12 @@ class ProductPhotosController extends Controller
         return view('cp.product_photos.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование фото: ' . $row->product->title );
     }
 
-
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'image' => 'image|mimes:jpeg,jpg,png,gif|max:2048|nullable',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $row = ProductPhotos::find($request->id);
 
         if (!$row) abort(404);
@@ -136,7 +116,6 @@ class ProductPhotosController extends Controller
         $row->save();
 
         return redirect()->route('cp.product_photos.index', ['product_id' => $row->product_id])->with('success', 'Данные успешно обновлены');
-
     }
 
     /**

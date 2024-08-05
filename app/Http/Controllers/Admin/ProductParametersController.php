@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\ProductParameters;
+use App\Http\Requests\Admin\ProductParameters\StoreRequest;
+use App\Http\Requests\Admin\ProductParameters\EditRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Validator;
-use URL;
+
 
 class ProductParametersController extends Controller
 {
@@ -35,21 +36,11 @@ class ProductParametersController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'name' => 'required',
-            'value' => 'required',
-            'product_id' => 'required|integer|exists:products,id'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         ProductParameters::create($request->all());
 
         return redirect()->route('cp.product_parameters.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
@@ -74,17 +65,8 @@ class ProductParametersController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'name' => 'required',
-            'value' => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $row = ProductParameters::find($request->id);
 
         if (!$row) abort(404);

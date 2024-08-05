@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\Users\StoreRequest;
+use App\Http\Requests\Admin\Users\EditRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -36,21 +37,8 @@ class UsersController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'login' => 'required|unique:users|max:255',
-            'name' => 'required',
-            'password' => 'required|min:6',
-            'password_again' => 'required|min:6|same:password',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         User::create($request->all());
 
         return redirect()->route('cp.users.index')->with('success', 'Информация успешно добавлена');
@@ -79,21 +67,8 @@ class UsersController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'login' => 'required|max:255|unique:users,login,' . $request->id,
-            'name' => 'required',
-            'password' => 'min:6|nullable',
-            'password_again' => 'min:6|same:password|nullable',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $row = User::find($request->id);
 
         if (!$row) abort(404);

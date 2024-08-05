@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\{Pages};
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\Pages\StoreRequest;
+use App\Http\Requests\Admin\Pages\EditRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -33,24 +34,11 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required',
-            'text' => 'required',
-            'slug' => 'required|unique:pages',
-            'main' => 'integer|nullable'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         Pages::create($request->all());
 
         return redirect()->route('cp.pages.index')->with('success', 'Данные успешно добавлены');
@@ -76,24 +64,11 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required',
-            'text' => 'required',
-            'slug' => 'required|unique:pages,slug,' . $request->id,
-            'main' => 'integer|nullable'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $row = Pages::find($request->id);
 
         if (!$row) abort(404);

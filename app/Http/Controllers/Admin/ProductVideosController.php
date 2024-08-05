@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Products;
 use App\Models\ProductVideos;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ProductVideos\StoreRequest;
+use App\Http\Requests\Admin\ProductVideos\EditRequest;
 use App\Helpers\VideoHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Validator;
 
 class ProductVideosController extends Controller
 {
@@ -43,20 +44,11 @@ class ProductVideosController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'video' => 'required',
-            'product_id' => 'required|integer|exists:products,id'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $video = VideoHelper::detectVideoId($request->video);
 
         ProductVideos::create(array_merge($request->all(),['provider' => $video['provider'], 'video' => $video['video']]));
@@ -82,19 +74,11 @@ class ProductVideosController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'video' => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $row = ProductVideos::find($request->id);
 
         if (!$row) abort(404);

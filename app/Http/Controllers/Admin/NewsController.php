@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\News;
+use App\Http\Requests\Admin\News\StoreRequest;
+use App\Http\Requests\Admin\News\EditRequest;
 use App\Helpers\StringHelper;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Storage;
@@ -32,25 +33,11 @@ class NewsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required|min:6|max:200',
-            'text' => 'required',
-            'preview' => 'required|min:6|max:400',
-            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
-            'slug' => 'required|unique:news',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         if ($request->hasFile('image')) {
             $extension = $request->file('image')->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
@@ -88,25 +75,11 @@ class NewsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'title' => 'required|min:6|max:200',
-            'text' => 'required',
-            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
-            'preview' => 'required|min:6|max:400',
-            'slug' => 'required|unique:news,slug,' . $request->id,
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $row = News::find($request->id);
 
         if (!$row) abort(404);
@@ -141,17 +114,14 @@ class NewsController extends Controller
                 });
 
                 if ($img->save(Storage::path('/public/news/') . $filename)) $row->image = $filename;
-
             }
         }
 
         $row->image_title = $request->input('image_title');
         $row->image_alt = $request->input('image_alt');
-
         $row->save();
 
         return redirect()->route('cp.news.index')->with('success', 'Данные успешно обновлены');
-
     }
 
     /**

@@ -6,11 +6,12 @@ use App\Models\{
     ProductDocuments,
     Products,
 };
+use App\Http\Requests\Admin\Pages\StoreRequest;
+use App\Http\Requests\Admin\Pages\EditRequest;
 use Illuminate\Http\Request;
 use App\Helpers\StringHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Validator;
 use Storage;
 
 class ProductDocumentsController extends Controller
@@ -43,18 +44,8 @@ class ProductDocumentsController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        $rules = [
-            'file' => 'required|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
-            'description' => 'required',
-            'product_id' => 'required|integer|exists:products,id'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $extension = $request->file('file')->getClientOriginalExtension();
         $filename = time() . '.' . $extension;
         $request->file('file')->storeAs('public/documents', $filename);
@@ -80,20 +71,11 @@ class ProductDocumentsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'file' => 'nullable|mimes:doc,pdf,docx,txt,pdf,xls,xlsx,odt,ods',
-            'description' => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         $row = ProductDocuments::find($request->id);
 
         if (!$row) abort(404);

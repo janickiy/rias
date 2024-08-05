@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\{
     GazGroup,
 };
+use App\Http\Requests\Admin\GazGroup\StoreRequest;
+use App\Http\Requests\Admin\GazGroup\EditRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Validator;
 use Image;
 use Storage;
 
@@ -32,20 +33,11 @@ class GazGroupController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest$request): RedirectResponse
     {
-        $rules = [
-            'name' => 'required',
-            'name_ru' => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
         GazGroup::create($request->all());
 
         return redirect()->route('cp.gaz_group.index')->with('success', 'Информация успешно добавлена');
@@ -65,21 +57,12 @@ class GazGroupController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EditRequest $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(EditRequest $request): RedirectResponse
     {
-        $rules = [
-            'name' => 'required',
-            'name_ru' => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) return back()->withErrors($validator)->withInput();
-
-        $row = Products::find($request->id);
+        $row = GazGroup::find($request->id);
 
         if (!$row) abort(404);
 
