@@ -86,7 +86,7 @@ class GazController extends Controller
         $row->chemical_formula_html = $request->input('chemical_formula_html');
         $row->save();
 
-        GazToGroup::where('faz_id', $request->id)->delete();
+        GazToGroup::where('gaz_id', $request->id)->delete();
 
         if ($request->gaz_group_id) {
             foreach ($request->gaz_group_id as $gaz_group_id) {

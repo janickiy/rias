@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\SettingsHelper;
-use Illuminate\Http\{
-    Response,
-    JsonResponse
-};
+use Illuminate\Http\{RedirectResponse, Response, JsonResponse};
 use App\Http\Requests\Frontend\{
     SendApplicationRequest,
     ConvertRequest,
@@ -227,7 +224,7 @@ class FrontendController
      * @param string $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function product(string $slug)
+    public function product(string $slug): View
     {
         $product = Products::where('slug', $slug)->first();
 
@@ -347,7 +344,7 @@ class FrontendController
      * @param SendApplicationRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendApplication(SendApplicationRequest $request): JsonResponse
+    public function sendApplication(SendApplicationRequest $request): RedirectResponse
     {
         $path = public_path('uploads');
         $attachment = $request->file('attachment');
