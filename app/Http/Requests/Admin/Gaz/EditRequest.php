@@ -26,7 +26,7 @@ class EditRequest extends FormRequest
             'weight' => 'nullable|numeric',
             'chemical_formula' => 'required|max:20',
             'chemical_formula_html' => 'required|max:60',
-            'gaz_group_id' => 'required|array',
+            'gaz_group_id' => 'array',
         ];
     }
 }
