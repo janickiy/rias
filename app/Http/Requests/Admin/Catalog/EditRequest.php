@@ -24,7 +24,7 @@ class EditRequest extends FormRequest
         return [
             'name' => 'required',
             'image' => 'image|mimes:jpeg,jpg,png,gif|max:2048|nullable',
-            'slug' => 'required|unique:catalog',
+            'slug' => 'required|unique:catalog,slug,' . $this->id,
         ];
     }
 }
