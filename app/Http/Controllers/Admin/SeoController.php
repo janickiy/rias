@@ -2,50 +2,35 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\DTO\Admin\SeoData;
+use App\Http\Requests\Admin\Seo\UpdateRequest;
 use App\Models\Seo;
+use App\Repositories\SeoRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class SeoController extends Controller
 {
-    /**
-     * @return View
-     */
+    public function __construct(private readonly SeoRepository $seoRepository)
+    {
+    }
+
     public function index(): View
     {
         return view('cp.seo.index')->with('title', 'Seo');
     }
 
-    /**
-     * @param int $id
-     * @return View
-     */
     public function edit(int $id): View
     {
-        $row = Seo::find($id);
-
-        if (!$row) abort(404);
+        $row = Seo::findOrFail($id);
 
         return view('cp.seo.edit', compact('row'))->with('title', 'Редактирование seo');
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function update(Request $request): RedirectResponse
+    public function update(UpdateRequest $request): RedirectResponse
     {
-        $row = Seo::find($request->id);
-
-        if (!$row) abort(404);
-
-        $row->h1 = $request->input('h1');
-        $row->title = $request->input('title');
-        $row->keyword = $request->input('keyword');
-        $row->description = $request->input('description');
-        $row->url_canonical = $request->input('url_canonical');
-        $row->save();
+        $row = Seo::findOrFail($request->integer('id'));
+        $this->seoRepository->update($row, SeoData::fromArray($request->validated()));
 
         return redirect()->route('cp.seo.index')->with('success', 'Данные успешно обновлены');
     }

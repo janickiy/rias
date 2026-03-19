@@ -41,7 +41,9 @@ class Catalog extends Model
      */
     public function getProductsList(int $limit = null)
     {
-        return $limit ? $this->hasMany(Products::class, 'catalog_id', 'id')->limit(5) : $this->hasMany(Products::class, 'catalog_id', 'id')->limit($limit);
+        $relation = $this->hasMany(Products::class, 'catalog_id', 'id');
+
+        return $limit ? $relation->limit($limit) : $relation;
     }
 
     /**
@@ -57,13 +59,13 @@ class Catalog extends Model
      */
     public function getImage()
     {
-        return Storage::disk('public')->url('app/public/catalog/' . $this->image);
+        return Storage::disk('public')->url('catalog/' . $this->image);
     }
 
     /**
      * @return void
      */
-    public function scopeRemove()
+    public function remove()
     {
         if (Storage::disk('public')->exists('catalog/' . $this->image) === true) Storage::disk('public')->delete('catalog/' . $this->image);
 

@@ -46,7 +46,7 @@ class News extends Model
      */
     public function getImage()
     {
-        return Storage::disk('public')->url('app/public/news/' . $this->image);
+        return Storage::disk('public')->url('news/' . $this->image);
     }
 
 }

@@ -1,343 +1,327 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 class StringHelper
 {
     /**
-     * @param $data
-     * @return array
+     * Транслитерация для slug.
      */
-    public static function ObjectToArray($data)
+    private const SLUG_MAP = [
+        'А' => 'A',   'Б' => 'B',   'В' => 'V',   'Г' => 'G',   'Д' => 'D',
+        'Е' => 'E',   'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',   'И' => 'I',
+        'Й' => 'Y',   'К' => 'K',   'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+        'О' => 'O',   'П' => 'P',   'Р' => 'R',   'С' => 'S',   'Т' => 'T',
+        'У' => 'U',   'Ф' => 'F',   'Х' => 'H',   'Ц' => 'Ts',  'Ч' => 'Ch',
+        'Ш' => 'Sh',  'Щ' => 'Sch', 'Ъ' => '',    'Ы' => 'Y',   'Ь' => '',
+        'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+
+        'а' => 'a',   'б' => 'b',   'в' => 'v',   'г' => 'g',   'д' => 'd',
+        'е' => 'e',   'ё' => 'e',   'ж' => 'zh',  'з' => 'z',   'и' => 'i',
+        'й' => 'y',   'к' => 'k',   'л' => 'l',   'м' => 'm',   'н' => 'n',
+        'о' => 'o',   'п' => 'p',   'р' => 'r',   'с' => 's',   'т' => 't',
+        'у' => 'u',   'ф' => 'f',   'х' => 'h',   'ц' => 'ts',  'ч' => 'ch',
+        'ш' => 'sh',  'щ' => 'sch', 'ъ' => '',    'ы' => 'y',   'ь' => '',
+        'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+    ];
+
+    private const MIME_TYPES = [
+        'txt' => 'text/plain',
+        'htm' => 'text/html',
+        'html' => 'text/html',
+        'php' => 'text/html',
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'json' => 'application/json',
+        'xml' => 'application/xml',
+        'swf' => 'application/x-shockwave-flash',
+        'flv' => 'video/x-flv',
+
+        'png' => 'image/png',
+        'jpe' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'jpg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'bmp' => 'image/bmp',
+        'ico' => 'image/vnd.microsoft.icon',
+        'tiff' => 'image/tiff',
+        'tif' => 'image/tiff',
+        'svg' => 'image/svg+xml',
+        'svgz' => 'image/svg+xml',
+        'webp' => 'image/webp',
+
+        'zip' => 'application/zip',
+        'rar' => 'application/x-rar-compressed',
+        '7z' => 'application/x-7z-compressed',
+        'tar' => 'application/x-tar',
+        'gz' => 'application/gzip',
+        'exe' => 'application/x-msdownload',
+        'msi' => 'application/x-msdownload',
+        'cab' => 'application/vnd.ms-cab-compressed',
+
+        'mp3' => 'audio/mpeg',
+        'wav' => 'audio/wav',
+        'ogg' => 'audio/ogg',
+        'mp4' => 'video/mp4',
+        'avi' => 'video/x-msvideo',
+        'mov' => 'video/quicktime',
+        'qt' => 'video/quicktime',
+        'webm' => 'video/webm',
+
+        'pdf' => 'application/pdf',
+        'psd' => 'image/vnd.adobe.photoshop',
+        'ai' => 'application/postscript',
+        'eps' => 'application/postscript',
+        'ps' => 'application/postscript',
+
+        'doc' => 'application/msword',
+        'dot' => 'application/msword',
+        'rtf' => 'application/rtf',
+        'xls' => 'application/vnd.ms-excel',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'csv' => 'text/csv',
+    ];
+
+    /**
+     * Рекурсивное преобразование объекта в массив.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    public static function objectToArray(mixed $data): mixed
     {
-        if (is_array($data) || is_object($data)) {
-            $result = [];
-            foreach ($data as $key => $value) {
-                $result[$key] = self::ObjectToArray($value);
-            }
-            return $result;
+        if (!is_array($data) && !is_object($data)) {
+            return $data;
         }
-        return $data;
+
+        $result = [];
+
+        foreach ((array) $data as $key => $value) {
+            $result[$key] = self::objectToArray($value);
+        }
+
+        return $result;
     }
 
     /**
-     * @param $el
+     * @param mixed $element
      * @param bool $first
      * @return string
      */
-    public static function tree($el, $first = true)
+    public static function tree(mixed $element, bool $first = true): string
     {
-        if (is_object($el)) $el = (array)$el;
-
-        if ($el) {
-
-            if ($first) {
-                $out = '<ul id="tree-checkbox" class="tree-checkbox treeview">';
-            } else {
-                $out = '<ul>';
-            }
-
-            foreach ($el as $k => $v) {
-
-                if (is_object($v)) $v = (array)$v;
-
-                if ($v) {
-
-                    $out .= "<li><strong> " . $k . " :</strong> ";
-
-                    if (is_array($v)) {
-                        $out .= self::tree($v, false);
-                    } else {
-                        $out .= $v;
-                    }
-
-                    $out .= "</li>";
-                }
-            }
-
-            $out .= "</ul>";
-
-            return $out;
+        if (is_object($element)) {
+            $element = (array) $element;
         }
+
+        if (!is_array($element) || empty($element)) {
+            return '';
+        }
+
+        $out = $first
+            ? '<ul id="tree-checkbox" class="tree-checkbox treeview">'
+            : '<ul>';
+
+        foreach ($element as $key => $value) {
+            if ($value === null || $value === '' || $value === [] || $value === false) {
+                continue;
+            }
+
+            if (is_object($value)) {
+                $value = (array) $value;
+            }
+
+            $safeKey = htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8');
+
+            $out .= '<li><strong>' . $safeKey . ':</strong> ';
+
+            if (is_array($value)) {
+                $out .= self::tree($value, false);
+            } else {
+                $out .= htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+            }
+
+            $out .= '</li>';
+        }
+
+        $out .= '</ul>';
+
+        return $out;
     }
 
     /**
-     * @param string $text
-     * @param bool $toLower
-     * @return string
+     * Генерация slug.
      */
     public static function slug(string $text, bool $toLower = true): string
     {
         $text = trim($text);
 
-        $tr = [
-            "А" => "A",
-            "Б" => "B",
-            "В" => "V",
-            "Г" => "G",
-            "Д" => "D",
-            "Е" => "E",
-            "Ё" => "E",
-            "Ж" => "J",
-            "З" => "Z",
-            "И" => "I",
-            "Й" => "Y",
-            "К" => "K",
-            "Л" => "L",
-            "М" => "M",
-            "Н" => "N",
-            "О" => "O",
-            "П" => "P",
-            "Р" => "R",
-            "С" => "S",
-            "Т" => "T",
-            "У" => "U",
-            "Ф" => "F",
-            "Х" => "H",
-            "Ц" => "TS",
-            "Ч" => "CH",
-            "Ш" => "SH",
-            "Щ" => "SCH",
-            "Ъ" => "",
-            "Ы" => "YI",
-            "Ь" => "",
-            "Э" => "E",
-            "Ю" => "YU",
-            "Я" => "YA",
-            "а" => "a",
-            "б" => "b",
-            "в" => "v",
-            "г" => "g",
-            "д" => "d",
-            "е" => "e",
-            "ё" => "e",
-            "ж" => "j",
-            "з" => "z",
-            "и" => "i",
-            "й" => "y",
-            "к" => "k",
-            "л" => "l",
-            "м" => "m",
-            "н" => "n",
-            "о" => "o",
-            "п" => "p",
-            "р" => "r",
-            "с" => "s",
-            "т" => "t",
-            "у" => "u",
-            "ф" => "f",
-            "х" => "h",
-            "ц" => "ts",
-            "ч" => "ch",
-            "ш" => "sh",
-            "щ" => "sch",
-            "ъ" => "y",
-            "ы" => "yi",
-            "ь" => "",
-            "э" => "e",
-            "ю" => "yu",
-            "я" => "ya",
-            "«" => "",
-            "»" => "",
-            "№" => "",
-            "Ӏ" => "",
-            "’" => "",
-            "ˮ" => "",
-            "_" => "-",
-            "'" => "",
-            "`" => "",
-            "^" => "",
-            "\." => "",
-            "," => "",
-            ":" => "",
-            ";" => "",
-            "<" => "",
-            ">" => "",
-            "!" => "",
-            "\(" => "",
-            "\)" => ""
-        ];
-
-        foreach ($tr as $ru => $en) {
-            $text = mb_eregi_replace($ru, $en, $text);
+        if ($text === '') {
+            return '';
         }
+
+        $text = strtr($text, self::SLUG_MAP);
+
+        // Убираем кавычки и спецсимволы, заменяем всё лишнее на дефис
+        $text = preg_replace('/[\'"`^«»№’ˮ]/u', '', $text) ?? $text;
+        $text = preg_replace('/[^A-Za-z0-9]+/u', '-', $text) ?? $text;
+        $text = trim($text, '-');
 
         if ($toLower) {
             $text = mb_strtolower($text);
         }
 
-        $text = str_replace(' ', '-', $text);
-
         return $text;
     }
 
     /**
-     * @param string $str
-     * @param int $chars
-     * @return string
+     * Обрезка текста по словам.
      */
     public static function shortText(string $str, int $chars = 500): string
     {
-        $pos = strpos(substr($str, $chars), " ");
-        $srttmpend = strlen($str) > $chars ? '...' : '';
+        $str = trim(strip_tags($str));
 
-        return substr($str, 0, $chars + $pos) . (isset($srttmpend) ? $srttmpend : '');
+        if ($str === '') {
+            return '';
+        }
+
+        if (mb_strlen($str) <= $chars) {
+            return $str;
+        }
+
+        $cut = mb_substr($str, 0, $chars);
+        $rest = mb_substr($str, $chars);
+
+        $spacePos = mb_strpos($rest, ' ');
+
+        if ($spacePos !== false) {
+            $cut .= mb_substr($rest, 0, $spacePos);
+        }
+
+        return rtrim($cut) . '...';
     }
 
     /**
-     * @param int $size
-     * @param int $maxDecimals
-     * @param string $mbSuffix
-     * @return string
+     * Форматирование размера в MB.
      */
-    public static function formatSizeInMb(int $size, int $maxDecimals = 3, string $mbSuffix = "MB")
+    public static function formatSizeInMb(int $size, int $maxDecimals = 3, string $mbSuffix = 'MB'): string
     {
         $mbSize = round($size / 1024 / 1024, $maxDecimals);
+        $formatted = rtrim(rtrim((string) $mbSize, '0'), '.');
 
-        return preg_replace("/\\.?0+$/", "", $mbSize) . $mbSuffix;
+        return $formatted . $mbSuffix;
     }
 
     /**
-     * @return mixed
+     * Максимальный допустимый размер загружаемого файла в байтах.
      */
-    public static function detectMaxUploadFileSize()
+    public static function detectMaxUploadFileSize(): int
     {
-        /**
-         * Converts shorthands like "2M" or "512K" to bytes
-         *
-         * @param int $size
-         * @return int|float
-         * @throws Exception
-         */
-        $normalize = function ($size) {
-            if (preg_match('/^(-?[\d\.]+)(|[KMG])$/i', $size, $match)) {
-                $pos = array_search($match[2], ["", "K", "M", "G"]);
-                $size = $match[1] * pow(1024, $pos);
-            } else {
+        $normalize = static function (string|false $size): int|false {
+            if ($size === false || $size === '') {
                 return false;
             }
-            return $size;
+
+            $size = trim($size);
+
+            if (!preg_match('/^(-?[\d.]+)\s*([KMG]?)$/i', $size, $match)) {
+                return false;
+            }
+
+            $value = (float) $match[1];
+            $unit = strtoupper($match[2]);
+
+            $power = match ($unit) {
+                'K' => 1,
+                'M' => 2,
+                'G' => 3,
+                default => 0,
+            };
+
+            return (int) round($value * (1024 ** $power));
         };
 
         $limits = [];
-        $limits[] = $normalize(ini_get('upload_max_filesize'));
 
-        if (($max_post = $normalize(ini_get('post_max_size'))) != 0) {
-            $limits[] = $max_post;
+        $uploadMax = $normalize(ini_get('upload_max_filesize'));
+        if ($uploadMax !== false && $uploadMax > 0) {
+            $limits[] = $uploadMax;
         }
 
-        if (($memory_limit = $normalize(ini_get('memory_limit'))) != -1) {
-            $limits[] = $memory_limit;
+        $postMax = $normalize(ini_get('post_max_size'));
+        if ($postMax !== false && $postMax > 0) {
+            $limits[] = $postMax;
         }
 
-        $maxFileSize = min($limits);
-
-        return $maxFileSize;
-    }
-
-    /**
-     * @return string
-     */
-    public static function maxUploadFileSize()
-    {
-        $maxUploadFileSize = self::detectMaxUploadFileSize();
-
-        if (!$maxUploadFileSize or $maxUploadFileSize == 0) {
-            $maxUploadFileSize = 2097152;
+        $memoryLimit = $normalize(ini_get('memory_limit'));
+        if ($memoryLimit !== false && $memoryLimit > 0) {
+            $limits[] = $memoryLimit;
         }
 
-        return self::formatSizeInMb($maxUploadFileSize);
+        if (empty($limits)) {
+            return 2097152; // 2 MB
+        }
+
+        return min($limits);
     }
 
     /**
-     * @param string $path
-     * @return mixed
+     * Максимальный размер загрузки в формате строки.
      */
-    public static function getMime(string $path)
+    public static function maxUploadFileSize(): string
     {
-        $path_info = getimagesize($path);
-
-        return $path_info['mime'];
+        return self::formatSizeInMb(self::detectMaxUploadFileSize());
     }
 
     /**
-     * @param string $string
-     * @return array|string|string[]
+     * MIME по файлу изображения.
      */
-    public static function phone(string $string)
+    public static function getMime(string $path): ?string
     {
-        return str_replace([' ', '(', ')', '-'], '', $string);
+        if (!is_file($path) || !is_readable($path)) {
+            return null;
+        }
+
+        $imageInfo = @getimagesize($path);
+
+        return $imageInfo['mime'] ?? null;
     }
 
     /**
-     * @param string $filename
-     * @return string
+     * Нормализация телефона.
      */
-    public static function get_mime_type(string $filename)
+    public static function phone(string $string): string
     {
-        $idx = explode('.', $filename);
-        $count_explode = count($idx);
-        $idx = strtolower($idx[$count_explode - 1]);
+        return preg_replace('/[^\d+]/', '', trim($string)) ?? '';
+    }
 
-        $mimet = [
-            'txt' => 'text/plain',
-            'htm' => 'text/html',
-            'html' => 'text/html',
-            'php' => 'text/html',
-            'css' => 'text/css',
-            'js' => 'application/javascript',
-            'json' => 'application/json',
-            'xml' => 'application/xml',
-            'swf' => 'application/x-shockwave-flash',
-            'flv' => 'video/x-flv',
+    /**
+     * MIME type по расширению файла.
+     */
+    public static function getMimeType(string $filename): string
+    {
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-            // images
-            'png' => 'image/png',
-            'jpe' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'jpg' => 'image/jpeg',
-            'gif' => 'image/gif',
-            'bmp' => 'image/bmp',
-            'ico' => 'image/vnd.microsoft.icon',
-            'tiff' => 'image/tiff',
-            'tif' => 'image/tiff',
-            'svg' => 'image/svg+xml',
-            'svgz' => 'image/svg+xml',
+        if ($extension === '') {
+            return 'application/octet-stream';
+        }
 
-            // archives
-            'zip' => 'application/zip',
-            'rar' => 'application/x-rar-compressed',
-            'exe' => 'application/x-msdownload',
-            'msi' => 'application/x-msdownload',
-            'cab' => 'application/vnd.ms-cab-compressed',
+        return self::MIME_TYPES[$extension] ?? 'application/octet-stream';
+    }
 
-            // audio/video
-            'mp3' => 'audio/mpeg',
-            'qt' => 'video/quicktime',
-            'mov' => 'video/quicktime',
-
-            // adobe
-            'pdf' => 'application/pdf',
-            'psd' => 'image/vnd.adobe.photoshop',
-            'ai' => 'application/postscript',
-            'eps' => 'application/postscript',
-            'ps' => 'application/postscript',
-
-            // ms office
-            'doc' => 'application/msword',
-            'rtf' => 'application/rtf',
-            'xls' => 'application/vnd.ms-excel',
-            'ppt' => 'application/vnd.ms-powerpoint',
-            'docx' => 'application/msword',
-            'xlsx' => 'application/vnd.ms-excel',
-            'pptx' => 'application/vnd.ms-powerpoint',
-
-            // open office
-            'odt' => 'application/vnd.oasis.opendocument.text',
-            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        ];
-
-        return $mimet[$idx] ?? 'application/octet-stream';
-
+    /**
+     * Алиас для обратной совместимости.
+     */
+    public static function get_mime_type(string $filename): string
+    {
+        return self::getMimeType($filename);
     }
 }

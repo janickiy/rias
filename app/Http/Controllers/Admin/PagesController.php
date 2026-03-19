@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Models\{Pages};
-use App\Http\Requests\Admin\Pages\StoreRequest;
+use App\DTO\Admin\PageData;
 use App\Http\Requests\Admin\Pages\EditRequest;
+use App\Http\Requests\Admin\Pages\StoreRequest;
+use App\Models\Pages;
+use App\Repositories\PageRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PagesController extends Controller
 {
+    public function __construct(private readonly PageRepository $pageRepository)
+    {
+    }
+
     /**
      * @return View
      */
@@ -24,11 +30,7 @@ class PagesController extends Controller
      */
     public function create(): View
     {
-        $options = [];
-
-        foreach (Pages::orderBy('id')->published()->get() as $row) {
-            $options[$row->id] = $row->title;
-        }
+        $options = Pages::orderBy('id')->published()->pluck('title', 'id')->all();
 
         return view('cp.pages.create_edit', compact('options'))->with('title', 'Добавление раздела');
     }
@@ -39,7 +41,7 @@ class PagesController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        Pages::create($request->all());
+        $this->pageRepository->create(PageData::fromArray($request->validated()));
 
         return redirect()->route('cp.pages.index')->with('success', 'Данные успешно добавлены');
     }
@@ -50,15 +52,8 @@ class PagesController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = Pages::find($id);
-
-        if (!$row) abort(404);
-
-        $options = [];
-
-        foreach (Pages::orderBy('id')->published()->get() as $row) {
-            $options[$row->id] = $row->title;
-        }
+        $row = Pages::findOrFail($id);
+        $options = Pages::orderBy('id')->published()->pluck('title', 'id')->all();
 
         return view('cp.pages.create_edit', compact('row', 'options'))->with('title', 'Редактирование раздела');
     }
@@ -69,36 +64,8 @@ class PagesController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Pages::find($request->id);
-
-        if (!$row) abort(404);
-
-        $row->title = $request->input('title');
-        $row->text = $request->input('text');
-        $row->meta_title = $request->input('meta_title');
-        $row->meta_description = $request->input('meta_description');
-        $row->meta_keywords = $request->input('meta_keywords');
-        $row->slug = $request->input('slug');
-        $row->seo_h1 = $request->input('seo_h1');
-        $row->seo_url_canonical = $request->input('seo_url_canonical');
-
-        $published = 0;
-
-        if ($request->input('published')) {
-            $published = 1;
-        }
-
-        $row->published = $published;
-
-        $main = 0;
-
-        if ($request->input('main')) {
-            $main = 1;
-            Pages::where('main', 1)->update(['main' => 0]);
-        }
-
-        $row->main = $main;
-        $row->save();
+        $row = Pages::findOrFail($request->integer('id'));
+        $this->pageRepository->update($row, PageData::fromArray($request->validated()));
 
         return redirect()->route('cp.pages.index')->with('success', 'Данные успешно обновлены');
     }
@@ -109,6 +76,10 @@ class PagesController extends Controller
      */
     public function destroy(Request $request): void
     {
-        Pages::where('id', $request->id)->delete();
+        $row = Pages::find($request->id);
+
+        if ($row) {
+            $this->pageRepository->delete($row);
+        }
     }
 }

@@ -2,102 +2,82 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DTO\Admin\ProductVideoData;
+use App\Helpers\VideoHelper;
+use App\Http\Requests\Admin\ProductVideos\EditRequest;
+use App\Http\Requests\Admin\ProductVideos\StoreRequest;
 use App\Models\Products;
 use App\Models\ProductVideos;
-use Illuminate\Http\Request;
-use App\Http\Requests\Admin\ProductVideos\StoreRequest;
-use App\Http\Requests\Admin\ProductVideos\EditRequest;
-use App\Helpers\VideoHelper;
+use App\Repositories\ProductVideoRepository;
+use App\Services\VideoService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductVideosController extends Controller
 {
-    /**
-     * @param int $product_id
-     * @return View
-     */
+    public function __construct(
+        private readonly ProductVideoRepository $videoRepository,
+        private readonly VideoService $videoService,
+    ) {
+    }
+
     public function index(int $product_id): View
     {
         $videos = ProductVideos::where('product_id', $product_id)->get();
-
-        if (!$videos) abort(404);
-
-        $product = Products::find($product_id);
-
-        if (!$product) abort(404);
+        $product = Products::findOrFail($product_id);
 
         return view('cp.product_videos.index', compact('videos', 'product_id'))->with('title', 'Список видео: ' . $product->title);
     }
 
-    /**
-     * @param int $product_id
-     * @return View
-     */
     public function create(int $product_id): View
     {
-        $product = Products::find($product_id);
-
-        if (!$product) abort(404);
+        $product = Products::findOrFail($product_id);
 
         return view('cp.product_videos.create_edit', compact('product_id'))->with('title', 'Добавление видео: ' . $product->title);
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $video = VideoHelper::detectVideoId($request->video);
+        $validated = $request->validated();
+        $video = $this->videoService->parse($validated['video']);
+        $validated['provider'] = $video['provider'];
+        $validated['video'] = $video['video'];
 
-        ProductVideos::create(array_merge($request->all(),['provider' => $video['provider'], 'video' => $video['video']]));
+        $this->videoRepository->create(ProductVideoData::fromArray($validated));
 
-        return redirect()->route('cp.product_videos.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.product_videos.index', ['product_id' => $request->integer('product_id')])->with('success', 'Информация успешно добавлена');
     }
 
-    /**
-     * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function edit(int $id)
+    public function edit(int $id): View
     {
-        $row = ProductVideos::find($id);
-
-        if (!$row) abort(404);
-
+        $row = ProductVideos::findOrFail($id);
         $row->video = VideoHelper::getVideoLink($row->provider, $row->video);
-
         $product_id = $row->product_id;
 
         return view('cp.product_videos.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка видео: ' . $row->product->title);
     }
 
-    /**
-     * @param EditRequest $request
-     * @return RedirectResponse
-     */
     public function update(EditRequest $request): RedirectResponse
+    {
+        $row = ProductVideos::findOrFail($request->integer('id'));
+        $validated = $request->validated();
+        $video = $this->videoService->parse($validated['video']);
+        $validated['provider'] = $video['provider'];
+        $validated['video'] = $video['video'];
+        $validated['product_id'] = $row->product_id;
+
+        $this->videoRepository->update($row, ProductVideoData::fromArray($validated));
+
+        return redirect()->route('cp.product_videos.index', ['product_id' => $row->product_id])->with('success', 'Данные обновлены');
+    }
+
+    public function destroy(Request $request): void
     {
         $row = ProductVideos::find($request->id);
 
-        if (!$row) abort(404);
-
-        $video = VideoHelper::detectVideoId($request->input('video'));
-
-        $row->video = $video['video'];
-        $row->provider = $video['provider'];
-        $row->save();
-
-        return redirect()->route('cp.product_videos.index', ['product_id' =>  $row->product_id])->with('success', 'Данные обновлены');
-    }
-
-    /**
-     * @param Request $request
-     * @return void
-     */
-    public function destroy(Request $request): void
-    {
-        ProductVideos::where('id', $request->id)->delete();
+        if ($row) {
+            $this->videoRepository->delete($row);
+        }
     }
 }

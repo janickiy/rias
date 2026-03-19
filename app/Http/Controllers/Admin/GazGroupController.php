@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-use Illuminate\Http\Request;
-use App\Models\{
-    GazGroup,
-};
-use App\Http\Requests\Admin\GazGroup\StoreRequest;
+use App\DTO\Admin\GazGroupData;
 use App\Http\Requests\Admin\GazGroup\EditRequest;
+use App\Http\Requests\Admin\GazGroup\StoreRequest;
+use App\Models\GazGroup;
+use App\Repositories\GazGroupRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Image;
-use Storage;
 
 class GazGroupController extends Controller
 {
+    public function __construct(private readonly GazGroupRepository $gazGroupRepository)
+    {
+    }
+
     /**
      * @return View
      */
@@ -36,9 +37,9 @@ class GazGroupController extends Controller
      * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(StoreRequest$request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        GazGroup::create($request->all());
+        $this->gazGroupRepository->create(GazGroupData::fromArray($request->validated()));
 
         return redirect()->route('cp.gaz_group.index')->with('success', 'Информация успешно добавлена');
     }
@@ -49,9 +50,7 @@ class GazGroupController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = GazGroup::find($id);
-
-        if (!$row) abort(404);
+        $row = GazGroup::findOrFail($id);
 
         return view('cp.gaz_group.create_edit', compact('row'))->with('title', 'Редактирование продукции');
     }
@@ -62,16 +61,10 @@ class GazGroupController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = GazGroup::find($request->id);
-
-        if (!$row) abort(404);
-
-        $row->name = $request->input('name');
-        $row->name_ru = $request->input('name_ru');
-        $row->save();
+        $row = GazGroup::findOrFail($request->integer('id'));
+        $this->gazGroupRepository->update($row, GazGroupData::fromArray($request->validated()));
 
         return redirect()->route('cp.gaz_group.index')->with('success', 'Данные обновлены');
-
     }
 
     /**
@@ -80,6 +73,10 @@ class GazGroupController extends Controller
      */
     public function destroy(Request $request): void
     {
-        GazGroup::find($request->id)->remove();
+        $row = GazGroup::find($request->id);
+
+        if ($row) {
+            $this->gazGroupRepository->delete($row);
+        }
     }
 }

@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Models\{Gaz,GazGroup,GazToGroup};
-use App\Http\Requests\Admin\Gaz\StoreRequest;
+use App\DTO\Admin\GazData;
 use App\Http\Requests\Admin\Gaz\EditRequest;
+use App\Http\Requests\Admin\Gaz\StoreRequest;
+use App\Models\Gaz;
+use App\Models\GazGroup;
+use App\Repositories\GazRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Image;
-use Storage;
 
 class GazController extends Controller
 {
+    public function __construct(private readonly GazRepository $gazRepository)
+    {
+    }
+
     /**
      * @return View
      */
@@ -32,20 +37,12 @@ class GazController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param StoreRequest $request
+     * @return RedirectResponse
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $id = Gaz::create($request->all())->id;
-
-        if ($request->gaz_group_id && $id) {
-            foreach ($request->gaz_group_id as $gaz_group_id) {
-                if (is_numeric($gaz_group_id)) {
-                    GazToGroup::create(['gaz_id' => $id, 'gaz_group_id' => $gaz_group_id]);
-                }
-            }
-        }
+        $this->gazRepository->create(GazData::fromArray($request->validated()));
 
         return redirect()->route('cp.gaz.index')->with('success', 'Информация успешно добавлена');
     }
@@ -56,16 +53,9 @@ class GazController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = Gaz::find($id);
-
-        if (!$row) abort(404);
-
+        $row = Gaz::findOrFail($id);
         $options = GazGroup::getOption();
-        $gaz_group_id = [];
-
-        foreach ($row->groups as $group) {
-            $gaz_group_id[] = $group->id;
-        }
+        $gaz_group_id = $row->groups->pluck('id')->all();
 
         return view('cp.gaz.create_edit', compact('row', 'options', 'gaz_group_id'))->with('title', 'Редактирование газа');
     }
@@ -76,25 +66,8 @@ class GazController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Gaz::find($request->id);
-
-        if (!$row) abort(404);
-
-        $row->title = $request->input('title');
-        $row->weight = $request->input('weight');
-        $row->chemical_formula = $request->input('chemical_formula');
-        $row->chemical_formula_html = $request->input('chemical_formula_html');
-        $row->save();
-
-        GazToGroup::where('gaz_id', $request->id)->delete();
-
-        if ($request->gaz_group_id) {
-            foreach ($request->gaz_group_id as $gaz_group_id) {
-                if (is_numeric($gaz_group_id)) {
-                    GazToGroup::create(['gaz_id' => $request->id, 'gaz_group_id' => $gaz_group_id]);
-                }
-            }
-        }
+        $row = Gaz::findOrFail($request->integer('id'));
+        $this->gazRepository->update($row, GazData::fromArray($request->validated()));
 
         return redirect()->route('cp.gaz.index')->with('success', 'Данные обновлены');
     }
@@ -105,6 +78,10 @@ class GazController extends Controller
      */
     public function destroy(Request $request): void
     {
-        Gaz::find($request->id)->remove();
+        $row = Gaz::find($request->id);
+
+        if ($row) {
+            $this->gazRepository->delete($row);
+        }
     }
 }

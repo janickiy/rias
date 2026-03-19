@@ -2,29 +2,31 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Models\{Catalog, Products};
+use App\DTO\Admin\ProductData;
 use App\Helpers\StringHelper;
-use App\Http\Requests\Admin\Products\StoreRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
+use App\Http\Requests\Admin\Products\StoreRequest;
+use App\Models\Catalog;
+use App\Models\Products;
+use App\Repositories\ProductRepository;
+use App\Services\ImageStorageService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Image;
-use Storage;
 
 class ProductsController extends Controller
 {
-    /**
-     * @return View
-     */
+    public function __construct(
+        private readonly ProductRepository $productRepository,
+        private readonly ImageStorageService $imageStorageService,
+    ) {
+    }
+
     public function index(): View
     {
         return view('cp.products.index')->with('title', 'Продукция');
     }
 
-    /**
-     * @return View
-     */
     public function create(): View
     {
         $options = Catalog::getOption();
@@ -33,115 +35,57 @@ class ProductsController extends Controller
         return view('cp.products.create_edit', compact('options', 'maxUploadFileSize'))->with('title', 'Добавление продукции');
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
-        if ($request->hasFile('image')) {
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $fileNameToStore = 'origin_' . $filename;
-            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
+        $validated = $request->validated();
 
-            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
-                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
-                $img->resize(null, 300, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore);
-            }
+        if ($request->hasFile('image')) {
+            $files = $this->imageStorageService->storeOriginalAndThumbnail($request->file('image'), 'products', null, 300);
+            $validated['origin'] = $files['origin'];
+            $validated['thumbnail'] = $files['thumbnail'];
         }
 
-        Products::create(array_merge(array_merge($request->all()), [
-            'thumbnail' => $thumbnailFileNameToStore ?? null,
-            'origin' => $fileNameToStore ?? null,
-        ]));
+        $this->productRepository->create(ProductData::fromArray($validated));
 
         return redirect()->route('cp.products.index')->with('success', 'Информация успешно добавлена');
     }
 
-    /**
-     * @param int $id
-     * @return View
-     */
     public function edit(int $id): View
     {
-        $row = Products::find($id);
-
-        if (!$row) abort(404);
-
+        $row = Products::findOrFail($id);
         $options = Catalog::getOption();
         $maxUploadFileSize = StringHelper::maxUploadFileSize();
 
         return view('cp.products.create_edit', compact('row', 'options', 'maxUploadFileSize'))->with('title', 'Редактирование продукции');
     }
 
-    /**
-     * @param EditRequest $request
-     * @return RedirectResponse
-     */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Products::find($request->id);
-
-        if (!$row) abort(404);
-
-        $row->title = $request->input('title');
-        $row->description = $request->input('description');
-        $row->full_description = $request->input('full_description');
-        $row->catalog_id = $request->catalog_id;
-        $row->meta_title = $request->input('meta_title');
-        $row->meta_description = $request->input('meta_description');
-        $row->meta_keywords = $request->input('meta_keywords');
-        $row->slug = $request->input('slug');
-        $row->seo_h1 = $request->input('seo_h1');
-        $row->seo_url_canonical = $request->input('seo_url_canonical');
+        $row = Products::findOrFail($request->integer('id'));
+        $validated = $request->validated();
+        $validated['thumbnail'] = $row->thumbnail;
+        $validated['origin'] = $row->origin;
 
         if ($request->hasFile('image')) {
+            $this->imageStorageService->deleteIfExists('products', $row->thumbnail);
+            $this->imageStorageService->deleteIfExists('products', $row->origin);
 
-            $image = $request->pic;
-
-            if ($image != null) {
-                if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
-                if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);
-            }
-
-            if (Storage::disk('public')->exists('products/' . $row->thumbnail) === true) Storage::disk('public')->delete('products/' . $row->thumbnail);
-            if (Storage::disk('public')->exists('products/' . $row->origin) === true) Storage::disk('public')->delete('products/' . $row->origin);;
-
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $fileNameToStore = 'origin_' . $filename;
-            $thumbnailFileNameToStore = 'thumbnail_' . $filename;
-
-            if ($request->file('image')->storeAs('public/products', $fileNameToStore)) {
-                $img = Image::make(Storage::path('/public/products/') . $fileNameToStore);
-                $img->resize(null, 300, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-
-                if ($img->save(Storage::path('/public/products/') . $thumbnailFileNameToStore)) {
-                    $row->thumbnail = $thumbnailFileNameToStore;
-                    $row->origin = $fileNameToStore;
-                }
-            }
+            $files = $this->imageStorageService->storeOriginalAndThumbnail($request->file('image'), 'products', null, 300);
+            $validated['origin'] = $files['origin'];
+            $validated['thumbnail'] = $files['thumbnail'];
         }
 
-        $row->image_title = $request->input('image_title');
-        $row->image_alt = $request->input('image_alt');
-        $row->save();
+        $this->productRepository->update($row, ProductData::fromArray($validated));
 
         return redirect()->route('cp.products.index')->with('success', 'Данные обновлены');
     }
 
-    /**
-     * @param Request $request
-     * @return void
-     */
     public function destroy(Request $request): void
     {
-        Products::find($request->id)->remove();
+        $row = Products::find($request->id);
+
+        if ($row) {
+            $this->productRepository->delete($row);
+        }
     }
 }

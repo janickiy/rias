@@ -34,7 +34,7 @@ class GazGroup extends Model
     /**
      * @return void
      */
-    public function scopeRemove()
+    public function remove()
     {
         $this->gaz()->delete();
 

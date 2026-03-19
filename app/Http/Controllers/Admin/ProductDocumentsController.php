@@ -2,29 +2,33 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\{
-    ProductDocuments,
-    Products,
-};
-use App\Http\Requests\Admin\Pages\StoreRequest;
-use App\Http\Requests\Admin\Pages\EditRequest;
-use Illuminate\Http\Request;
+use App\DTO\Admin\ProductDocumentData;
 use App\Helpers\StringHelper;
+use App\Http\Requests\Admin\ProductDocuments\EditRequest;
+use App\Http\Requests\Admin\ProductDocuments\StoreRequest;
+use App\Models\ProductDocuments;
+use App\Models\Products;
+use App\Repositories\ProductDocumentRepository;
+use App\Services\DocumentStorageService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Storage;
 
 class ProductDocumentsController extends Controller
 {
+    public function __construct(
+        private readonly ProductDocumentRepository $documentRepository,
+        private readonly DocumentStorageService $documentStorageService,
+    ) {
+    }
+
     /**
      * @param int $product_id
      * @return View
      */
     public function index(int $product_id): View
     {
-        $row = Products::find($product_id);
-
-        if (!$row) abort(404);
+        $row = Products::findOrFail($product_id);
 
         return view('cp.product_documents.index', compact('product_id'))->with('title', 'Список документации: ' . $row->title);
     }
@@ -41,18 +45,17 @@ class ProductDocumentsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $extension = $request->file('file')->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
-        $request->file('file')->storeAs('public/documents', $filename);
+        $validated = $request->validated();
+        $validated['path'] = $this->documentStorageService->store($request->file('file'), 'documents');
 
-        ProductDocuments::create(array_merge($request->all(), ['path' => $filename]));
+        $this->documentRepository->create(ProductDocumentData::fromArray($validated));
 
-        return redirect()->route('cp.product_documents.index', ['product_id' => $request->product_id])->with('success', 'Информация успешно добавлена');
+        return redirect()->route('cp.product_documents.index', ['product_id' => $request->integer('product_id')])->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -61,10 +64,7 @@ class ProductDocumentsController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = ProductDocuments::find($id);
-
-        if (!$row) abort(404);
-
+        $row = ProductDocuments::findOrFail($id);
         $product_id = $row->product_id;
 
         return view('cp.product_documents.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка документации');
@@ -76,20 +76,17 @@ class ProductDocumentsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = ProductDocuments::find($request->id);
-
-        if (!$row) abort(404);
+        $row = ProductDocuments::findOrFail($request->integer('id'));
+        $validated = $request->validated();
+        $validated['path'] = $row->path;
+        $validated['product_id'] = $row->product_id;
 
         if ($request->hasFile('file')) {
-            if (Storage::disk('public')->exists('documents/' . $row->path) === true) Storage::disk('public')->delete('documents/' . $row->path);
-
-            $extension = $request->file('file')->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $request->file('file')->storeAs('public/documents', $filename);
+            $this->documentStorageService->deleteIfExists('documents', $row->path);
+            $validated['path'] = $this->documentStorageService->store($request->file('file'), 'documents');
         }
 
-        $row->description = $request->input('description');
-        $row->save();
+        $this->documentRepository->update($row, ProductDocumentData::fromArray($validated));
 
         return redirect()->route('cp.product_documents.index', ['product_id' => $row->product_id])->with('success', 'Данные обновлены');
     }
@@ -102,10 +99,11 @@ class ProductDocumentsController extends Controller
     {
         $row = ProductDocuments::find($request->id);
 
-        if ($row) {
-            if (Storage::disk('public')->exists('documents/' . $row->path) === true) Storage::disk('public')->delete('documents/' . $row->path);
+        if (!$row) {
+            return;
         }
 
-        $row->delete();
+        $this->documentStorageService->deleteIfExists('documents', $row->path);
+        $this->documentRepository->delete($row);
     }
 }

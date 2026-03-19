@@ -3,28 +3,37 @@
 namespace App\Http\Requests\Admin\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'value' => 'required',
-            'key_cd' => 'required|unique:settings|max:255',
-            'type' => 'required',
+            'key_cd' => ['required', 'string', 'max:255', 'unique:settings,key_cd'],
+            'type' => ['required', 'string', 'max:255'],
+            'display_value' => ['nullable', 'string', 'max:255'],
+            'value' => ['nullable'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $type = strtoupper((string) $this->input('type'));
+
+            if ($type === 'FILE' && !$this->hasFile('value')) {
+                $validator->errors()->add('value', 'Поле value обязательно для типа FILE.');
+            }
+
+            if ($type !== 'FILE' && blank($this->input('value'))) {
+                $validator->errors()->add('value', 'Поле value обязательно.');
+            }
+        });
     }
 }

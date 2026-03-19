@@ -59,13 +59,13 @@ class Gaz extends Model
 
         switch ($type) {
             case self::CONVERT_FROM_PPM:
-                return  $gaz->covertFromPpm($value);
+                return $gaz->covertFromPpm($value);
             case self::CONVERT_FROM_MG:
                 return $gaz->covertFromMg($value);
             case self::CONVERT_FROM_OBD:
-                return  $gaz->covertFromObd($value);
+                return $gaz->covertFromObd($value);
             case self::CONVERT_FROM_NKPR:
-                return  $gaz->covertFromNkpr($value);
+                return $gaz->covertFromNkpr($value);
         }
 
     }
@@ -75,7 +75,7 @@ class Gaz extends Model
      */
     public function group()
     {
-        return $this->hasManyThrough(GazGroup::class, GazToGroup::class,'gaz_id','id','id','gaz_group_id');
+        return $this->hasManyThrough(GazGroup::class, GazToGroup::class, 'gaz_id', 'id', 'id', 'gaz_group_id');
     }
 
     /**
@@ -144,13 +144,13 @@ class Gaz extends Model
      */
     public function groups()
     {
-        return $this->hasManyThrough(GazGroup::class, GazToGroup::class,'gaz_id','id','id','gaz_group_id');
+        return $this->hasManyThrough(GazGroup::class, GazToGroup::class, 'gaz_id', 'id', 'id', 'gaz_group_id');
     }
 
     /**
      * @return void
      */
-    public function scopeRemove()
+    public function remove()
     {
         GazToGroup::where('gaz_id', $this->id)->delete();
         $this->delete();

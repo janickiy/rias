@@ -41,7 +41,7 @@ class Products extends Model
      */
     public function getThumbnailUrl()
     {
-        return Storage::disk('public')->url('app/public/products/' . $this->thumbnail);
+        return Storage::disk('public')->url('products/' . $this->thumbnail);
     }
 
     /**
@@ -49,7 +49,7 @@ class Products extends Model
      */
     public function getOriginUrl()
     {
-        return Storage::disk('public')->url('app/public/products/' . $this->origin);
+        return Storage::disk('public')->url('products/' . $this->origin);
     }
 
     /**
@@ -88,7 +88,7 @@ class Products extends Model
     /**
      * @return void
      */
-    public function scopeRemove()
+    public function remove()
     {
 
         if (Storage::disk('public')->exists('products/' . $this->thumbnail) === true) Storage::disk('public')->delete('products/' . $this->thumbnail);

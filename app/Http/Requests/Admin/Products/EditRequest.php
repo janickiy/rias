@@ -6,28 +6,28 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class EditRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'description' => 'required',
-            'full_description' => 'required',
-            'slug' => 'required|unique:products,slug,' . $this->id,
-            'image' => 'image|mimes:jpeg,jpg,png|max:2048|nullable',
-            'catalog_id' => 'integer|required',
+            'id' => ['required', 'integer', 'exists:products,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'full_description' => ['required', 'string'],
+            'slug' => ['required', 'string', 'max:255', 'unique:products,slug,' . $this->id],
+            'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+            'catalog_id' => ['required', 'integer', 'exists:catalog,id'],
+            'meta_title' => ['nullable', 'string', 'max:255'],
+            'meta_description' => ['nullable', 'string', 'max:255'],
+            'meta_keywords' => ['nullable', 'string', 'max:255'],
+            'seo_h1' => ['nullable', 'string', 'max:255'],
+            'seo_url_canonical' => ['nullable', 'string', 'max:255'],
+            'image_title' => ['nullable', 'string', 'max:255'],
+            'image_alt' => ['nullable', 'string', 'max:255'],
         ];
     }
 }
