@@ -9,30 +9,49 @@ use Illuminate\Support\Facades\DB;
 
 class GazRepository
 {
+
+    public function find(int $id): ?Gaz
+    {
+        return Gaz::find($id);
+    }
+
+    public function findOrFail(int $id): Gaz
+    {
+        return Gaz::with('groups')->findOrFail($id);
+    }
+
     public function create(GazData $data): Gaz
     {
-        return DB::transaction(function () use ($data) {
-            $gaz = Gaz::create($data->toArray());
-            $this->syncGroups($gaz->id, $data->gazGroupIds);
+        $gaz = Gaz::create($data->toArray());
 
-            return $gaz;
-        });
+        if (!empty($data->gaz_group_id)) {
+            $gaz->groups()->sync($data->gaz_group_id);
+        }
+
+        return $gaz;
     }
 
-    public function update(Gaz $gaz, GazData $data): Gaz
+    public function update(Gaz $gaz, GazData $data): bool
     {
-        return DB::transaction(function () use ($gaz, $data) {
-            $gaz->update($data->toArray());
-            GazToGroup::where('gaz_id', $gaz->id)->delete();
-            $this->syncGroups($gaz->id, $data->gazGroupIds);
+        $updated = $gaz->update($data->toArray());
 
-            return $gaz->refresh();
-        });
+        if (isset($data->gaz_group_id)) {
+            $gaz->groups()->sync($data->gaz_group_id);
+        }
+
+        return $updated;
     }
 
-    public function delete(Gaz $gaz): void
+    public function delete(Gaz $gaz): bool
     {
-        $gaz->remove();
+        $gaz->groups()->detach();
+
+        return (bool)$gaz->delete();
+    }
+
+    public function getGroupIds(Gaz $gaz): array
+    {
+        return $gaz->groups()->pluck('id')->all();
     }
 
     private function syncGroups(int $gazId, array $groupIds): void
@@ -40,7 +59,7 @@ class GazRepository
         foreach ($groupIds as $groupId) {
             GazToGroup::create([
                 'gaz_id' => $gazId,
-                'gaz_group_id' => (int) $groupId,
+                'gaz_group_id' => (int)$groupId,
             ]);
         }
     }

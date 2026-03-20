@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\ProductDocumentData;
 use App\Helpers\StringHelper;
 use App\Http\Requests\Admin\ProductDocuments\EditRequest;
 use App\Http\Requests\Admin\ProductDocuments\StoreRequest;
-use App\Models\ProductDocuments;
-use App\Models\Products;
+use App\Http\Requests\Admin\ProductDocuments\DeleteRequest;
 use App\Repositories\ProductDocumentRepository;
+use App\Repositories\ProductRepository;
 use App\Services\DocumentStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +20,7 @@ class ProductDocumentsController extends Controller
 {
     public function __construct(
         private readonly ProductDocumentRepository $documentRepository,
+        private readonly ProductRepository $productRepository,
         private readonly DocumentStorageService $documentStorageService,
     ) {
     }
@@ -28,9 +31,12 @@ class ProductDocumentsController extends Controller
      */
     public function index(int $product_id): View
     {
-        $row = Products::findOrFail($product_id);
+        $product = $this->productRepository->findOrFail($product_id);
 
-        return view('cp.product_documents.index', compact('product_id'))->with('title', 'Список документации: ' . $row->title);
+        return view('cp.product_documents.index', [
+            'product_id' => $product_id,
+            'title' => 'Список документации: ' . $product->title,
+        ]);
     }
 
     /**
@@ -39,9 +45,11 @@ class ProductDocumentsController extends Controller
      */
     public function create(int $product_id): View
     {
-        $maxUploadFileSize = StringHelper::maxUploadFileSize();
-
-        return view('cp.product_documents.create_edit', compact('product_id', 'maxUploadFileSize'))->with('title', 'Добавление документации');
+        return view('cp.product_documents.create_edit', [
+            'product_id' => $product_id,
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+            'title' => 'Добавление документации',
+        ]);
     }
 
     /**
@@ -50,12 +58,17 @@ class ProductDocumentsController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-        $validated['path'] = $this->documentStorageService->store($request->file('file'), 'documents');
+        $data = $this->prepareDataForStore($request);
 
-        $this->documentRepository->create(ProductDocumentData::fromArray($validated));
+        $this->documentRepository->create(
+            ProductDocumentData::fromArray($data)
+        );
 
-        return redirect()->route('cp.product_documents.index', ['product_id' => $request->integer('product_id')])->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.product_documents.index', [
+                'product_id' => $request->integer('product_id'),
+            ])
+            ->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -64,10 +77,14 @@ class ProductDocumentsController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = ProductDocuments::findOrFail($id);
-        $product_id = $row->product_id;
+        $row = $this->documentRepository->findOrFail($id);
 
-        return view('cp.product_documents.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование списка документации');
+        return view('cp.product_documents.create_edit', [
+            'row' => $row,
+            'product_id' => $row->product_id,
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+            'title' => 'Редактирование списка документации',
+        ]);
     }
 
     /**
@@ -76,34 +93,104 @@ class ProductDocumentsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = ProductDocuments::findOrFail($request->integer('id'));
-        $validated = $request->validated();
-        $validated['path'] = $row->path;
-        $validated['product_id'] = $row->product_id;
+        $row = $this->documentRepository->findOrFail($request->integer('id'));
+        $data = $this->prepareDataForUpdate($request, $row->path, $row->product_id);
 
-        if ($request->hasFile('file')) {
+        $this->documentRepository->update(
+            $row,
+            ProductDocumentData::fromArray($data)
+        );
+
+        return redirect()
+            ->route('cp.product_documents.index', [
+                'product_id' => $row->product_id,
+            ])
+            ->with('success', 'Данные обновлены');
+    }
+
+    /**
+     * @param DeleteRequest $request
+     * @return RedirectResponse
+     */
+    public function destroy(DeleteRequest $request): RedirectResponse
+    {
+        $row = $this->documentRepository->find($request->integer('id'));
+
+        if ($row !== null) {
+            $productId = $row->product_id;
+
             $this->documentStorageService->deleteIfExists('documents', $row->path);
-            $validated['path'] = $this->documentStorageService->store($request->file('file'), 'documents');
+            $this->documentRepository->delete($row);
+
+            return redirect()
+                ->route('cp.product_documents.index', [
+                    'product_id' => $productId,
+                ])
+                ->with('success', 'Информация успешно удалена');
         }
 
-        $this->documentRepository->update($row, ProductDocumentData::fromArray($validated));
+        return redirect()
+            ->back()
+            ->with('error', 'Документ не найден');
+    }
 
-        return redirect()->route('cp.product_documents.index', ['product_id' => $row->product_id])->with('success', 'Данные обновлены');
+    /**
+     * @param StoreRequest $request
+     * @return array
+     */
+    private function prepareDataForStore(StoreRequest $request): array
+    {
+        $data = $request->validated();
+        $data['path'] = $this->documentStorageService->store(
+            $request->file('file'),
+            'documents'
+        );
+
+        return $data;
+    }
+
+    /**
+     * @param EditRequest $request
+     * @param string|null $currentPath
+     * @param int $productId
+     * @return array
+     */
+    private function prepareDataForUpdate(
+        EditRequest $request,
+        ?string $currentPath,
+        int $productId,
+    ): array {
+        $data = $request->validated();
+        $data['path'] = $currentPath;
+        $data['product_id'] = $productId;
+
+        $newPath = $this->replaceDocumentIfExists($request, $currentPath);
+
+        if ($newPath !== null) {
+            $data['path'] = $newPath;
+        }
+
+        return $data;
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @param string|null $oldPath
+     * @return string|null
      */
-    public function destroy(Request $request): void
+    private function replaceDocumentIfExists(Request $request, ?string $oldPath = null): ?string
     {
-        $row = ProductDocuments::find($request->id);
-
-        if (!$row) {
-            return;
+        if (!$request->hasFile('file')) {
+            return null;
         }
 
-        $this->documentStorageService->deleteIfExists('documents', $row->path);
-        $this->documentRepository->delete($row);
+        if ($oldPath !== null) {
+            $this->documentStorageService->deleteIfExists('documents', $oldPath);
+        }
+
+        return $this->documentStorageService->store(
+            $request->file('file'),
+            'documents'
+        );
     }
 }

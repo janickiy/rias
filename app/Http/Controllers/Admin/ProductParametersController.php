@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\ProductParameterData;
 use App\Http\Requests\Admin\ProductParameters\EditRequest;
 use App\Http\Requests\Admin\ProductParameters\StoreRequest;
-use App\Models\ProductParameters;
-use App\Models\Products;
+use App\Http\Requests\Admin\ProductParameters\DeleteRequest;
 use App\Repositories\ProductParameterRepository;
+use App\Repositories\ProductRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductParametersController extends Controller
 {
-    public function __construct(private readonly ProductParameterRepository $parameterRepository)
-    {
+    public function __construct(
+        private readonly ProductParameterRepository $parameterRepository,
+        private readonly ProductRepository $productRepository,
+    ) {
     }
 
     /**
@@ -24,10 +28,14 @@ class ProductParametersController extends Controller
      */
     public function index(int $product_id): View
     {
-        Products::findOrFail($product_id);
-        $parameters = ProductParameters::where('product_id', $product_id)->get();
+        $product = $this->productRepository->findOrFail($product_id);
+        $parameters = $this->parameterRepository->getByProductId($product_id);
 
-        return view('cp.product_parameters.index', compact('parameters', 'product_id'))->with('title', 'Технические характеристики');
+        return view('cp.product_parameters.index', [
+            'parameters' => $parameters,
+            'product_id' => $product_id,
+            'title' => 'Технические характеристики: ' . $product->title,
+        ]);
     }
 
     /**
@@ -36,9 +44,12 @@ class ProductParametersController extends Controller
      */
     public function create(int $product_id): View
     {
-        Products::findOrFail($product_id);
+        $this->productRepository->findOrFail($product_id);
 
-        return view('cp.product_parameters.create_edit', compact('product_id'))->with('title', 'Добавление параметра');
+        return view('cp.product_parameters.create_edit', [
+            'product_id' => $product_id,
+            'title' => 'Добавление параметра',
+        ]);
     }
 
     /**
@@ -47,9 +58,15 @@ class ProductParametersController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $this->parameterRepository->create(ProductParameterData::fromArray($request->validated()));
+        $this->parameterRepository->create(
+            ProductParameterData::fromArray($request->validated())
+        );
 
-        return redirect()->route('cp.product_parameters.index', ['product_id' => $request->integer('product_id')])->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.product_parameters.index', [
+                'product_id' => $request->integer('product_id'),
+            ])
+            ->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -58,29 +75,59 @@ class ProductParametersController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = ProductParameters::findOrFail($id);
-        $product_id = $row->product_id;
+        $row = $this->parameterRepository->findOrFail($id);
 
-        return view('cp.product_parameters.create_edit', compact('row', 'product_id'))->with('title', 'Редактирование параметра');
+        return view('cp.product_parameters.create_edit', [
+            'row' => $row,
+            'product_id' => $row->product_id,
+            'title' => 'Редактирование параметра',
+        ]);
     }
 
+    /**
+     * @param EditRequest $request
+     * @return RedirectResponse
+     */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = ProductParameters::findOrFail($request->integer('id'));
-        $validated = $request->validated();
-        $validated['product_id'] = $row->product_id;
+        $row = $this->parameterRepository->findOrFail($request->integer('id'));
+        $data = $request->validated();
+        $data['product_id'] = $row->product_id;
 
-        $this->parameterRepository->update($row, ProductParameterData::fromArray($validated));
+        $this->parameterRepository->update(
+            $row,
+            ProductParameterData::fromArray($data)
+        );
 
-        return redirect()->route('cp.product_parameters.index', ['product_id' => $row->product_id])->with('success', 'Данные обновлены');
+        return redirect()
+            ->route('cp.product_parameters.index', [
+                'product_id' => $row->product_id,
+            ])
+            ->with('success', 'Данные обновлены');
     }
 
-    public function destroy(Request $request): void
+    /**
+     * @param DeleteRequest $request
+     * @return RedirectResponse
+     */
+    public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = ProductParameters::find($request->id);
+        $row = $this->parameterRepository->find($request->integer('id'));
 
-        if ($row) {
+        if ($row !== null) {
+            $productId = $row->product_id;
+
             $this->parameterRepository->delete($row);
+
+            return redirect()
+                ->route('cp.product_parameters.index', [
+                    'product_id' => $productId,
+                ])
+                ->with('success', 'Информация успешно удалена');
         }
+
+        return redirect()
+            ->back()
+            ->with('error', 'Параметр не найден');
     }
 }

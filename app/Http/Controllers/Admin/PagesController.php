@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\PageData;
 use App\Http\Requests\Admin\Pages\EditRequest;
 use App\Http\Requests\Admin\Pages\StoreRequest;
-use App\Models\Pages;
 use App\Repositories\PageRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,16 +14,16 @@ use Illuminate\View\View;
 
 class PagesController extends Controller
 {
-    public function __construct(private readonly PageRepository $pageRepository)
-    {
+    public function __construct(
+        private readonly PageRepository $pageRepository,
+    ) {
     }
 
-    /**
-     * @return View
-     */
     public function index(): View
     {
-        return view('cp.pages.index')->with('title', 'Страницы и разделы');
+        return view('cp.pages.index', [
+            'title' => 'Страницы и разделы',
+        ]);
     }
 
     /**
@@ -30,9 +31,10 @@ class PagesController extends Controller
      */
     public function create(): View
     {
-        $options = Pages::orderBy('id')->published()->pluck('title', 'id')->all();
-
-        return view('cp.pages.create_edit', compact('options'))->with('title', 'Добавление раздела');
+        return view('cp.pages.create_edit', [
+            'title' => 'Добавление раздела',
+            'options' => $this->pageRepository->getParentOptions(),
+        ]);
     }
 
     /**
@@ -41,9 +43,13 @@ class PagesController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $this->pageRepository->create(PageData::fromArray($request->validated()));
+        $this->pageRepository->create(
+            PageData::fromArray($request->validated())
+        );
 
-        return redirect()->route('cp.pages.index')->with('success', 'Данные успешно добавлены');
+        return redirect()
+            ->route('cp.pages.index')
+            ->with('success', 'Данные успешно добавлены');
     }
 
     /**
@@ -52,10 +58,13 @@ class PagesController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = Pages::findOrFail($id);
-        $options = Pages::orderBy('id')->published()->pluck('title', 'id')->all();
+        $row = $this->pageRepository->findOrFail($id);
 
-        return view('cp.pages.create_edit', compact('row', 'options'))->with('title', 'Редактирование раздела');
+        return view('cp.pages.create_edit', [
+            'title' => 'Редактирование раздела',
+            'row' => $row,
+            'options' => $this->pageRepository->getParentOptions(),
+        ]);
     }
 
     /**
@@ -64,22 +73,32 @@ class PagesController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Pages::findOrFail($request->integer('id'));
-        $this->pageRepository->update($row, PageData::fromArray($request->validated()));
+        $row = $this->pageRepository->findOrFail($request->integer('id'));
 
-        return redirect()->route('cp.pages.index')->with('success', 'Данные успешно обновлены');
+        $this->pageRepository->update(
+            $row,
+            PageData::fromArray($request->validated())
+        );
+
+        return redirect()
+            ->route('cp.pages.index')
+            ->with('success', 'Данные успешно обновлены');
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @return RedirectResponse
      */
-    public function destroy(Request $request): void
+    public function destroy(Request $request): RedirectResponse
     {
-        $row = Pages::find($request->id);
+        $row = $this->pageRepository->find($request->integer('id'));
 
-        if ($row) {
+        if ($row !== null) {
             $this->pageRepository->delete($row);
         }
+
+        return redirect()
+            ->route('cp.pages.index')
+            ->with('success', 'Информация успешно удалена');
     }
 }

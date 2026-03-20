@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\NewsData;
 use App\Helpers\StringHelper;
 use App\Http\Requests\Admin\News\EditRequest;
 use App\Http\Requests\Admin\News\StoreRequest;
-use App\Models\News;
 use App\Repositories\NewsRepository;
 use App\Services\ImageStorageService;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,10 @@ use Illuminate\View\View;
 
 class NewsController extends Controller
 {
+    /**
+     * @param NewsRepository $newsRepository
+     * @param ImageStorageService $imageStorageService
+     */
     public function __construct(
         private readonly NewsRepository $newsRepository,
         private readonly ImageStorageService $imageStorageService,
@@ -26,7 +31,9 @@ class NewsController extends Controller
      */
     public function index(): View
     {
-        return view('cp.news.index')->with('title', 'Новости');
+        return view('cp.news.index', [
+            'title' => 'Новости',
+        ]);
     }
 
     /**
@@ -34,9 +41,10 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        $maxUploadFileSize = StringHelper::maxUploadFileSize();
-
-        return view('cp.news.create_edit', compact('maxUploadFileSize'))->with('title', 'Добавление новости');
+        return view('cp.news.create_edit', [
+            'title' => 'Добавление новости',
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+        ]);
     }
 
     /**
@@ -45,15 +53,13 @@ class NewsController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $data = $this->prepareDataForStore($request);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $this->imageStorageService->storeResizedImage($request->file('image'), 'news', null, 300);
-        }
+        $this->newsRepository->create(NewsData::fromArray($data));
 
-        $this->newsRepository->create(NewsData::fromArray($validated));
-
-        return redirect()->route('cp.news.index')->with('success', 'Данные успешно добавлены');
+        return redirect()
+            ->route('cp.news.index')
+            ->with('success', 'Данные успешно добавлены');
     }
 
     /**
@@ -62,10 +68,13 @@ class NewsController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = News::findOrFail($id);
-        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+        $row = $this->newsRepository->findOrFail($id);
 
-        return view('cp.news.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование новости');
+        return view('cp.news.create_edit', [
+            'title' => 'Редактирование новости',
+            'row' => $row,
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+        ]);
     }
 
     /**
@@ -74,33 +83,87 @@ class NewsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = News::findOrFail($request->integer('id'));
-        $validated = $request->validated();
-        $validated['image'] = $row->image;
+        $row = $this->newsRepository->findOrFail($request->integer('id'));
+        $data = $this->prepareDataForUpdate($request, $row->image);
 
-        if ($request->hasFile('image')) {
-            $this->imageStorageService->deleteIfExists('news', $row->image);
-            $validated['image'] = $this->imageStorageService->storeResizedImage($request->file('image'), 'news', null, 300);
-        }
+        $this->newsRepository->update($row, NewsData::fromArray($data));
 
-        $this->newsRepository->update($row, NewsData::fromArray($validated));
-
-        return redirect()->route('cp.news.index')->with('success', 'Данные успешно обновлены');
+        return redirect()
+            ->route('cp.news.index')
+            ->with('success', 'Данные успешно обновлены');
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @return RedirectResponse
      */
-    public function destroy(Request $request): void
+    public function destroy(Request $request): RedirectResponse
     {
-        $news = News::find($request->id);
+        $id = $request->integer('id');
+        $news = $this->newsRepository->find($id);
 
-        if (!$news) {
-            return;
+        if ($news !== null) {
+            $this->imageStorageService->deleteIfExists('news', $news->image);
+            $this->newsRepository->delete($news);
         }
 
-        $this->imageStorageService->deleteIfExists('news', $news->image);
-        $this->newsRepository->delete($news);
+        return redirect()
+            ->route('cp.news.index')
+            ->with('success', 'Информация успешно удалена');
+    }
+
+    /**
+     * Подготовка данных для создания.
+     */
+    private function prepareDataForStore(StoreRequest $request): array
+    {
+        $data = $request->validated();
+        $data['image'] = $this->uploadImageIfExists($request);
+
+        return $data;
+    }
+
+    /**
+     * Подготовка данных для обновления.
+     * @param EditRequest $request
+     * @param string|null $currentImage
+     * @return array
+     */
+    private function prepareDataForUpdate(EditRequest $request, ?string $currentImage): array
+    {
+        $data = $request->validated();
+        $data['image'] = $currentImage;
+
+        $newImage = $this->uploadImageIfExists($request, $currentImage);
+
+        if ($newImage !== null) {
+            $data['image'] = $newImage;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Загрузка изображения при наличии файла.
+     * @param Request $request
+     * @param string|null $oldImage
+     * @return string|null
+     */
+    private function uploadImageIfExists(Request $request, ?string $oldImage = null): ?string
+    {
+        if (!$request->hasFile('image')) {
+            return null;
+        }
+
+        if ($oldImage !== null) {
+            $this->imageStorageService->deleteIfExists('news', $oldImage);
+        }
+
+        return $this->imageStorageService->storeResizedImage(
+            $request->file('image'),
+            'news',
+            null,
+            300
+        );
     }
 }

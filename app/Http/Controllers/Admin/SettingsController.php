@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\SettingData;
 use App\Http\Requests\Admin\Settings\EditRequest;
 use App\Http\Requests\Admin\Settings\StoreRequest;
-use App\Models\Settings;
+use App\Http\Requests\Admin\Settings\DeleteRequest;
 use App\Repositories\SettingRepository;
 use App\Services\DocumentStorageService;
 use Illuminate\Http\RedirectResponse;
@@ -22,68 +24,172 @@ class SettingsController extends Controller
 
     public function index(): View
     {
-        return view('cp.settings.index')->with('title', 'Настройки');
+        return view('cp.settings.index', [
+            'title' => 'Настройки',
+        ]);
     }
 
+    /**
+     * @param string $type
+     * @return View
+     */
     public function create(string $type): View
     {
-        return view('cp.settings.create_edit', compact('type'))->with('title', 'Добавление настроек');
+        return view('cp.settings.create_edit', [
+            'type' => $type,
+            'title' => 'Добавление настроек',
+        ]);
     }
 
+    /**
+     * @param StoreRequest $request
+     * @return RedirectResponse
+     */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-        $type = strtoupper((string) $validated['type']);
+        $data = $this->prepareDataForStore($request);
 
-        if ($type === 'FILE') {
-            $validated['value'] = $this->documentStorageService->store($request->file('value'), 'settings');
-        } else {
-            $validated['value'] = (string) $request->input('value');
-        }
+        $this->settingRepository->create(
+            SettingData::fromArray($data)
+        );
 
-        $this->settingRepository->create(SettingData::fromArray($validated));
-
-        return redirect()->route('cp.settings.index')->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.settings.index')
+            ->with('success', 'Информация успешно добавлена');
     }
 
+    /**
+     * @param int $id
+     * @return View
+     */
     public function edit(int $id): View
     {
-        $row = Settings::findOrFail($id);
-        $type = $row->type;
+        $row = $this->settingRepository->findOrFail($id);
 
-        return view('cp.settings.create_edit', compact('row', 'type'))->with('title', 'Редактирование настроек');
+        return view('cp.settings.create_edit', [
+            'row' => $row,
+            'type' => $row->type,
+            'title' => 'Редактирование настроек',
+        ]);
     }
 
+    /**
+     * @param EditRequest $request
+     * @return RedirectResponse
+     */
     public function update(EditRequest $request): RedirectResponse
     {
-        $settings = Settings::findOrFail($request->integer('id'));
-        $validated = $request->validated();
-        $validated['type'] = $settings->getRawOriginal('type');
+        $setting = $this->settingRepository->findOrFail($request->integer('id'));
+        $data = $this->prepareDataForUpdate($request, $setting);
 
-        if ($request->hasFile('value')) {
-            $this->documentStorageService->deleteIfExists('settings', $settings->filePath());
-            $validated['value'] = $this->documentStorageService->store($request->file('value'), 'settings');
-        } else {
-            $validated['value'] = (string) ($request->input('value') ?? $settings->filePath());
-        }
+        $this->settingRepository->update(
+            $setting,
+            SettingData::fromArray($data)
+        );
 
-        $this->settingRepository->update($settings, SettingData::fromArray($validated));
-
-        return redirect()->route('cp.settings.index')->with('success', 'Данные обновлены');
+        return redirect()
+            ->route('cp.settings.index')
+            ->with('success', 'Данные обновлены');
     }
 
-    public function destroy(Request $request): void
+    /**
+     * @param \DeleteRequest $request
+     * @return RedirectResponse
+     */
+    public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = Settings::find($request->id);
+        $row = $this->settingRepository->find($request->integer('id'));
 
-        if (!$row) {
-            return;
+        if ($row !== null) {
+            if ($this->isFileType($row->type)) {
+                $this->documentStorageService->deleteIfExists('settings', $row->filePath());
+            }
+
+            $this->settingRepository->delete($row);
         }
 
-        if ($row->type === 'FILE') {
-            $this->documentStorageService->deleteIfExists('settings', $row->filePath());
+        return redirect()
+            ->route('cp.settings.index')
+            ->with('success', 'Информация успешно удалена');
+    }
+
+    /**
+     * @param StoreRequest $request
+     * @return array
+     */
+    private function prepareDataForStore(StoreRequest $request): array
+    {
+        $data = $request->validated();
+        $type = strtoupper((string) $data['type']);
+
+        $data['type'] = $type;
+        $data['value'] = $this->resolveStoreValue($request, $type);
+
+        return $data;
+    }
+
+    /**
+     * @param EditRequest $request
+     * @param object $setting
+     * @return array
+     */
+    private function prepareDataForUpdate(EditRequest $request, object $setting): array
+    {
+        $data = $request->validated();
+        $type = (string) $setting->getRawOriginal('type');
+
+        $data['type'] = $type;
+        $data['value'] = $this->resolveUpdateValue($request, $setting, $type);
+
+        return $data;
+    }
+
+    /**
+     * @param StoreRequest $request
+     * @param string $type
+     * @return string
+     */
+    private function resolveStoreValue(StoreRequest $request, string $type): string
+    {
+        if ($this->isFileType($type)) {
+            return $this->documentStorageService->store(
+                $request->file('value'),
+                'settings'
+            );
         }
 
-        $this->settingRepository->delete($row);
+        return (string) $request->input('value', '');
+    }
+
+    /**
+     * @param EditRequest $request
+     * @param object $setting
+     * @param string $type
+     * @return string
+     */
+    private function resolveUpdateValue(EditRequest $request, object $setting, string $type): string
+    {
+        if ($this->isFileType($type)) {
+            if ($request->hasFile('value')) {
+                $this->documentStorageService->deleteIfExists(
+                    'settings',
+                    $setting->filePath()
+                );
+
+                return $this->documentStorageService->store(
+                    $request->file('value'),
+                    'settings'
+                );
+            }
+
+            return (string) $setting->filePath();
+        }
+
+        return (string) $request->input('value', '');
+    }
+
+    private function isFileType(string $type): bool
+    {
+        return strtoupper($type) === 'FILE';
     }
 }

@@ -1,44 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
+use App\Http\Requests\Admin\Robots\UpdateRequest;
+use App\Services\RobotsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class RobotsController extends Controller
 {
-    /**
-     * @return View
-     */
-    public function edit(): View
-    {
-        $file = File::get(public_path('robots.txt'));
-
-        return view('cp.robots.edit', compact('file'))->with('title', 'Редактирование Robots.txt');
+    public function __construct(
+        private readonly RobotsService $robotsService,
+    ) {
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function update(Request $request): RedirectResponse
+    public function edit(): View
     {
-        $rules = [
-            'content' => 'required',
-        ];
+        return view('cp.robots.edit', [
+            'file' => $this->robotsService->getContent(),
+            'title' => 'Редактирование Robots.txt',
+        ]);
+    }
 
-        $validator = Validator::make($request->all(), $rules);
+    public function update(UpdateRequest $request): RedirectResponse
+    {
+        $this->robotsService->update($request->string('content')->toString());
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        File::put(public_path('robots.txt'), $request->input('content'));
-
-        return redirect()->route('cp.robots.edit')->with('success', 'Данные успешно обновлены');
+        return redirect()
+            ->route('cp.robots.edit')
+            ->with('success', 'Данные успешно обновлены');
     }
 }

@@ -9,5 +9,4 @@ class FeedbackController extends Controller
     {
         return view('cp.feedback.index')->with('title', 'Сообщения с сайта');
     }
-
 }

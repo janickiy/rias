@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\GazGroupData;
 use App\Http\Requests\Admin\GazGroup\EditRequest;
 use App\Http\Requests\Admin\GazGroup\StoreRequest;
-use App\Models\GazGroup;
 use App\Repositories\GazGroupRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ use Illuminate\View\View;
 
 class GazGroupController extends Controller
 {
-    public function __construct(private readonly GazGroupRepository $gazGroupRepository)
+    public function __construct(
+        private readonly GazGroupRepository $gazGroupRepository,
+    )
     {
     }
 
@@ -22,7 +25,9 @@ class GazGroupController extends Controller
      */
     public function index(): View
     {
-        return view('cp.gaz_group.index')->with('title', 'Группы газов');
+        return view('cp.gaz_group.index', [
+            'title' => 'Группы газов',
+        ]);
     }
 
     /**
@@ -30,7 +35,9 @@ class GazGroupController extends Controller
      */
     public function create(): View
     {
-        return view('cp.gaz_group.create_edit')->with('title', 'Добавление группы газов');
+        return view('cp.gaz_group.create_edit', [
+            'title' => 'Добавление группы газов',
+        ]);
     }
 
     /**
@@ -39,9 +46,13 @@ class GazGroupController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $this->gazGroupRepository->create(GazGroupData::fromArray($request->validated()));
+        $this->gazGroupRepository->create(
+            GazGroupData::fromArray($request->validated())
+        );
 
-        return redirect()->route('cp.gaz_group.index')->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.gaz_group.index')
+            ->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -50,9 +61,12 @@ class GazGroupController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = GazGroup::findOrFail($id);
+        $row = $this->gazGroupRepository->findOrFail($id);
 
-        return view('cp.gaz_group.create_edit', compact('row'))->with('title', 'Редактирование продукции');
+        return view('cp.gaz_group.create_edit', [
+            'title' => 'Редактирование группы газов',
+            'row' => $row,
+        ]);
     }
 
     /**
@@ -61,22 +75,32 @@ class GazGroupController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = GazGroup::findOrFail($request->integer('id'));
-        $this->gazGroupRepository->update($row, GazGroupData::fromArray($request->validated()));
+        $row = $this->gazGroupRepository->findOrFail($request->integer('id'));
 
-        return redirect()->route('cp.gaz_group.index')->with('success', 'Данные обновлены');
+        $this->gazGroupRepository->update(
+            $row,
+            GazGroupData::fromArray($request->validated())
+        );
+
+        return redirect()
+            ->route('cp.gaz_group.index')
+            ->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @return RedirectResponse
      */
-    public function destroy(Request $request): void
+    public function destroy(Request $request): RedirectResponse
     {
-        $row = GazGroup::find($request->id);
+        $row = $this->gazGroupRepository->find($request->integer('id'));
 
-        if ($row) {
+        if ($row !== null) {
             $this->gazGroupRepository->delete($row);
         }
+
+        return redirect()
+            ->route('cp.gaz_group.index')
+            ->with('success', 'Информация успешно удалена');
     }
 }

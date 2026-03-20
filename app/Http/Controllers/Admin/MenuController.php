@@ -1,139 +1,125 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
-use App\Models\{Menus, MenuItems};
-use Illuminate\Http\Request;
-use App\Facades\Menu;
-use URL;
+use App\Http\Requests\Admin\Menu\AddCustomMenuRequest;
+use App\Http\Requests\Admin\Menu\CreateMenuRequest;
+use App\Http\Requests\Admin\Menu\DeleteMenuItemRequest;
+use App\Http\Requests\Admin\Menu\DeleteMenuRequest;
+use App\Http\Requests\Admin\Menu\GenerateMenuControlRequest;
+use App\Http\Requests\Admin\Menu\UpdateMenuItemRequest;
+use App\Repositories\MenuRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 
 class MenuController extends Controller
 {
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index()
-    {
-        return view('cp.menu.index')->with('title', 'Меню');
+    public function __construct(
+        private readonly MenuRepository $menuRepository,
+    ) {
     }
 
-    /**
-     * @param Request $request
-     * @return false|string
-     */
-    public function createnewmenu(Request $request)
+    public function index(): View
     {
-
-        $menu = new Menus();
-        $menu->name = $request->input("menuname");
-        $menu->save();
-        return json_encode(["resp" => $menu->id]);
+        return view('cp.menu.index', [
+            'title' => 'Меню',
+        ]);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function deleteitemmenu(Request $request)
+    public function createNewMenu(CreateMenuRequest $request): JsonResponse
     {
-        $menuitem = MenuItems::find($request->input("id"));
+        $menu = $this->menuRepository->createMenu(
+            $request->string('menuname')->toString()
+        );
 
-        $menuitem->delete();
+        return response()->json([
+            'resp' => $menu->id,
+        ]);
     }
 
-    /**
-     * @param Request $request
-     * @return false|string
-     */
-    public function deletemenug(Request $request)
+    public function deleteItemMenu(DeleteMenuItemRequest $request): JsonResponse
     {
-        $menus = new MenuItems();
-        $getall = $menus->getall($request->input("id"));
-        if (count($getall) == 0) {
-            $menudelete = Menus::find($request->input("id"));
-            $menudelete->delete();
+        $deleted = $this->menuRepository->deleteMenuItem(
+            $request->integer('id')
+        );
 
-            return json_encode(["resp" => "you delete this item"]);
+        return response()->json([
+            'resp' => $deleted ? 1 : 0,
+        ]);
+    }
+
+    public function deleteMenuGroup(DeleteMenuRequest $request): JsonResponse
+    {
+        $menuId = $request->integer('id');
+
+        if ($this->menuRepository->menuHasItems($menuId)) {
+            return response()->json([
+                'resp' => 'You have to delete all items first',
+                'error' => 1,
+            ], 422);
+        }
+
+        $this->menuRepository->deleteMenu($menuId);
+
+        return response()->json([
+            'resp' => 'you delete this item',
+        ]);
+    }
+
+    public function updateItem(UpdateMenuItemRequest $request): JsonResponse
+    {
+        $arrayData = $request->input('arraydata');
+
+        if (is_array($arrayData)) {
+            $this->menuRepository->bulkUpdateItems($arrayData);
         } else {
-            return json_encode(["resp" => "You have to delete all items first", "error" => 1]);
+            $this->menuRepository->updateItem(
+                id: $request->integer('id'),
+                label: $request->string('label')->toString(),
+                link: $request->string('url')->toString(),
+                class: $request->input('clases'),
+                roleId: config('menu.use_roles')
+                    ? (int) ($request->input('role_id') ?: 0)
+                    : null,
+            );
         }
+
+        return response()->json([
+            'resp' => 1,
+        ]);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function updateitem(Request $request)
+    public function addCustomMenu(AddCustomMenuRequest $request): JsonResponse
     {
-        $arraydata = $request->input("arraydata");
-        if (is_array($arraydata)) {
-            foreach ($arraydata as $value) {
-                $menuitem = MenuItems::find($value['id']);
-                $menuitem->label = $value['label'];
-                $menuitem->link = $value['link'];
-                $menuitem->class = $value['class'];
-                if (config('menu.use_roles')) {
-                    $menuitem->role_id = $value['role_id'] ? $value['role_id'] : 0;
-                }
-                $menuitem->save();
-            }
-        } else {
-            $menuitem = MenuItems::find($request->input("id"));
-            $menuitem->label = $request->input("label");
-            $menuitem->link = $request->input("url");
-            $menuitem->class = $request->input("clases");
+        $this->menuRepository->addCustomMenuItem(
+            menuId: $request->integer('idmenu'),
+            label: $request->string('labelmenu')->toString(),
+            link: $request->string('linkmenu')->toString(),
+            roleId: config('menu.use_roles')
+                ? (int) ($request->input('rolemenu') ?: 0)
+                : null,
+        );
 
-            if (config('menu.use_roles')) {
-                $menuitem->role_id = $request->input("role_id") ? $request->input("role_id") : 0;
-            }
-
-            $menuitem->save();
-        }
+        return response()->json([
+            'resp' => 1,
+        ]);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function addcustommenu(Request $request)
+    public function generateMenuControl(GenerateMenuControlRequest $request): JsonResponse
     {
+        $this->menuRepository->updateMenuStructure(
+            menuId: $request->integer('idmenu'),
+            menuName: $request->string('menuname')->toString(),
+            items: $request->input('arraydata', []),
+            roleId: config('menu.use_roles')
+                ? (int) ($request->input('role_id') ?: 0)
+                : null,
+        );
 
-        $menuitem = new MenuItems();
-        $menuitem->label = $request->input("labelmenu");
-        $menuitem->link = $request->input("linkmenu");
-
-        if (config('menu.use_roles')) {
-            $menuitem->role_id = $request->input("rolemenu") ? $request->input("rolemenu") : 0;
-        }
-
-        $menuitem->menu = $request->input("idmenu");
-        $menuitem->sort = MenuItems::getNextSortRoot($request->input("idmenu"));
-        $menuitem->save();
-
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function generatemenucontrol(Request $request)
-    {
-        $menu = Menus::find($request->input("idmenu"));
-        $menu->name = $request->input("menuname");
-
-        $menu->save();
-
-        if (is_array($request->input("arraydata"))) {
-            foreach ($request->input("arraydata") as $value) {
-
-                $menuitem = MenuItems::find($value["id"]);
-                $menuitem->parent = $value["parent"];
-                $menuitem->sort = $value["sort"];
-                $menuitem->depth = $value["depth"];
-                if (config('menu.use_roles')) {
-                    $menuitem->role_id = $request->input("role_id");
-                }
-                $menuitem->save();
-            }
-        }
-
-        echo json_encode(["resp" => 1]);
-
+        return response()->json([
+            'resp' => 1,
+        ]);
     }
 }

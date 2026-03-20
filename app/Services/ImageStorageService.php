@@ -8,6 +8,14 @@ use Image;
 
 class ImageStorageService
 {
+    /**
+     * @param UploadedFile $file
+     * @param string $directory
+     * @param int|null $width
+     * @param int|null $height
+     * @param string $prefix
+     * @return string
+     */
     public function storeResizedImage(UploadedFile $file, string $directory, ?int $width = null, ?int $height = null, string $prefix = ''): string
     {
         $filename = $prefix . uniqid('', true) . '.' . $file->getClientOriginalExtension();
@@ -23,6 +31,13 @@ class ImageStorageService
         return $filename;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param string $directory
+     * @param int|null $thumbWidth
+     * @param int|null $thumbHeight
+     * @return string[]
+     */
     public function storeOriginalAndThumbnail(UploadedFile $file, string $directory, ?int $thumbWidth = null, ?int $thumbHeight = null): array
     {
         $basename = uniqid('', true) . '.' . $file->getClientOriginalExtension();

@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentStorageService
 {
+    /**
+     * @param UploadedFile $file
+     * @param string $directory
+     * @return string
+     */
     public function store(UploadedFile $file, string $directory): string
     {
         $filename = uniqid('', true) . '.' . $file->getClientOriginalExtension();
@@ -15,6 +20,11 @@ class DocumentStorageService
         return $filename;
     }
 
+    /**
+     * @param string $directory
+     * @param string|null $filename
+     * @return void
+     */
     public function deleteIfExists(string $directory, ?string $filename): void
     {
         if (empty($filename)) {

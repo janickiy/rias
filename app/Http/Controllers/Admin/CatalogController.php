@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\CatalogData;
 use App\Helpers\StringHelper;
 use App\Http\Requests\Admin\Catalog\EditRequest;
 use App\Http\Requests\Admin\Catalog\StoreRequest;
-use App\Models\Catalog;
 use App\Repositories\CatalogRepository;
 use App\Services\ImageStorageService;
 use Illuminate\Http\RedirectResponse;
@@ -15,67 +16,156 @@ use Illuminate\View\View;
 
 class CatalogController extends Controller
 {
+    /**
+     * @param CatalogRepository $catalogRepository
+     * @param ImageStorageService $imageStorageService
+     */
     public function __construct(
         private readonly CatalogRepository $catalogRepository,
         private readonly ImageStorageService $imageStorageService,
     ) {
     }
 
+    /**
+     * @return View
+     */
     public function index(): View
     {
-        return view('cp.catalog.index')->with('title', 'Категории');
+        return view('cp.catalog.index', [
+            'title' => 'Категории',
+        ]);
     }
 
+    /**
+     * @return View
+     */
     public function create(): View
     {
-        $maxUploadFileSize = StringHelper::maxUploadFileSize();
-
-        return view('cp.catalog.create_edit', compact('maxUploadFileSize'))->with('title', 'Добавление категории');
+        return view('cp.catalog.create_edit', [
+            'title' => 'Добавление категории',
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+        ]);
     }
 
+    /**
+     * @param StoreRequest $request
+     * @return RedirectResponse
+     */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $data = $this->prepareDataForStore($request);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $this->imageStorageService->storeResizedImage($request->file('image'), 'catalog', null, 400);
-        }
+        $this->catalogRepository->create(CatalogData::fromArray($data));
 
-        $this->catalogRepository->create(CatalogData::fromArray($validated));
-
-        return redirect()->route('cp.catalog.index')->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.catalog.index')
+            ->with('success', 'Информация успешно добавлена');
     }
 
+    /**
+     * @param int $id
+     * @return View
+     */
     public function edit(int $id): View
     {
-        $row = Catalog::findOrFail($id);
-        $maxUploadFileSize = StringHelper::maxUploadFileSize();
+        $row = $this->catalogRepository->findOrFail($id);
 
-        return view('cp.catalog.create_edit', compact('row', 'maxUploadFileSize'))->with('title', 'Редактирование категории');
+        return view('cp.catalog.create_edit', [
+            'title' => 'Редактирование категории',
+            'row' => $row,
+            'maxUploadFileSize' => StringHelper::maxUploadFileSize(),
+        ]);
     }
 
+    /**
+     * @param EditRequest $request
+     * @return RedirectResponse
+     */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Catalog::findOrFail($request->integer('id'));
-        $validated = $request->validated();
-        $validated['image'] = $row->image;
+        $row = $this->catalogRepository->findOrFail($request->id);
+        $data = $this->prepareDataForUpdate($request, $row->image);
 
-        if ($request->hasFile('image')) {
-            $this->imageStorageService->deleteIfExists('catalog', $row->image);
-            $validated['image'] = $this->imageStorageService->storeResizedImage($request->file('image'), 'catalog', null, 400);
-        }
+        $this->catalogRepository->update($row, CatalogData::fromArray($data));
 
-        $this->catalogRepository->update($row, CatalogData::fromArray($validated));
-
-        return redirect()->route('cp.catalog.index')->with('success', 'Информация успешно обновлена');
+        return redirect()
+            ->route('cp.catalog.index')
+            ->with('success', 'Информация успешно обновлена');
     }
 
-    public function destroy(Request $request): void
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function destroy(Request $request): RedirectResponse
     {
-        $row = Catalog::find($request->id);
+        $id = $request->integer('id');
+        $row = $this->catalogRepository->find($id);
 
-        if ($row) {
+        if ($row !== null) {
             $this->catalogRepository->delete($row);
         }
+
+        return redirect()
+            ->route('cp.catalog.index')
+            ->with('success', 'Информация успешно удалена');
+    }
+
+    /**
+     * Подготовка данных для создания.
+     * @param StoreRequest $request
+     * @return array
+     */
+    private function prepareDataForStore(StoreRequest $request): array
+    {
+        $data = $request->validated();
+
+        $data['image'] = $this->uploadImageIfExists($request);
+
+        return $data;
+    }
+
+    /**
+     * Подготовка данных для обновления.
+     * @param EditRequest $request
+     * @param string|null $currentImage
+     * @return array
+     */
+    private function prepareDataForUpdate(EditRequest $request, ?string $currentImage): array
+    {
+        $data = $request->validated();
+        $data['image'] = $currentImage;
+
+        $newImage = $this->uploadImageIfExists($request, $currentImage);
+
+        if ($newImage !== null) {
+            $data['image'] = $newImage;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Загрузка изображения при наличии файла.
+     * @param Request $request
+     * @param string|null $oldImage
+     * @return string|null
+     */
+    private function uploadImageIfExists(Request $request, ?string $oldImage = null): ?string
+    {
+        if (!$request->hasFile('image')) {
+            return null;
+        }
+
+        if ($oldImage !== null) {
+            $this->imageStorageService->deleteIfExists('catalog', $oldImage);
+        }
+
+        return $this->imageStorageService->storeResizedImage(
+            $request->file('image'),
+            'catalog',
+            null,
+            400
+        );
     }
 }

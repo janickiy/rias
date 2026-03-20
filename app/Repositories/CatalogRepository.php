@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\DTO\Admin\CatalogData;
@@ -7,20 +9,37 @@ use App\Models\Catalog;
 
 class CatalogRepository
 {
+    public function find(int $id): ?Catalog
+    {
+        return Catalog::find($id);
+    }
+
+    public function findOrFail(int $id): Catalog
+    {
+        return Catalog::findOrFail($id);
+    }
+
+    public function getOptions(): array
+    {
+        return Catalog::getOption();
+    }
+
     public function create(CatalogData $data): Catalog
     {
-        return Catalog::create($data->toArray());
+        $catalog = new Catalog();
+        $catalog->fill($data->toArray());
+        $catalog->save();
+
+        return $catalog;
     }
 
-    public function update(Catalog $catalog, CatalogData $data): Catalog
+    public function update(Catalog $catalog, CatalogData $data): bool
     {
-        $catalog->update($data->toArray());
-
-        return $catalog->refresh();
+        return $catalog->update($data->toArray());
     }
 
-    public function delete(Catalog $catalog): void
+    public function delete(Catalog $catalog): bool
     {
-        $catalog->remove();
+        return (bool) $catalog->delete();
     }
 }

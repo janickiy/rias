@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\DTO\Admin\GazData;
 use App\Http\Requests\Admin\Gaz\EditRequest;
 use App\Http\Requests\Admin\Gaz\StoreRequest;
-use App\Models\Gaz;
-use App\Models\GazGroup;
+use App\Repositories\GazGroupRepository;
 use App\Repositories\GazRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,10 @@ use Illuminate\View\View;
 
 class GazController extends Controller
 {
-    public function __construct(private readonly GazRepository $gazRepository)
+    public function __construct(
+        private readonly GazRepository      $gazRepository,
+        private readonly GazGroupRepository $gazGroupRepository,
+    )
     {
     }
 
@@ -23,7 +27,9 @@ class GazController extends Controller
      */
     public function index(): View
     {
-        return view('cp.gaz.index')->with('title', 'Группы газов');
+        return view('cp.gaz.index', [
+            'title' => 'Группы газов',
+        ]);
     }
 
     /**
@@ -31,9 +37,10 @@ class GazController extends Controller
      */
     public function create(): View
     {
-        $options = GazGroup::getOption();
-
-        return view('cp.gaz.create_edit', compact('options'))->with('title', 'Добавление газа');
+        return view('cp.gaz.create_edit', [
+            'title' => 'Добавление газа',
+            'options' => $this->gazGroupRepository->getOptions(),
+        ]);
     }
 
     /**
@@ -42,9 +49,13 @@ class GazController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $this->gazRepository->create(GazData::fromArray($request->validated()));
+        $this->gazRepository->create(
+            GazData::fromArray($request->validated())
+        );
 
-        return redirect()->route('cp.gaz.index')->with('success', 'Информация успешно добавлена');
+        return redirect()
+            ->route('cp.gaz.index')
+            ->with('success', 'Информация успешно добавлена');
     }
 
     /**
@@ -53,11 +64,14 @@ class GazController extends Controller
      */
     public function edit(int $id): View
     {
-        $row = Gaz::findOrFail($id);
-        $options = GazGroup::getOption();
-        $gaz_group_id = $row->groups->pluck('id')->all();
+        $row = $this->gazRepository->findOrFail($id);
 
-        return view('cp.gaz.create_edit', compact('row', 'options', 'gaz_group_id'))->with('title', 'Редактирование газа');
+        return view('cp.gaz.create_edit', [
+            'title' => 'Редактирование газа',
+            'row' => $row,
+            'options' => $this->gazGroupRepository->getOptions(),
+            'gaz_group_id' => $this->gazGroupRepository->getIdsByGaz($row),
+        ]);
     }
 
     /**
@@ -66,22 +80,32 @@ class GazController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = Gaz::findOrFail($request->integer('id'));
-        $this->gazRepository->update($row, GazData::fromArray($request->validated()));
+        $row = $this->gazRepository->findOrFail($request->integer('id'));
 
-        return redirect()->route('cp.gaz.index')->with('success', 'Данные обновлены');
+        $this->gazRepository->update(
+            $row,
+            GazData::fromArray($request->validated())
+        );
+
+        return redirect()
+            ->route('cp.gaz.index')
+            ->with('success', 'Данные обновлены');
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @return RedirectResponse
      */
-    public function destroy(Request $request): void
+    public function destroy(Request $request): RedirectResponse
     {
-        $row = Gaz::find($request->id);
+        $row = $this->gazRepository->find($request->integer('id'));
 
-        if ($row) {
+        if ($row !== null) {
             $this->gazRepository->delete($row);
         }
+
+        return redirect()
+            ->route('cp.gaz.index')
+            ->with('success', 'Информация успешно удалена');
     }
 }
