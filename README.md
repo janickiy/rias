@@ -14,12 +14,11 @@ http://домен/cp
 
 # Требования
 - Apache2
-- Redis
 - MySQL >= 5.6 или MariaDB >= 10.2
 - Composer
 - URL rewrite enabled
 - Cron
-- PHP >= 7.4
+- PHP >= 8.1
 - BCMath PHP Extension
 - Ctype PHP Extension
 - Fileinfo PHP extension
@@ -32,9 +31,5 @@ http://домен/cp
 - XML PHP Extension
 - Http PHP Extension
 - Exif PHP Extension
-- SOAP PHP Extension
-- PCRE PHP Extension
 - CURL PHP Extension
-- Redis PHP Extension
 - gmp PHP Extension
-- Sockets PHP Extension
