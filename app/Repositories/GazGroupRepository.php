@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\DTO\Admin\GazGroupData;
 use App\Models\GazGroup;
+use Illuminate\Support\Collection;
 
 class GazGroupRepository
 {
@@ -34,7 +35,7 @@ class GazGroupRepository
         return (bool) $gazGroup->delete();
     }
 
-    public function getOptions(): array
+    public function getOptions(): Collection
     {
         return GazGroup::getOption();
     }
