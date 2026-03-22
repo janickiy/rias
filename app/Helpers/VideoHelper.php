@@ -103,6 +103,10 @@ class VideoHelper
 
     /**
      * Получить HTML плеера.
+     *
+     * @param string $provider
+     * @param string $video
+     * @return string
      */
     public static function getVideoPlayer(string $provider, string $video): string
     {
@@ -131,6 +135,10 @@ class VideoHelper
 
     /**
      * Получить embed URL.
+     *
+     * @param string $provider
+     * @param string $video
+     * @return string
      */
     public static function getVideoUrl(string $provider, string $video): string
     {
@@ -144,6 +152,10 @@ class VideoHelper
 
     /**
      * Получить публичную ссылку на видео.
+     *
+     * @param string $provider
+     * @param string $video
+     * @return string
      */
     public static function getVideoLink(string $provider, string $video): string
     {
@@ -157,6 +169,9 @@ class VideoHelper
 
     /**
      * Преобразование Mail.ru URL в ID формата для API.
+     *
+     * @param string $url
+     * @return string
      */
     private static function getMailRuVideoId(string $url): string
     {
@@ -170,6 +185,9 @@ class VideoHelper
 
     /**
      * Получить превью Rutube.
+     *
+     * @param string $video
+     * @return string|null
      */
     private static function getRutubeThumb(string $video): ?string
     {
@@ -192,6 +210,9 @@ class VideoHelper
 
     /**
      * Получить poster Mail.ru.
+     *
+     * @param string $video
+     * @return string|null
      */
     private static function getMailRuPoster(string $video): ?string
     {
@@ -202,6 +223,9 @@ class VideoHelper
 
     /**
      * Получить embed URL Mail.ru.
+     *
+     * @param string $video
+     * @return string|null
      */
     private static function getMailRuEmbedUrl(string $video): ?string
     {
@@ -217,6 +241,9 @@ class VideoHelper
 
     /**
      * Получить публичный URL Mail.ru.
+     *
+     * @param string $video
+     * @return string|null
      */
     private static function getMailRuPublicUrl(string $video): ?string
     {
@@ -227,6 +254,9 @@ class VideoHelper
 
     /**
      * Получить данные видео Mail.ru.
+     *
+     * @param string $video
+     * @return array
      */
     private static function getMailRuVideoData(string $video): array
     {

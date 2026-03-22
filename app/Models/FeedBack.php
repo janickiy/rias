@@ -9,8 +9,6 @@ class FeedBack extends Model
 
     protected $table = 'feedback';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'name',
         'email',

@@ -9,8 +9,6 @@ class ProductVideos extends Model
 {
     protected $table = 'product_videos';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'provider',
         'video',

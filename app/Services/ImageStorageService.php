@@ -59,6 +59,11 @@ class ImageStorageService
         ];
     }
 
+    /**
+     * @param string $directory
+     * @param string|null $filename
+     * @return void
+     */
     public function deleteIfExists(string $directory, ?string $filename): void
     {
         if (empty($filename)) {

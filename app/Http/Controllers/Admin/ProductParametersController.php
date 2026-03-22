@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\DTO\Admin\ProductParameterData;
 use App\Http\Requests\Admin\ProductParameters\EditRequest;
 use App\Http\Requests\Admin\ProductParameters\StoreRequest;
@@ -11,7 +12,6 @@ use App\Http\Requests\Admin\ProductParameters\DeleteRequest;
 use App\Repositories\ProductParameterRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductParametersController extends Controller
@@ -20,6 +20,7 @@ class ProductParametersController extends Controller
         private readonly ProductParameterRepository $parameterRepository,
         private readonly ProductRepository $productRepository,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -90,7 +91,7 @@ class ProductParametersController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->parameterRepository->findOrFail($request->integer('id'));
+        $row = $this->parameterRepository->findOrFail($request->id);
         $data = $request->validated();
         $data['product_id'] = $row->product_id;
 
@@ -112,7 +113,7 @@ class ProductParametersController extends Controller
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->parameterRepository->find($request->integer('id'));
+        $row = $this->parameterRepository->find($request->id);
 
         if ($row !== null) {
             $productId = $row->product_id;

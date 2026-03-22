@@ -9,8 +9,6 @@ class ProductDocuments extends Model
 {
     protected $table = 'product_documents';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'path',
         'description',

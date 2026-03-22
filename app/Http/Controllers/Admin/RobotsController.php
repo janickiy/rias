@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\Http\Requests\Admin\Robots\UpdateRequest;
 use App\Services\RobotsService;
 use Illuminate\Http\RedirectResponse;
@@ -14,8 +15,12 @@ class RobotsController extends Controller
     public function __construct(
         private readonly RobotsService $robotsService,
     ) {
+        parent::__construct();
     }
 
+    /**
+     * @return View
+     */
     public function edit(): View
     {
         return view('cp.robots.edit', [
@@ -24,6 +29,10 @@ class RobotsController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdateRequest $request
+     * @return RedirectResponse
+     */
     public function update(UpdateRequest $request): RedirectResponse
     {
         $this->robotsService->update($request->string('content')->toString());

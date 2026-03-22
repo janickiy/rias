@@ -24,6 +24,7 @@ class CatalogController extends Controller
         private readonly CatalogRepository $catalogRepository,
         private readonly ImageStorageService $imageStorageService,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -99,7 +100,7 @@ class CatalogController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $id = $request->integer('id');
+        $id = $request->id;
         $row = $this->catalogRepository->find($id);
 
         if ($row !== null) {

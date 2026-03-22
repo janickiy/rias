@@ -20,6 +20,7 @@ class GazController extends Controller
         private readonly GazGroupRepository $gazGroupRepository,
     )
     {
+        parent::__construct();
     }
 
     /**
@@ -80,7 +81,7 @@ class GazController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->gazRepository->findOrFail($request->integer('id'));
+        $row = $this->gazRepository->findOrFail($request->id);
 
         $this->gazRepository->update(
             $row,
@@ -98,7 +99,7 @@ class GazController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->gazRepository->find($request->integer('id'));
+        $row = $this->gazRepository->find($request->id);
 
         if ($row !== null) {
             $this->gazRepository->delete($row);

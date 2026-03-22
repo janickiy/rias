@@ -159,6 +159,10 @@ class StringHelper
 
     /**
      * Генерация slug.
+     *
+     * @param string $text
+     * @param bool $toLower
+     * @return string
      */
     public static function slug(string $text, bool $toLower = true): string
     {
@@ -184,6 +188,10 @@ class StringHelper
 
     /**
      * Обрезка текста по словам.
+     *
+     * @param string $str
+     * @param int $chars
+     * @return string
      */
     public static function shortText(string $str, int $chars = 500): string
     {
@@ -211,6 +219,11 @@ class StringHelper
 
     /**
      * Форматирование размера в MB.
+     *
+     * @param int $size
+     * @param int $maxDecimals
+     * @param string $mbSuffix
+     * @return string
      */
     public static function formatSizeInMb(int $size, int $maxDecimals = 3, string $mbSuffix = 'MB'): string
     {
@@ -220,8 +233,11 @@ class StringHelper
         return $formatted . $mbSuffix;
     }
 
+
     /**
-     * Максимальный допустимый размер загружаемого файла в байтах.
+     * Максимальный допустимый размер загружаемого файла в байта
+     *
+     * @return int
      */
     public static function detectMaxUploadFileSize(): int
     {
@@ -275,6 +291,8 @@ class StringHelper
 
     /**
      * Максимальный размер загрузки в формате строки.
+     *
+     * @return string
      */
     public static function maxUploadFileSize(): string
     {
@@ -283,6 +301,9 @@ class StringHelper
 
     /**
      * MIME по файлу изображения.
+     *
+     * @param string $path
+     * @return string|null
      */
     public static function getMime(string $path): ?string
     {
@@ -297,6 +318,9 @@ class StringHelper
 
     /**
      * Нормализация телефона.
+     *
+     * @param string $string
+     * @return string
      */
     public static function phone(string $string): string
     {
@@ -305,6 +329,9 @@ class StringHelper
 
     /**
      * MIME type по расширению файла.
+     *
+     * @param string $filename
+     * @return string
      */
     public static function getMimeType(string $filename): string
     {
@@ -319,6 +346,9 @@ class StringHelper
 
     /**
      * Алиас для обратной совместимости.
+     *
+     * @param string $filename
+     * @return string
      */
     public static function get_mime_type(string $filename): string
     {

@@ -23,6 +23,7 @@ class ProductDocumentsController extends Controller
         private readonly ProductRepository $productRepository,
         private readonly DocumentStorageService $documentStorageService,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -93,7 +94,7 @@ class ProductDocumentsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->documentRepository->findOrFail($request->integer('id'));
+        $row = $this->documentRepository->findOrFail($request->id);
         $data = $this->prepareDataForUpdate($request, $row->path, $row->product_id);
 
         $this->documentRepository->update(
@@ -114,7 +115,7 @@ class ProductDocumentsController extends Controller
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->documentRepository->find($request->integer('id'));
+        $row = $this->documentRepository->find($request->id);
 
         if ($row !== null) {
             $productId = $row->product_id;

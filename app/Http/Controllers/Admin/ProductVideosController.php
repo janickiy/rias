@@ -13,7 +13,6 @@ use App\Repositories\ProductRepository;
 use App\Repositories\ProductVideoRepository;
 use App\Services\VideoService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductVideosController extends Controller
@@ -23,6 +22,7 @@ class ProductVideosController extends Controller
         private readonly ProductRepository $productRepository,
         private readonly VideoService $videoService,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductVideosController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->videoRepository->findOrFail($request->integer('id'));
+        $row = $this->videoRepository->findOrFail($request->id);
         $data = $this->prepareDataForUpdate($request, $row->product_id);
 
         $this->videoRepository->update(
@@ -117,7 +117,7 @@ class ProductVideosController extends Controller
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->videoRepository->find($request->integer('id'));
+        $row = $this->videoRepository->find($request->id);
 
         if ($row !== null) {
             $productId = $row->product_id;

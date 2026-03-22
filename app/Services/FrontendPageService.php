@@ -13,7 +13,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class FrontendPageService
 {
-    public function getMainPage(): Pages
+    /**
+     * @return Pages
+     */
+    public function getMainPage():Pages
     {
         return Pages::query()->where('main', 1)->firstOrFail();
     }

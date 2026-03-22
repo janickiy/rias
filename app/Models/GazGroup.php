@@ -8,8 +8,6 @@ class GazGroup extends Model
 {
     protected $table = 'gaz_group';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'name',
         'name_ru'

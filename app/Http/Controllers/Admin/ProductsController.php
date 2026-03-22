@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\DTO\Admin\ProductData;
 use App\Helpers\StringHelper;
 use App\Http\Requests\Admin\Products\EditRequest;
@@ -22,6 +23,7 @@ class ProductsController extends Controller
         private readonly CatalogRepository $catalogRepository,
         private readonly ImageStorageService $imageStorageService,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -85,7 +87,7 @@ class ProductsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->productRepository->findOrFail($request->integer('id'));
+        $row = $this->productRepository->findOrFail($request->id);
         $data = $this->prepareDataForUpdate($request, $row->origin, $row->thumbnail);
 
         $this->productRepository->update(
@@ -104,7 +106,7 @@ class ProductsController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->productRepository->find($request->integer('id'));
+        $row = $this->productRepository->find($request->id);
 
         if ($row !== null) {
             $this->deleteProductImages($row->origin, $row->thumbnail);

@@ -8,8 +8,6 @@ class ProductParameters extends Model
 {
     protected $table = 'product_parameters';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'name',
         'value',

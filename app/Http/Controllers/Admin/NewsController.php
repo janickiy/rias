@@ -24,6 +24,7 @@ class NewsController extends Controller
         private readonly NewsRepository $newsRepository,
         private readonly ImageStorageService $imageStorageService,
     ) {
+        parent::__construct();
     }
 
     /**
@@ -83,7 +84,7 @@ class NewsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->newsRepository->findOrFail($request->integer('id'));
+        $row = $this->newsRepository->findOrFail($request->id);
         $data = $this->prepareDataForUpdate($request, $row->image);
 
         $this->newsRepository->update($row, NewsData::fromArray($data));
@@ -99,7 +100,7 @@ class NewsController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $id = $request->integer('id');
+        $id = $request->id;
         $news = $this->newsRepository->find($id);
 
         if ($news !== null) {

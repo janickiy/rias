@@ -10,8 +10,6 @@ class Pages extends Model
 
     protected $table = 'pages';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'title',
         'text',

@@ -10,8 +10,6 @@ class Catalog extends Model
 
     protected $table = 'catalog';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'name',
         'description',

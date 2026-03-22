@@ -15,6 +15,7 @@ class SeoController extends Controller
     public function __construct(
         private readonly SeoRepository $seoRepository,
     ) {
+        parent::__construct();
     }
 
     public function index(): View
@@ -36,7 +37,7 @@ class SeoController extends Controller
 
     public function update(UpdateRequest $request): RedirectResponse
     {
-        $row = $this->seoRepository->findOrFail($request->integer('id'));
+        $row = $this->seoRepository->findOrFail($request->id);
 
         $this->seoRepository->update(
             $row,

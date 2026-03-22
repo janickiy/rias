@@ -9,8 +9,6 @@ class ProductPhotos extends Model
 {
     protected $table = 'product_photos';
 
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'title',
         'alt',
