@@ -81,7 +81,7 @@ class GazController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->gazRepository->findOrFail($request->id);
+        $row = $this->gazRepository->findOrFail($request->integer('id'));
 
         $this->gazRepository->update(
             $row,
@@ -99,7 +99,7 @@ class GazController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->gazRepository->find($request->id);
+        $row = $this->gazRepository->find($request->integer('id'));
 
         if ($row !== null) {
             $this->gazRepository->delete($row);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Storage;
 
 class ProductDocuments extends Model
@@ -16,17 +17,17 @@ class ProductDocuments extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Products::class, 'product_id', 'id');
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDocument()
+    public function getDocument(): string
     {
         return Storage::disk('public')->url('documents/' . $this->path);
     }

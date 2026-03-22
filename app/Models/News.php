@@ -26,11 +26,7 @@ class News extends Model
         'seo_url_canonical'
     ];
 
-    /**
-     * @param string $lang
-     * @return mixed
-     */
-    public function excerpt()
+    public function excerpt(): string
     {
         $content = $this->text;
         $content = preg_replace("/<img(.*?)>/si", "", $content);
@@ -39,10 +35,8 @@ class News extends Model
         return StringHelper::shortText($content,500);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getImage()
+
+    public function getImage(): string
     {
         return Storage::disk('public')->url('news/' . $this->image);
     }

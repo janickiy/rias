@@ -6,14 +6,10 @@ use App\Models\News;
 use App\Models\Pages;
 use App\Models\Products;
 use App\Models\User;
-use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    /**
-     * @return View
-     */
-    public function index(): View
+    public function index()
     {
         $users = User::query()->count();
         $news = News::query()->count();

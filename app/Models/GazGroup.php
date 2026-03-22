@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class GazGroup extends Model
 {
@@ -14,9 +15,9 @@ class GazGroup extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function gaz()
+    public function gaz(): HasManyThrough
     {
         return $this->hasManyThrough(Gaz::class, GazToGroup::class,'gaz_group_id','id','id','gaz_id');
     }

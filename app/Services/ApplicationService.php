@@ -59,7 +59,7 @@ class ApplicationService
 
     private function getNotificationEmails(): array
     {
-        $setting = SettingsHelper::getSetting('EMAIL_NOTIFY');
+        $setting = (string) SettingsHelper::getSetting('EMAIL_NOTIFY');
 
         return array_values(
             array_filter(

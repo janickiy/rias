@@ -84,7 +84,7 @@ class NewsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->newsRepository->findOrFail($request->id);
+        $row = $this->newsRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $row->image);
 
         $this->newsRepository->update($row, NewsData::fromArray($data));
@@ -100,7 +100,7 @@ class NewsController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $id = $request->id;
+        $id = $request->integer('id');
         $news = $this->newsRepository->find($id);
 
         if ($news !== null) {

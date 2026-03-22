@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\DTO\Admin\ProductVideoData;
 use App\Helpers\VideoHelper;
 use App\Http\Requests\Admin\ProductVideos\EditRequest;
@@ -96,7 +97,7 @@ class ProductVideosController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->videoRepository->findOrFail($request->id);
+        $row = $this->videoRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $row->product_id);
 
         $this->videoRepository->update(
@@ -117,7 +118,7 @@ class ProductVideosController extends Controller
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->videoRepository->find($request->id);
+        $row = $this->videoRepository->find($request->integer('id'));
 
         if ($row !== null) {
             $productId = $row->product_id;

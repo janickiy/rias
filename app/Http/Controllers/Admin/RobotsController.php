@@ -18,9 +18,6 @@ class RobotsController extends Controller
         parent::__construct();
     }
 
-    /**
-     * @return View
-     */
     public function edit(): View
     {
         return view('cp.robots.edit', [
@@ -29,10 +26,6 @@ class RobotsController extends Controller
         ]);
     }
 
-    /**
-     * @param UpdateRequest $request
-     * @return RedirectResponse
-     */
     public function update(UpdateRequest $request): RedirectResponse
     {
         $this->robotsService->update($request->string('content')->toString());

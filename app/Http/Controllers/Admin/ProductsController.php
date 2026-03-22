@@ -87,7 +87,7 @@ class ProductsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->productRepository->findOrFail($request->id);
+        $row = $this->productRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $row->origin, $row->thumbnail);
 
         $this->productRepository->update(
@@ -106,7 +106,7 @@ class ProductsController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->productRepository->find($request->id);
+        $row = $this->productRepository->find($request->integer('id'));
 
         if ($row !== null) {
             $this->deleteProductImages($row->origin, $row->thumbnail);

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Helpers\StringHelper;
 
 class Pages extends Model
@@ -57,11 +59,7 @@ class Pages extends Model
         return $this->attributes['page_path'];
     }
 
-    /**
-     * @param string $lang
-     * @return mixed
-     */
-    public function excerpt()
+    public function excerpt(): string
     {
         $content = $this->text;
         $content = preg_replace("/<img(.*?)>/si", "", $content);
@@ -87,17 +85,18 @@ class Pages extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo($this, 'parent_id', 'id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function children(){
+    public function children(): HasMany
+    {
         return $this->hasMany($this, 'parent_id', 'id');
     }
 

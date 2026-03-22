@@ -18,6 +18,9 @@ class SeoController extends Controller
         parent::__construct();
     }
 
+    /**
+     * @return View
+     */
     public function index(): View
     {
         return view('cp.seo.index', [
@@ -35,9 +38,13 @@ class SeoController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdateRequest $request
+     * @return RedirectResponse
+     */
     public function update(UpdateRequest $request): RedirectResponse
     {
-        $row = $this->seoRepository->findOrFail($request->id);
+        $row = $this->seoRepository->findOrFail($request->integer('id'));
 
         $this->seoRepository->update(
             $row,

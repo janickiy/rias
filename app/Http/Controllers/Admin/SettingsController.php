@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\DTO\Admin\SettingData;
 use App\Http\Requests\Admin\Settings\EditRequest;
 use App\Http\Requests\Admin\Settings\StoreRequest;
@@ -12,6 +11,7 @@ use App\Http\Requests\Admin\Settings\DeleteRequest;
 use App\Repositories\SettingRepository;
 use App\Services\DocumentStorageService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
@@ -23,9 +23,6 @@ class SettingsController extends Controller
         parent::__construct();
     }
 
-    /**
-     * @return View
-     */
     public function index(): View
     {
         return view('cp.settings.index', [
@@ -83,7 +80,7 @@ class SettingsController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $setting = $this->settingRepository->findOrFail($request->id);
+        $setting = $this->settingRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $setting);
 
         $this->settingRepository->update(
@@ -97,12 +94,12 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param DeleteRequest $request
+     * @param \DeleteRequest $request
      * @return RedirectResponse
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->settingRepository->find($request->id);
+        $row = $this->settingRepository->find($request->integer('id'));
 
         if ($row !== null) {
             if ($this->isFileType($row->type)) {
@@ -192,10 +189,6 @@ class SettingsController extends Controller
         return (string) $request->input('value', '');
     }
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     private function isFileType(string $type): bool
     {
         return strtoupper($type) === 'FILE';

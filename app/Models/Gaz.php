@@ -19,7 +19,6 @@ class Gaz extends Model
 
     protected $table = 'gaz';
 
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'title',
@@ -28,7 +27,7 @@ class Gaz extends Model
         'chemical_formula_html',
     ];
 
-    public static function getTypes()
+    public static function getTypes(): array
     {
         return [
             self::CONVERT_FROM_PPM => 'ppm',

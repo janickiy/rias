@@ -20,9 +20,6 @@ class PagesController extends Controller
         parent::__construct();
     }
 
-    /**
-     * @return View
-     */
     public function index(): View
     {
         return view('cp.pages.index', [
@@ -77,7 +74,7 @@ class PagesController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->pageRepository->findOrFail($request->id);
+        $row = $this->pageRepository->findOrFail($request->integer('id'));
 
         $this->pageRepository->update(
             $row,
@@ -95,7 +92,7 @@ class PagesController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->pageRepository->find($request->id);
+        $row = $this->pageRepository->find($request->integer('id'));
 
         if ($row !== null) {
             $this->pageRepository->delete($row);

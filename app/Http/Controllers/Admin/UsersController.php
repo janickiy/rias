@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\DTO\Admin\UserData;
 use App\Http\Requests\Admin\Users\EditRequest;
 use App\Http\Requests\Admin\Users\StoreRequest;
 use App\Http\Requests\Admin\Users\DeleteRequest;
 use App\Repositories\UserRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -79,7 +79,7 @@ class UsersController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->userRepository->findOrFail($request->id);
+        $row = $this->userRepository->findOrFail($request->integer('id'));
 
         $this->userRepository->update(
             $row,
@@ -97,7 +97,7 @@ class UsersController extends Controller
      */
     public function destroy(DeleteRequest $request): RedirectResponse
     {
-        $row = $this->userRepository->find($request->id);
+        $row = $this->userRepository->find($request->integer('id'));
 
         if ($row === null) {
             return redirect()

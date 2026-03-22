@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\VideoHelper;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductVideos extends Model
 {
@@ -16,9 +17,9 @@ class ProductVideos extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Products::class, 'product_id', 'id');
     }
@@ -26,7 +27,7 @@ class ProductVideos extends Model
     /**
      * @return string
      */
-    public function getThumb()
+    public function getThumb(): string
     {
         return VideoHelper::getThumb($this->provider,$this->video);
     }
@@ -34,7 +35,7 @@ class ProductVideos extends Model
     /**
      * @return string
      */
-    public function getVideoUrl()
+    public function getVideoUrl(): string
     {
         return VideoHelper::getVideoUrl($this->provider,$this->video);
     }

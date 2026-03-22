@@ -84,7 +84,7 @@ class CatalogController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->catalogRepository->findOrFail($request->id);
+        $row = $this->catalogRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $row->image);
 
         $this->catalogRepository->update($row, CatalogData::fromArray($data));
@@ -100,7 +100,7 @@ class CatalogController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $id = $request->id;
+        $id = $request->integer('id');
         $row = $this->catalogRepository->find($id);
 
         if ($row !== null) {
@@ -148,6 +148,7 @@ class CatalogController extends Controller
 
     /**
      * Загрузка изображения при наличии файла.
+     *
      * @param Request $request
      * @param string|null $oldImage
      * @return string|null

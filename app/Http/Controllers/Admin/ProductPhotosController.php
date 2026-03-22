@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\DTO\Admin\ProductPhotoData;
 use App\Helpers\StringHelper;
 use App\Http\Requests\Admin\ProductPhotos\EditRequest;
@@ -81,7 +80,7 @@ class ProductPhotosController extends Controller
      */
     public function update(EditRequest $request): RedirectResponse
     {
-        $row = $this->photoRepository->findOrFail($request->id);
+        $row = $this->photoRepository->findOrFail($request->integer('id'));
         $data = $this->prepareDataForUpdate($request, $row);
 
         $this->photoRepository->update(
@@ -102,7 +101,7 @@ class ProductPhotosController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $row = $this->photoRepository->find($request->id);
+        $row = $this->photoRepository->find($request->integer('id'));
 
         if ($row !== null) {
             $productId = $row->product_id;

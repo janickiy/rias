@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Storage;
 
 class Catalog extends Model
@@ -26,18 +27,18 @@ class Catalog extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Products::class, 'catalog_id', 'id');
     }
 
     /**
      * @param int|null $limit
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function getProductsList(int $limit = null)
+    public function getProductsList(?int $limit = null): HasMany
     {
         $relation = $this->hasMany(Products::class, 'catalog_id', 'id');
 
@@ -63,7 +64,7 @@ class Catalog extends Model
     /**
      * @return void
      */
-    public function remove()
+    public function remove(): void
     {
         if (Storage::disk('public')->exists('catalog/' . $this->image) === true) Storage::disk('public')->delete('catalog/' . $this->image);
 
